@@ -1,0 +1,16 @@
+bcrypt @ file:///D:/bld/bcrypt_1610521360613/work
+certifi==2021.5.30
+cffi @ file:///D:/bld/cffi_1625835466651/work
+cryptography @ file:///D:/bld/cryptography_1616851819782/work
+cx-Oracle @ file:///D:/bld/cx_oracle_1622602313389/work
+greenlet @ file:///D:/bld/greenlet_1628272284766/work
+numpy @ file:///D:/bld/numpy_1624400134018/work
+pandas @ file:///D:/bld/pandas_1625236651035/work
+paramiko @ file:///home/conda/feedstock_root/build_artifacts/paramiko_1598988093657/work
+pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1593275161868/work
+PyNaCl @ file:///D:/bld/pynacl_1610673314332/work
+python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
+pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1612179539967/work
+six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
+SQLAlchemy @ file:///D:/bld/sqlalchemy_1626924858492/work
+wincertstore==0.2

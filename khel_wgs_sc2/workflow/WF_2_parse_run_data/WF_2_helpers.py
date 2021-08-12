@@ -1,0 +1,100 @@
+from ..workflow_obj import workflow_obj
+from ..processor import *
+from ..reader import *
+from ..writer import *
+from ..ui import *
+from ..formatter import *
+import pandas as pd
+
+
+class WorkflowObj2(workflow_obj):
+    # constructor
+    def __init__(self, logger):
+        self.id = "WF_2"
+        self.logger = logger
+
+    # methods
+    def get_json(self):
+        self.logger.info(self.id + ': Acquiring local data from cache')
+        super().get_json(2)
+        self.logger.info(self.id + ': get_json finished!')
+
+
+    def get_info_from_user(self):
+        self.logger.info(self.id + ": Getting input from user")
+        run_data, self.machine_num, self.wgs_run_date, \
+            self.day_run_num, self.platform = get_run_data()
+
+        neg = False
+        pos = False
+        # store away the control values for the run
+        for sample_num in range(len(run_data['hsn'])):
+            if "neg" in run_data['hsn'][sample_num].lower():
+                self.neg_ctrl_pass = (run_data['percent_cvg'][sample_num] <= self.neg_percent_cvg_cutoff)
+                self.neg_name = "1" + self.wgs_run_date[:-4].replace("/", "") + self.wgs_run_date[-2:] + str(self.machine_num) + str(self.day_run_num)
+                run_data['hsn'][sample_num] = self.neg_name
+                neg = True
+            if "pos" in run_data['hsn'][sample_num].lower():
+                self.pos_ctrl_pass = (run_data['percent_cvg'][sample_num] >= self.percent_cvg_cutoff)
+                self.pos_name = "2" + self.wgs_run_date[:-4].replace("/", "") + self.wgs_run_date[-2:] + str(self.machine_num) + str(self.day_run_num)
+                run_data['hsn'][sample_num] = self.pos_name
+                pos = True
+            if neg and pos:
+                break
+        
+        # create dataframe for QC/Research table
+        self.df_qc = pd.DataFrame.from_dict(run_data)
+        
+        self.logger.info(self.id + ": get_info_from_user finished")
+
+
+    def format_dataframe(self):
+        self.logger.info(self.id + ": Formatting dataframe")
+        self.df_qc = remove_pools(self.df_qc, 'hsn')
+        self.df_qc = remove_blanks(self.df_qc, 'hsn')
+        # add columns
+        self.df_qc = add_cols(obj=self, \
+            df=self.df_qc, \
+            col_lst=self.add_col_lst, \
+            col_func_map=self.col_func_map)
+        self.df_qc = self.df_qc.astype({"wgs_run_date": str})
+        
+        # sort/remove columns to match table 1
+        self.df_qc = self.df_qc[self.df_qc_cols]
+        # create dataframe for results table
+        self.df_results = self.df_qc.copy()
+        # sort/remove columns to match table 2
+        self.df_results = pd.DataFrame(self.df_results[self.df_results_cols])
+        neg_idx = self.df_results.index[self.df_results['hsn'] == self.neg_name][0]
+        pos_idx = self.df_results.index[self.df_results['hsn'] == self.pos_name][0]
+        self.df_results.drop([pos_idx, neg_idx], inplace=True)
+        self.logger.info(self.id + ": format_dataframe finished")
+
+
+    def database_push(self):
+        self.logger.info(self.id + ": Pushing info to database")
+        super().setup_db()
+        # query for updating results table (only update table1 if qc is better)
+        # update table 2 regardless
+        
+        # only write to table 1 (results table) if QC's pass
+        if self.neg_ctrl_pass and self.pos_ctrl_pass:
+            df_results_lst = self.df_results.values.astype(str).tolist()
+            self.write_query_tbl1 = self.write_query_tbl1.replace("{avg_depth_cutoff}", str(self.avg_depth_cutoff))
+            self.write_query_tbl1 = self.write_query_tbl1.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
+            self.db_handler.lst_ptr_push(df_lst=df_results_lst, query=self.write_query_tbl1)
+        else:
+            self.logger.warning(self.id + f": neg: {self.neg_ctrl_pass}, pos: {self.pos_ctrl_pass}... \
+                Run not added to Results table")
+        
+        #TYPE: LST
+        df_qc_lst = self.df_qc.values.astype(str).tolist()
+        df_qc_cols_query = "(" + ", ".join(self.df_qc_cols) + ")"
+        try:
+            self.db_handler.lst_push(df_lst=df_qc_lst, df_cols=df_qc_cols_query)
+        except Exception as e:
+            print(e)
+            raise ValueError("\n-------------------------------------------------------------------------------------------------------------------\
+                \nEntry already exists in the database! The clearlabs data for this run has likely already been added to the database\
+                \n-------------------------------------------------------------------------------------------------------------------")
+        self.logger.info(self.id + ": database_push finished!")
