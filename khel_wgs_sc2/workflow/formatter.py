@@ -67,7 +67,6 @@ def add_cols(obj=None, df=None, col_lst=None, col_func_map=None):
             v = col_func_map[k]
             try:
                 # try to get additional value to run apply function with
-                func = v[0]
                 val = v[1]
                 try:
                     val = getattr(obj, v[1])
@@ -80,7 +79,6 @@ def add_cols(obj=None, df=None, col_lst=None, col_func_map=None):
             except IndexError:
                 # try using the value as a function
                 try:
-                    func = v[0]
                     df[k] = df.apply(lambda row: globals()[v[0]](row), axis=1)
                 # try using the value as a variable
                 except Exception as e:
@@ -124,16 +122,6 @@ def parse_seq_id(row, arg):
     if len(seq_id) == 1:
         # WF 3
         seq_id = str(row["seqName"]).split(".")
-        # if arg == "hsn":
-        #     return int(seq_id[0][0:7])
-        # elif arg == "m_num":
-        #     return int(seq_id[2][4:])
-        # elif arg == "pos":
-        #     return int(seq_id[5][-2:])
-        # elif arg == "run_num":
-        #     return int(seq_id[4])
-        # elif arg == "date":
-        #     return seq_id[3]
         if arg == "hsn":
             return int(seq_id[0][0:7])
         elif arg == "m_num":

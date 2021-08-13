@@ -49,7 +49,7 @@
             ],
             "facility_category": [
                 "parse_category",
-                "facility_replace_dict"
+                "parse_category_dict"
             ],
             "source": [
                 "format_source"
