@@ -1,5 +1,5 @@
 from ..workflow_obj import workflow_obj
-from ..processor import *
+from ..reader import get_pandas
 from xlrd import open_workbook
 from xlutils.copy import copy as xl_copy
 import os

@@ -1,14 +1,8 @@
 from ..workflow_obj import workflow_obj
-from ..processor import *
-import time
 import os
 import re
-import sys
 import datetime
-import numpy as np
 import pandas as pd
-from sqlalchemy import text
-from sqlalchemy import create_engine
 
 
 class query_obj(workflow_obj):

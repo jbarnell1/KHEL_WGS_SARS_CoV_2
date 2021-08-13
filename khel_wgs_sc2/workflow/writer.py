@@ -1,7 +1,7 @@
 import json
 import datetime
 import os
-from ui import get_path
+from workflow.ui import get_path
 
 
 def write_json(path, py_dict):

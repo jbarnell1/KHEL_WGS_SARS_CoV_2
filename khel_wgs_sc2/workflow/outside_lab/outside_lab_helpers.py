@@ -1,5 +1,4 @@
 from ..workflow_obj import workflow_obj
-from ..processor import *
 import time
 from tkinter import filedialog
 from tkinter import *

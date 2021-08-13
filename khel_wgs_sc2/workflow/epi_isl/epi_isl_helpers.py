@@ -1,5 +1,6 @@
 from ..workflow_obj import workflow_obj
-from ..processor import *
+from ..ui import get_path
+from ..reader import get_pandas
 import re
 
 

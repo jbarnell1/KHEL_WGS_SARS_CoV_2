@@ -1,9 +1,5 @@
-from ..processor import *
 from ..workflow_obj import workflow_obj
-from ..reader import *
-from ..writer import *
-from ..ui import *
-from ..formatter import *
+from ..ui import get_path
 import sys
 import paramiko as pk
 import time

@@ -1,9 +1,7 @@
 from ..workflow_obj import workflow_obj
-from ..processor import *
-from ..reader import *
-from ..writer import *
-from ..ui import *
-from ..formatter import *
+from ..reader import get_pandas
+from ..ui import get_path
+from ..formatter import add_cols, remove_blanks, remove_pools, merge_dataframes
 
 class WorkflowObj4(workflow_obj):
     # constructor
@@ -24,7 +22,6 @@ class WorkflowObj4(workflow_obj):
         splt = nc_path.split("/")
         parent_folder = splt[-2]
         data = parent_folder.split(".")
-        #080521.11.1
         neg_name = "1" + "".join(data)
         pos_name = "2" + "".join(data)
         self.logger.info(self.id + ": Getting nextclade data from worksheet")

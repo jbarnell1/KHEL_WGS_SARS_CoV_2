@@ -1,9 +1,7 @@
 from ..workflow_obj import workflow_obj
-from ..processor import *
-from ..reader import *
-from ..writer import *
-from ..ui import *
-from ..formatter import *
+from ..reader import get_pandas
+from ..ui import get_path
+from ..formatter import add_cols, remove_pools, remove_blanks, merge_dataframes
 
 
 class WorkflowObj5(workflow_obj):

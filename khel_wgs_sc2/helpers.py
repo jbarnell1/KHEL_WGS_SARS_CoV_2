@@ -1,4 +1,3 @@
-from sqlalchemy.exc import ArgumentError, IntegrityError
 from workflow.WF_1_import_demos.WF_1_import_demos import run_script_1
 from workflow.WF_2_parse_run_data.WF_2_parse_run_data import run_script_2
 from workflow.WF_3_compile_fasta.WF_3_compile_fasta import run_script_3
@@ -6,7 +5,7 @@ from workflow.WF_4_parse_nextclade.WF_4_parse_nextclade import run_script_4
 from workflow.WF_5_parse_pangolin.WF_5_parse_pangolin import run_script_5
 from workflow.WF_6_build_epi_report.WF_6_build_epi_report import run_script_6
 from workflow.WF_7_send_epi_report.WF_7_send_epi_report import run_script_7
-# from workflow.WF_8_build_nextstrain.WF_8_build_nextstrain import run_script_8
+from workflow.WF_8_build_nextstrain.WF_8_build_nextstrain import run_script_8
 from workflow.epi_isl.epi_isl import run_epi_isl
 from workflow.gisaid.gisaid import run_gisaid
 from workflow.outside_lab.outside_lab import run_outside_lab
@@ -14,7 +13,6 @@ from workflow.query.query import run_query
 from workflow.refresh.refresh import run_refresh
 import pyodbc
 import logging
-import os
 import time
 
 
@@ -70,15 +68,12 @@ def run(u_input):
                         return True
 
                 # catch errors and perform logic here
-                except ValueError as i:
-                    print(i)
-                    time.sleep(5)
-                except ArgumentError as i:
-                    print(i)
-                    time.sleep(5)
                 except pyodbc.IntegrityError as i:
                     print(i)
                     print("\nThis usually happens when the run data has already been imported into the database")
+                    time.sleep(5)
+                except Exception as i:
+                    print(i)
                     time.sleep(5)
 
         elif u_input.strip().lower() == '1':
