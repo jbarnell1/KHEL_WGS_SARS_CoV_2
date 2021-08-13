@@ -40,139 +40,147 @@ def config_logger(log_name):
     return logger
 
 
-def run(u_input):
-    try:
-        if u_input.strip().lower() == 'start':
-            tracker = 1
-            while True:
-                try:
-                    # configure logger
-                    logger = config_logger('khel_wgs_sc2')
-                    # run script
-                    if tracker == 1:
-                        run_script_1(logger)
-                        tracker += 1
-                    elif tracker == 2:
-                        run_script_2(logger)
-                        tracker += 1
-                    elif tracker == 3:
-                        run_script_3(logger)
-                        tracker += 1
-                    elif tracker == 4:
-                        run_script_4(logger)
-                        tracker += 1
-                    elif tracker == 5:
-                        run_script_5(logger)
-                        tracker += 1
-                    else:
-                        print("\n ___________________________________________________\n|  _______________________________________________  |\n| |\033[4m      SARS-CoV-2 daily workflow complete!      \033[0m| |\n|___________________________________________________|\n")
-                        return True
+def run():
+    ask = True
+    while ask:
+        u_input = input("\n\nIf you'd like to run the whole workflow, enter 'start'.\n\nIf you'd like to run just a part of the workflow:\nenter '1' to import demographics\
+            \nenter '2' to parse the clearlabs run data\nenter '3' to compile the fasta file\nenter '4' to parse the nextclade file\nenter '5' to parse the pangolin file\
+            \nenter '6' to build the daily epi report\nenter '7' to send the daily epi report\nenter '8' to build a nextstrain report\n\nOther options:\
+            \nenter 'refresh' to roll back the database to the most current version of an excel file\nenter 'query' to get a specific snapshot of the database\
+            \nenter 'outside lab' to import a data template submitted from an outside lab\nenter 'gisaid' to produce template and fasta files from a list of hsn's\
+            \nenter 'epi isl' to update all isl numbers for samples submitted to gisaid\n\nenter 'q' to quit\n--> ")
+        try:
+            if u_input.strip().lower() == 'start':
+                tracker = 1
+                while True:
+                    try:
+                        # configure logger
+                        logger = config_logger('khel_wgs_sc2')
+                        # run script
+                        if tracker == 1:
+                            run_script_1(logger)
+                            tracker += 1
+                        elif tracker == 2:
+                            run_script_2(logger)
+                            tracker += 1
+                        elif tracker == 3:
+                            run_script_3(logger)
+                            tracker += 1
+                        elif tracker == 4:
+                            run_script_4(logger)
+                            tracker += 1
+                        elif tracker == 5:
+                            run_script_5(logger)
+                            tracker += 1
+                        else:
+                            print("\n ___________________________________________________\n|  _______________________________________________  |\n| |\033[4m      SARS-CoV-2 daily workflow complete!      \033[0m| |\n|___________________________________________________|\n")
+                            return True
 
-                # catch errors and perform logic here
-                except pyodbc.IntegrityError as i:
-                    print(i)
-                    print("\nThis usually happens when the run data has already been imported into the database")
-                    time.sleep(5)
-                except Exception as i:
-                    print(i)
-                    time.sleep(5)
+                    # catch errors and perform logic here
+                    except pyodbc.IntegrityError as i:
+                        print(i)
+                        print("\nThis usually happens when the run data has already been imported into the database")
+                        time.sleep(5)
+                    except Exception as i:
+                        print(i)
+                        time.sleep(5)
 
-        elif u_input.strip().lower() == '1':
-            # configure logger
-            logger = config_logger('import_demos')
-            # run script
-            run_script_1(logger)
-            return True
+            elif u_input.strip().lower() == '1':
+                # configure logger
+                logger = config_logger('import_demos')
+                # run script
+                run_script_1(logger)
+                return True
 
-        elif u_input.strip().lower() == '2':
-            # configure logger
-            logger = config_logger('parse_run_data')
-            # run script
-            run_script_2(logger)
-            return True
+            elif u_input.strip().lower() == '2':
+                # configure logger
+                logger = config_logger('parse_run_data')
+                # run script
+                run_script_2(logger)
+                return True
 
-        elif u_input.strip().lower() == '3':
-            # configure logger
-            logger = config_logger('compile_fasta')
-            # run script
-            run_script_3(logger)
-            return True
+            elif u_input.strip().lower() == '3':
+                # configure logger
+                logger = config_logger('compile_fasta')
+                # run script
+                run_script_3(logger)
+                return True
 
-        elif u_input.strip().lower() == '4':
-            # configure logger
-            logger = config_logger('parse_nextclade')
-            # run script
-            run_script_4(logger)
-            return True
+            elif u_input.strip().lower() == '4':
+                # configure logger
+                logger = config_logger('parse_nextclade')
+                # run script
+                run_script_4(logger)
+                return True
 
-        elif u_input.strip().lower() == '5':
-            # configure logger
-            logger = config_logger('parse_pangolin')
-            # run script
-            run_script_5(logger)
-            return True
+            elif u_input.strip().lower() == '5':
+                # configure logger
+                logger = config_logger('parse_pangolin')
+                # run script
+                run_script_5(logger)
+                return True
 
-        elif u_input.strip().lower() == '6':
-            # configure logger
-            logger = config_logger('build_epi')
-            run_script_6(logger)
-            return True
+            elif u_input.strip().lower() == '6':
+                # configure logger
+                logger = config_logger('build_epi')
+                run_script_6(logger)
+                return True
 
-        elif u_input.strip().lower() == '7':
-            # configure logger
-            logger = config_logger('send_epi')
-            run_script_7(logger)
-            return True
+            elif u_input.strip().lower() == '7':
+                # configure logger
+                logger = config_logger('send_epi')
+                run_script_7(logger)
+                return True
 
-        elif u_input.strip().lower() == '8':
-            # configure logger
-            logger = config_logger('build_nextstrain')
-            run_script_8(logger)
-            return True
+            elif u_input.strip().lower() == '8':
+                # configure logger
+                logger = config_logger('build_nextstrain')
+                run_script_8(logger)
+                return True
 
-        elif u_input.strip().lower() == 'refresh':
-            # configure logger
-            logger = config_logger('refresh')
-            # run script
-            run_refresh(logger)
-            return True
-        
-        elif u_input.strip().lower() == 'query':
-            # configure logger
-            logger = config_logger('query')
-            # run script
-            run_query(logger)
-            return True
-        
-        elif u_input.strip().lower() == 'outside lab':
-            # configure logger
-            logger = config_logger('outside_lab')
-            # run script
-            run_outside_lab(logger)
-            return True
+            elif u_input.strip().lower() == 'refresh':
+                # configure logger
+                logger = config_logger('refresh')
+                # run script
+                run_refresh(logger)
+                return True
+            
+            elif u_input.strip().lower() == 'query':
+                # configure logger
+                logger = config_logger('query')
+                # run script
+                run_query(logger)
+                return True
+            
+            elif u_input.strip().lower() == 'outside lab':
+                # configure logger
+                logger = config_logger('outside_lab')
+                # run script
+                run_outside_lab(logger)
+                return True
 
-        elif u_input.strip().lower() == 'gisaid':
-            # configure logger
-            logger = config_logger('gisaid')
-            # run script
-            run_gisaid(logger)
-            return True
+            elif u_input.strip().lower() == 'gisaid':
+                # configure logger
+                logger = config_logger('gisaid')
+                # run script
+                run_gisaid(logger)
+                return True
 
-        elif u_input.strip().lower() == 'epi isl':
-            # configure logger
-            logger = config_logger('epi_isl')
-            # run script
-            run_epi_isl(logger)
-            return True
-        
-        elif u_input.strip().lower() == 'q':
-            return False
-        
-        else:
-            raise ValueError("Invalid input!")
+            elif u_input.strip().lower() == 'epi isl':
+                # configure logger
+                logger = config_logger('epi_isl')
+                # run script
+                run_epi_isl(logger)
+                return True
+            
+            elif u_input.strip().lower() == 'q':
+                return False
+            
+            else:
+                raise ValueError("Invalid input!")
 
-    except Exception as i:
-        print(i)
-        time.sleep(2)
-        return True
-        
+        except Exception as i:
+            print(i)
+            time.sleep(2)
+            return True
+            
