@@ -12,4 +12,3 @@ if __name__ == "__main__":
     #         \nenter 'epi isl' to update all isl numbers for samples submitted to gisaid\n\nenter 'q' to quit\n--> ")
     run()
         
-

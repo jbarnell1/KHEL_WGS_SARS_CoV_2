@@ -1,4 +1,4 @@
-from workflow.WF_8_build_nextstrain.WF_8_build_nextstrain_helpers import WorkflowObj8
+from workflow.WF_8_build_nextstrain.WF_8_helpers import WorkflowObj8
 import time
 
 

@@ -102,7 +102,7 @@ results on-device so you won't have to enter them again).")
             print("\nFinished! If you need to change these values in the \
 future for any reason, modify the cache file: daily_workflow/data/cache.json")
             if wf == 1:
-                full_cache[workflow]['limsConn'] = self.lims_conn
+                full_cache[workflow]['lims_conn'] = self.lims_conn
             if wf == -2:
                 full_cache[workflow]['path_to_template'] = self.path_to_template
                 full_cache[workflow]['gisaid_path'] = self.gisaid_path
@@ -113,10 +113,10 @@ future for any reason, modify the cache file: daily_workflow/data/cache.json")
                 full_cache[workflow]['port'] = self.port
                 full_cache[workflow]['sftp_user'] = self.sftp_user
                 full_cache[workflow]['sftp_pwd'] = self.sftp_pwd
-            full_cache["all_workflows"]['sqlUser'] = self.sql_user
-            full_cache["all_workflows"]['sqlPass'] = self.sql_pass
-            full_cache["all_workflows"]['sqlServer'] = self.sql_server
-            full_cache["all_workflows"]['sqldb'] = self.sql_db
+            full_cache["all_workflows"]['sql_user'] = self.sql_user
+            full_cache["all_workflows"]['sql_pass'] = self.sql_pass
+            full_cache["all_workflows"]['sql_server'] = self.sql_server
+            full_cache["all_workflows"]['sql_db'] = self.sql_db
             print("\nStoring data for future use...")
             res = write_json(path_to_cache, full_cache)
             if res != 0:
