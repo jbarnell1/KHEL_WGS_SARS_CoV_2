@@ -51,6 +51,13 @@ class workflow_obj(ABC):
 
         # search for private data.  If empty, gather from user (first time use)
         path_to_private_cache = top_pkg_folder + "\\data\\private_cache.json"
+        # if the file doesn't exist, create it
+        if os.path.isfile(path_to_private_cache) and os.access(path_to_private_cache, os.R_OK):
+            pass
+        else:
+            print("\nPrivate cache does not exist, creating file...")
+            private_start_dict = dict.fromkeys(full_static_cache.keys(), {})
+            write_json(path_to_private_cache, private_start_dict)
         full_private_cache = read_json(path_to_private_cache)
         working_private_cache = full_private_cache[workflow]
         gen_private_cache = full_private_cache['all_workflows']

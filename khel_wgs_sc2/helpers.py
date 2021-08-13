@@ -75,7 +75,6 @@ def run():
                             tracker += 1
                         else:
                             print("\n ___________________________________________________\n|  _______________________________________________  |\n| |\033[4m      SARS-CoV-2 daily workflow complete!      \033[0m| |\n|___________________________________________________|\n")
-                            return True
 
                     # catch errors and perform logic here
                     except pyodbc.IntegrityError as i:
@@ -91,91 +90,78 @@ def run():
                 logger = config_logger('import_demos')
                 # run script
                 run_script_1(logger)
-                return True
-
+                
             elif u_input.strip().lower() == '2':
                 # configure logger
                 logger = config_logger('parse_run_data')
                 # run script
                 run_script_2(logger)
-                return True
-
+                
             elif u_input.strip().lower() == '3':
                 # configure logger
                 logger = config_logger('compile_fasta')
                 # run script
                 run_script_3(logger)
-                return True
-
+                
             elif u_input.strip().lower() == '4':
                 # configure logger
                 logger = config_logger('parse_nextclade')
                 # run script
                 run_script_4(logger)
-                return True
-
+                
             elif u_input.strip().lower() == '5':
                 # configure logger
                 logger = config_logger('parse_pangolin')
                 # run script
                 run_script_5(logger)
-                return True
-
+                
             elif u_input.strip().lower() == '6':
                 # configure logger
                 logger = config_logger('build_epi')
                 run_script_6(logger)
-                return True
-
+                
             elif u_input.strip().lower() == '7':
                 # configure logger
                 logger = config_logger('send_epi')
                 run_script_7(logger)
-                return True
-
+                
             elif u_input.strip().lower() == '8':
                 # configure logger
                 logger = config_logger('build_nextstrain')
                 run_script_8(logger)
-                return True
-
+            
             elif u_input.strip().lower() == 'refresh':
                 # configure logger
                 logger = config_logger('refresh')
                 # run script
                 run_refresh(logger)
-                return True
-            
+                
             elif u_input.strip().lower() == 'query':
                 # configure logger
                 logger = config_logger('query')
                 # run script
                 run_query(logger)
-                return True
-            
+                
             elif u_input.strip().lower() == 'outside lab':
                 # configure logger
                 logger = config_logger('outside_lab')
                 # run script
                 run_outside_lab(logger)
-                return True
 
             elif u_input.strip().lower() == 'gisaid':
                 # configure logger
                 logger = config_logger('gisaid')
                 # run script
                 run_gisaid(logger)
-                return True
-
+            
             elif u_input.strip().lower() == 'epi isl':
                 # configure logger
                 logger = config_logger('epi_isl')
                 # run script
                 run_epi_isl(logger)
-                return True
-            
+                
             elif u_input.strip().lower() == 'q':
-                return False
+                ask = False
             
             else:
                 raise ValueError("Invalid input!")
@@ -183,5 +169,5 @@ def run():
         except Exception as i:
             print(i)
             time.sleep(2)
-            return True
+            
             

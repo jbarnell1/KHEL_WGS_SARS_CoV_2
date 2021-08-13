@@ -11,7 +11,6 @@ def write_json(path, py_dict):
         return 0
     except:
         return 1
-    
 
 def save_csv(df):
     # get today's date to produce file names
