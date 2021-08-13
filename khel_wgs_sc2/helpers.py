@@ -41,6 +41,7 @@ def config_logger(log_name):
 
 
 def run():
+    print("\n ___________________________________________________\n|  _______________________________________________  |\n| |\033[4m    SARS-CoV-2 daily workflow runner script    \033[0m| |\n|___________________________________________________|\n")
     ask = True
     while ask:
         u_input = input("\n\nIf you'd like to run the whole workflow, enter 'start'.\n\nIf you'd like to run just a part of the workflow:\nenter '1' to import demographics\
