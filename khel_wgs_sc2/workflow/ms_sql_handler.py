@@ -48,8 +48,9 @@ class ms_sql_handler():
             df = pd.read_sql(query, con=self.engine)
         return df
 
-    def sub_read(self, query):
+    def sub_read(self, query=None):
         local_query = query.replace("{avg_depth_cutoff}", str(self.avg_depth_cutoff))
+        local_query = local_query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
         df = pd.read_sql(local_query, con=self.engine)
         return df
 

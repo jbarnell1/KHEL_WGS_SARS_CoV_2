@@ -229,7 +229,10 @@ def get_path_to_fasta(row):
                 path = base_path + folder + folder2 + ".fasta\\" + folder2 + ".barcode" + str(position) + ".fasta"
             else:
                 path = base_path + folder + folder2 + ".fasta\\barcode" + str(position) + ".fasta"
-
+                
+        # verify that parsed path is valid
+        if not os.path.exists(path):
+            raise ValueError("The parser generated a path to a fasta file that is not valid!!\n" + path)
         return path
  
 

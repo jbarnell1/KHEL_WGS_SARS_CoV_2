@@ -36,6 +36,6 @@ _______________________________________
    - Extract required data from user-provided `results(n).csv` file.
    - Push the Pangolin data to the *results table* only.
 
-All of these workflows can be run on their own, but I've provided a runner script that can call each one, waiting for the user<br>
+All of these workflows can be run on their own, but I've provided a runner script that can call each one, waiting for the user
 to complete the critical steps.  For more information on each workflow, see the [docs](docs/overview.md).
 

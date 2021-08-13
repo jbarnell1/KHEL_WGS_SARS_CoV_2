@@ -1,4 +1,5 @@
 from abc import ABC
+from workflow.ui import get_path_folder
 from workflow.ms_sql_handler import ms_sql_handler
 from workflow.reader import read_json
 from workflow.ui import get_path
@@ -39,7 +40,7 @@ class workflow_obj(ABC):
         for k, v in working_static_cache.items():
             if "query" in str(k):
                 if not hasattr(self, k):
-                    setattr(self, k, "".join(v))
+                    setattr(self, k, " ".join(v))
             else:
                 if not hasattr(self, k):
                     setattr(self, k, v)
@@ -72,8 +73,6 @@ class workflow_obj(ABC):
             if wf == 1:
                 self.lims_conn = working_private_cache['lims_conn']
             if wf == -2:
-                self.path_to_template = working_private_cache['path_to_template']
-                self.gisaid_path = working_private_cache['gisaid_path']
                 self.folderpathbase = working_private_cache['folderpathbase']
             if wf == 7:
                 self.destination = working_private_cache['destination']
@@ -95,11 +94,8 @@ results on-device so you won't have to enter them again).")
                 self.lims_conn = input("\nPlease enter the string for the LIMS connection \
 (ie <user>/<password>@<db_tablename>\n-->")
             if wf == -2:
-                print("Please enter the path to the template workbook")
-                self.path_to_template = get_path()
-                print("Please select the path to the gisaid file")
-                self.gisaid_path = get_path()
-                self.folderpathbase = "\\".join(self.path_to_template.split("\\")[:-1])
+                print("Please select the folder you'd like to contain the finished file")
+                self.folderpathbase = get_path_folder()
             if wf == 7:
                 self.destination = input("\nType the relative path of the destination folder\n-->")
                 self.location = input("\nType the address of the final location of sftp transfer\n-->")
@@ -126,8 +122,6 @@ future for any reason, modify the cache file: daily_workflow/data/private_cache.
             if wf == 1:
                 full_private_cache[workflow]['lims_conn'] = self.lims_conn
             if wf == -2:
-                full_private_cache[workflow]['path_to_template'] = self.path_to_template
-                full_private_cache[workflow]['gisaid_path'] = self.gisaid_path
                 full_private_cache[workflow]['folderpathbase'] = self.folderpathbase
             if wf == 7:
                 full_private_cache[workflow]['destination'] = self.destination

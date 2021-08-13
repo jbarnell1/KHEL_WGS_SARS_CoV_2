@@ -2,6 +2,7 @@ import datetime
 import pandas as pd
 import numpy as np
 import re
+import os
 
 def remove_blanks(df, col_name):
     ctr = 0
@@ -290,7 +291,9 @@ def format_state(row, state_abbrev):
 
 
 def parse_path(row, path):
-    return path + "/" + row["seqName"]
+    new_path = path + "/" + row["seqName"]
+    if not os.path.exists(new_path):
+        raise ValueError("The parser generated a path to a fasta file that is not valid!!")
 
 
 def get_gisaid(row):
