@@ -22,7 +22,7 @@ def config_logger(log_name):
     # so we have to force a try-except block here
     try:
         actual = 'ide'
-        # IDE
+        # IDE 
         f_handler = logging.FileHandler('khel_wgs_sc2/khel_wgs_sc2/logs/' + log_name + '.txt', 'w+')
         actual = 'windows'
         # windows
