@@ -18,7 +18,8 @@ import time
 
 def config_logger(log_name):
     logger = logging.getLogger(__name__)
-    # unfortunately, the script and IDE see the structure differently, so we have to force a try-except block here
+    # unfortunately, the script and IDE see the structure differently, 
+    # so we have to force a try-except block here
     try:
         actual = 'ide'
         # IDE
