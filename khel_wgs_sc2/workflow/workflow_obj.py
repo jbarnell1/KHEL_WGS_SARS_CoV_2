@@ -85,6 +85,9 @@ class workflow_obj(ABC):
             if wf == 6:
                 self.lab = working_private_cache['lab']
                 self.p_lab = working_private_cache['p_lab']
+            if wf == -5:
+                self.base_path = working_private_cache['base_path']
+                self.new_base_path = working_private_cache['new_base_path']
 
         except KeyError:
             print("Looks like this is your first time using the script!")
@@ -109,6 +112,13 @@ results on-device so you won't have to enter them again).")
             if wf == 6:
                 self.lab = input("\nType the name of the lab submitting the report\n-->")
                 self.p_lab = input("\nType the name of the lab performing the tests to appear on this report\n-->")
+            if wf == -5:
+                print("\nPlease select the path to the folder where ClearLabs \
+                    Downloads used to be stored.")
+                self.base_path = get_path()
+                print("\nPlease select the path to the folder where ClearLabs \
+                    Downloads are now stored.")
+                self.new_base_path = get_path()
 
             if need_sql:
                 self.sql_user = input("\nPlease enter the username for the sql database:\n-->")

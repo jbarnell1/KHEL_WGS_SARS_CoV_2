@@ -50,7 +50,7 @@ class refresh_obj(workflow_obj):
         # add columns
         df = remove_pools(df, 'hsn')
         print("\nAdding 'path_to_fasta' column...")
-        df['path_to_fasta'] = df.apply(lambda row: get_path_to_fasta(row), axis = 1)
+        df['path_to_fasta'] = df.apply(lambda row: self.get_path_to_fasta(row), axis = 1)
         print("\nAdding 'avg_depth' column...")
         df['avg_depth'] = df.apply(lambda row: get_avg_depth(row), axis=1)
         print("\nAdding 'percent_cvg' column...")
@@ -139,6 +139,80 @@ class refresh_obj(workflow_obj):
         
         self.logger.info(self.id + ": database_push finished!")
 
+    def get_path_to_fasta(self, row):
+        # if other lab submitted
+        if re.search("KS-M\d{4}-\d{6}", str(row['seq_run_id'])) or re.search("\d{6}", str(row['seq_run_id'])):
+            #TODO
+            return None
+
+        # if ClearLabs
+        elif re.search("CL-BHRL\d{2}-\d{6}", str(row['seq_run_id'])) \
+        or re.search("BHRL\d{2}.\d{4}-\d{2}-\d{2}.\d{2}", str(row['seq_run_id'])) \
+        or re.search("BB1L\d{2}.\d{4}-\d{2}-\d{2}.\d{2}", str(row['seq_run_id'])):
+            # check if the seq_run_id matches the "CL_BHRL" naming scheme
+            if re.search("CL-BHRL\d{2}-\d{6}", str(row['seq_run_id'])):
+                # if it does, extract run date and machine number
+                lst = str(row['seq_run_id']).split("-")
+                run_date = datetime.datetime.strptime(lst[-1], "%y%m%d")
+                machine_num = str(lst[1])[-2:]
+                # day_run_num not available
+            # all other naming schemes have similar structure
+            else:
+                lst = str(row['seq_run_id']).split(".")
+                run_date = datetime.datetime.strptime(lst[1], "%Y-%m-%d")
+                machine_num = str(lst[0])[-2:]
+                # repeated casts remove "0"-padded ints
+                day_run_num = str(int(lst[-1]))
+
+            position = str(str(row['seq_run_order']).split(".")[-1])
+
+            # after 07/29/21, we include day run number in the folder name
+            if int(run_date.strftime("%y%m%d")) > 210729:
+                folder = run_date.strftime("%m%d%y") + "." + machine_num + "." + day_run_num + "\\"
+            else:
+                folder = run_date.strftime("%m%d%y") + "." + machine_num + "\\"
+            
+            # find out the folder structure
+            if os.path.exists(self.base_path + folder + "FAST files") or os.path.exists(self.new_base_path + folder + "FAST files"):
+                # all of the dates listed below (except for the and/not statement) use ".A" designations
+                # on the hsns
+                if (int(run_date.strftime("%y%m%d")) >= 210405 and int(run_date.strftime("%y%m%d")) <= 210805 or \
+                    folder == "030221.12\\" or folder == "040121.11\\" or folder == "031221.12\\" \
+                    or folder == "022621.12\\" or folder == "032321.11\\" or folder == "022521.11\\" \
+                    or folder == "030921.12\\" or folder == "032421.11\\" or folder == "031621.12\\") \
+                    and not (folder == "041521.12\\" or folder == "040821.12\\"):
+                    # file structure for those listed above includes .A designations
+                    hsn = str(row['hsn'])
+                # early folder dates and more recent folder dates (after 08/05/21) drop ".A" designations
+                else:
+                    hsn = str(row['hsn'])[0:7]
+                if hsn[0] == "M":
+                    hsn = str(row['hsn']).split(".")[0]
+
+                # after 08/13/21 we moved to a completely different folder, still drop ".A" designations
+                if int(run_date.strftime("%y%m%d")) >= 210816:
+                    base = self.new_base_path
+                else:
+                    base = self.base_path
+                # now, build full path
+                path = base + folder + "FAST files\\" + hsn + "." + str(row['seq_run_id']) + ".barcode" + str(position) + ".fasta"
+                # verify that parsed path is valid (this ensures the more recent samples definitely have correct file paths)
+                if not os.path.exists(path):
+                    print(path)
+                    #raise ValueError("The parser generated a path to a fasta file that is not valid!!\n" + path)
+
+            # older, FAST files was implemented pretty early on
+            else:
+                folder2 = str(row['hsn'])[0:7] + "." + str(row['seq_run_id'])
+                # old file structure
+                if int(folder[4:6] + folder[0:2] + folder[2:4]) == 210222:
+                    path = self.base_path + folder + folder2 + ".fasta\\" + folder2 + ".barcode" + str(position) + ".fasta"
+                else:
+                    path = self.base_path + folder + folder2 + ".fasta\\barcode" + str(position) + ".fasta"
+            return path
+        else:
+            return None
+
 
 
 def parse_seq_id_refresh(row, arg):
@@ -191,49 +265,8 @@ def get_name(row, arg):
         return names[0]
 
 
-def get_path_to_fasta(row):
-    # if iseq
-    if re.search("KS-M\d{4}-\d{6}", str(row['seq_run_id'])) or re.search("\d{6}", str(row['seq_run_id'])):
-        #TODO
-        return None
 
-    # if ClearLabs
-    elif re.search("CL-BHRL\d{2}-\d{6}", str(row['seq_run_id'])) or re.search("BHRL\d{2}.\d{4}-\d{2}-\d{2}.\d{2}", str(row['seq_run_id'])) or re.search("BB1L\d{2}.\d{4}-\d{2}-\d{2}.\d{2}", str(row['seq_run_id'])):
-        base_path = "\\\\kdhe\\dfs\\DHEL Shared\\Diagnostic Microbiology\\WGS\\SARS-CoV-2\\ClearLabs downloads\\"
-        if re.search("CL-BHRL\d{2}-\d{6}", str(row['seq_run_id'])):
-            run_date = str(row['seq_run_id'])[12:14] + str(row['seq_run_id'])[14:] + str(row['seq_run_id'])[10:12]
-            machine_num = str(row['seq_run_id'])[7:9]
-        else:
-            run_date = str(row['seq_run_id'])[12:14] + str(row['seq_run_id'])[15:17] + str(row['seq_run_id'])[9:11]
-            machine_num = str(row['seq_run_id'])[4:6]
-            day_run_num = str(int(str(row['seq_run_id'])[-2:]))
         
-        position = str(row['seq_run_order'])[-2:]
-        # after this date, we include day run number in the folder name
-        if int(run_date[-2:] + run_date[:2] + run_date[2:4]) > 210729:
-            folder = run_date + "." + machine_num + day_run_num + "\\"
-        else:
-            folder = run_date + "." + machine_num + "\\"
-        
-        # find out the folder structure
-        if os.path.exists(base_path + folder + "FAST files"):
-            if (int(folder[4:6] + folder[0:2] + folder[2:4]) >= int("210405") or folder == "030221.12\\" or folder == "040121.11\\" or folder == "031221.12\\" or folder == "022621.12\\" or folder == "032321.11\\" or folder == "022521.11\\" or folder == "030921.12\\" or folder == "032421.11\\" or folder == "031621.12\\") and not (folder == "041521.12\\" or folder == "040821.12\\"):
-                # new file structure includes .A designations
-                path = base_path + folder + "FAST files\\" + str(row['hsn']) + "." + str(row['seq_run_id']) + ".barcode" + str(position) + ".fasta"
-            else:
-                path = base_path + folder + "FAST files\\" + str(row['hsn'])[0:7] + "." + str(row['seq_run_id']) + ".barcode" + str(position) + ".fasta"
-        else:
-            folder2 = str(row['hsn'])[0:7] + "." + str(row['seq_run_id'])
-            # old file structure
-            if int(folder[4:6] + folder[0:2] + folder[2:4]) == int("210222"):
-                path = base_path + folder + folder2 + ".fasta\\" + folder2 + ".barcode" + str(position) + ".fasta"
-            else:
-                path = base_path + folder + folder2 + ".fasta\\barcode" + str(position) + ".fasta"
-                
-        # verify that parsed path is valid
-        if not os.path.exists(path):
-            raise ValueError("The parser generated a path to a fasta file that is not valid!!\n" + path)
-        return path
  
 
 def format_date(row, colName):
@@ -378,8 +411,8 @@ def get_percent_cvg(row):
     # remove percentage signs
     result = float(str(row['assembly_coverage']).replace("%", ""))
     # convert to decimal percentage
-    if result <= 1:
-        result *= 100
+    # if result <= 1:
+    #     result *= 100
     return f'{result:.2f}'
 
 

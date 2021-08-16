@@ -7,7 +7,7 @@ import os
 def remove_blanks(df, col_name):
     ctr = 0
     working_df = pd.DataFrame(df)
-    # remove any blanks from the run
+    # remove any blanks from the run 
     try:
         while True:
             if re.search("Blank\d*.*", working_df.at[ctr, col_name]):
