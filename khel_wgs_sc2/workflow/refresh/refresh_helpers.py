@@ -198,7 +198,7 @@ class refresh_obj(workflow_obj):
                 path = base + folder + "FAST files\\" + hsn + "." + str(row['seq_run_id']) + ".barcode" + str(position) + ".fasta"
                 # verify that parsed path is valid (this ensures the more recent samples definitely have correct file paths)
                 if not os.path.exists(path):
-                    print(path)
+                    return None
                     #raise ValueError("The parser generated a path to a fasta file that is not valid!!\n" + path)
 
             # older, FAST files was implemented pretty early on
