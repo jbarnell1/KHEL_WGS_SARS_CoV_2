@@ -3,6 +3,7 @@ from workflow.ui import get_path_folder
 from workflow.ms_sql_handler import ms_sql_handler
 from workflow.reader import read_json
 from workflow.ui import get_path
+from workflow.ui import get_path_folder
 from workflow.writer import write_json
 import time
 import os
@@ -114,11 +115,11 @@ results on-device so you won't have to enter them again).")
                 self.p_lab = input("\nType the name of the lab performing the tests to appear on this report\n-->")
             if wf == -5:
                 print("\nPlease select the path to the folder where ClearLabs \
-                    Downloads used to be stored.")
-                self.base_path = get_path()
+Downloads used to be stored.")
+                self.base_path = get_path_folder()
                 print("\nPlease select the path to the folder where ClearLabs \
-                    Downloads are now stored.")
-                self.new_base_path = get_path()
+Downloads are now stored.")
+                self.new_base_path = get_path_folder()
 
             if need_sql:
                 self.sql_user = input("\nPlease enter the username for the sql database:\n-->")
