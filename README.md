@@ -39,5 +39,5 @@ _______________________________________
 All of these workflows can be run on their own, but I've provided a runner script that can call each one, waiting for the user
 to complete the critical steps.  For more information on each workflow, see the [docs](docs/overview.md).
 
-This README is a work in progress.  We will be updating regularly, so check back often!
+This README is a work in progress.  We will be updating regularly, so check back often! :)
 
