@@ -2,42 +2,94 @@
 # Daily Workflow
 _______________________________________
 
-### The daily workflow package contains the following workflows in their respective subdirectories:
- - **Workflow 1:** Import demographics
-   - Open HORIZON LIMS database (Oracle).
-   - Join all demographics with HSN's contained in the demographics workbook.
-   - Push new demographics to SARS_COV_2 MS SQL database (Table_1).
+## The daily workflow package contains the following workflows in their respective subdirectories:
+
+<br />
+
+### **Workflow 1:** [Import demographics](docs/WF_1_import_demos.md)
+ - Open HORIZON LIMS database (Oracle).
+ - Join all demographics with HSN's contained in the demographics workbook.
+ - Push new demographics to SARS_COV_2 MS SQL database (Table_1).
 
   > This step is absolutely required, since the HSN is the primary key in the database<br>
   > making it impossible to insert any other results further down the workflow.
 
- - **Workflow 2:** Parse Run Statistics (Data)
-   - Ask user for run data (currently only supports CL run data, copy/paste functionality).
-   - Push run data to SARS_COV_2 MS SQL database (Table 1 and Table 2).
+<br />
+<br />
 
-  > *Run statistics* will be used to identify which duplicate is selected to be represented in the
-  > Results table
+### **Workflow 2:** [Parse Run Statistics](docs/WF_2_parse_run_data.md) (Data)
+ - Ask user for run data (currently only supports CL run data, copy/paste functionality).
+ - Push run data to SARS_COV_2 MS SQL database (Table 1 and Table 2).
 
- - **Workflow 3:** Compile FASTA
-   - Ask user for path to download folder (typically the FAST files folder) of files<br>that should be concatenated.
-   - Concatenate fasta files, store new all_fasta file in parent folder, and save<br>pointers to each sample fasta.
-   - Push the fasta pointers to both tables in the SARS_COV_2 MS SQL database.
+  > *Run statistics* will be used to identify which duplicate is selected to be represented in the Results table
 
-  > At this point users should pass the fasta file to [nextclade][1] and [pangolin_lineage_analyzer][2].<br>
-  > The `.tsv` download should be selected from the nextclade site, and the `.csv` download should be selected<br>
-  > from the pangolin site.  Both should be stored in the parent folder for the run where the `all_fasta.fasta`<br>
-  > file is located.
+<br />
+<br />
 
- - **Workflow 4:** Parse Nextclade data
-   - Extract required data from user-provided `nextclade(n).tsv` file.
-   - Push the Nextclade data to both tables.
+### **Workflow 3:** [Compile FASTA](docs/WF_3_compile_fasta.md)
+ - Ask user for path to download folder (typically the FAST files folder) of files<br>that should be concatenated.
+ - Concatenate fasta files, store new all_fasta file in parent folder, and save<br>pointers to each sample fasta.
+ - Push the fasta pointers to both tables in the SARS_COV_2 MS SQL database.
+
+  > At this point users should pass the fasta file to [nextclade](https://clades.nextstrain.org/) and [pangolin_lineage_analyzer](https://pangolin.cog-uk.io/). The `.tsv` download should be selected from the nextclade site, and the `.csv` download should be selected<br>
+  > from the pangolin site.  Both should be stored in the parent folder for the run where the `all_fasta.fasta` file is located.
+
+<br />
+<br />
+
+### **Workflow 4:** [Parse Nextclade data](docs/WF_4_parse_nextclade.md)
+ - Extract required data from user-provided `nextclade(n).tsv` file.
+ - Push the Nextclade data to both tables.
+
+  > The name of this file does not matter, but the format must be a `.tsv` file.  
  
- - **Workflow 5:** Parse Pangolin data
-   - Extract required data from user-provided `results(n).csv` file.
-   - Push the Pangolin data to the *results table* only.
+<br />
+<br />
 
-All of these workflows can be run on their own, but I've provided a runner script that can call each one, waiting for the user
-to complete the critical steps.  For more information on each workflow, see the [docs](docs/overview.md).
+### **Workflow 5:** [Parse Pangolin data](docs/WF_5_parse_pangolin.md)
+ - Extract required data from user-provided `results(n).csv` file.
+ - Push the Pangolin data to the *results table* only.
+  
+  > The name of this file also does not matter, but the format must be a `.csv` file
+  
+<br />
+<br />
 
-This README is a work in progress.  We will be updating regularly, so check back often! :)
+### **Workflow 6:** [Build Epi Report](docs/WF_6_build_epi_report.md)
+ - Ask user for search to perform
+   - Potential searches currently allowed: `date `
+   - Coming soon: `submitting facility, performing facility, date range`
+ - Extract reportable information from the database and format to be accepted by HORIZON parser for efficient reporting of results
+ - Save report to appropriate folder for easy access in the future
+
+<br />
+<br />
+
+### **Workflow 7:** [Send Epi Report](docs/WF_7_send_epi_report.md)
+ - Uses the paramiko python package to send a file to EpiTrax using sftp.
+
+<br />
+<br />
+
+### **Workflow 8:** [Build Nextstrain Report](docs/WF_8_build_nextstrain_report.md)
+ - Extract all information required from the nextstrain scripts from the database and format to be accepted by the nextstrain CLI.
+ - Save report to appropriate folder for easy access in the future
+
+<br />
+<br />
+
+All of these workflows can be run on their own, but I've provided a runner script that can call workflows 1-5, waiting on input from the user to complete the critical steps.  It is recommended to create a simple script outside of the package for even easier access to call the runner script.  For more information, see the [docs](docs/overview.md).
+
+In addition to the standard workflows, I have included several scripts which can also be called individually from the runner and add essential functionality.
+
+<br />
+
+### **[EPI_ISL:](docs/epi_isl.md)**
+  - dlskjf
+  - 
+
+<br />
+<br />
+
+The README and other documentation is a work in progress.  We will be updating regularly, so check back often! :)
 
