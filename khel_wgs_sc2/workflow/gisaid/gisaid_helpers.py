@@ -1,5 +1,6 @@
 from ..workflow_obj import workflow_obj
 from ..ui import progressBar
+from ..formatter import add_cols
 import os
 import datetime
 import pandas as pd
@@ -56,34 +57,40 @@ class gisaid_obj(workflow_obj):
         # compile the gisaid template
         self.gisaid_df = pd.DataFrame(self.gisaid_start.rename(columns=self.rename_gisaid_cols_lst))
         self.gisaid_df.sort_values(['wgs_run_date', 'hsn'], inplace=True)
-        self.gisaid_df.insert(0, "submitter", self.user)
-        self.gisaid_df.insert(0, "fn", self.filepath)
-        self.gisaid_df["covv_virus_name"] = self.gisaid_df.apply(lambda row: self.get_virus_name(row), axis=1)
-        self.gisaid_df.insert(0, "covv_type", "betacoronavirus")
-        self.gisaid_df.insert(0, "covv_passage", "Original")
-        self.gisaid_df["covv_collection_date"] = self.gisaid_df.apply(lambda row: str(row["doc"]), axis=1)
-        self.gisaid_df["covv_location"] = self.gisaid_df.apply(lambda row: "North America / USA / " + str(row["state"]) if str(row["state"]) != "unknown" else "North America / USA / Kansas", axis=1)
-        self.gisaid_df.insert(0, "covv_add_location", "unknown")
-        self.gisaid_df.insert(0, "covv_host", "Human")
-        self.gisaid_df.insert(0, "covv_add_host_info", "unknown")
-        self.gisaid_df["covv_gender"] = self.gisaid_df.apply(lambda row: str(row["sex"]).lower(), axis=1)
-        self.gisaid_df.insert(0, "covv_patient_status", "unknown")
-        self.gisaid_df.insert(0, "covv_specimen", "unknown")
-        self.gisaid_df.insert(0, "covv_outbreak", "unknown")
-        self.gisaid_df.insert(0, "covv_last_vaccinated", "unknown")
-        self.gisaid_df.insert(0, "covv_treatment", "unknown")
-        self.gisaid_df.insert(0, "covv_seq_technology", "ClearLabs")
-        self.gisaid_df.insert(0, "covv_assembly_method", "ClearLabs")
-        #TODO make variable lab names and lab addresses
-        self.gisaid_df.insert(0, "covv_orig_lab", self.lab_name)
-        self.gisaid_df.insert(0, "covv_orig_lab_addr", self.lab_addr)
-        self.gisaid_df.insert(0, "covv_provider_sample_id", "unknown")
-        self.gisaid_df.insert(0, "covv_subm_lab", self.lab_name)
-        self.gisaid_df.insert(0, "covv_subm_lab_addr", self.lab_addr)
-        self.gisaid_df.insert(0, "covv_subm_sample_id", "unknown")
-        self.gisaid_df.insert(0, "covv_authors", self.authors)
-        self.gisaid_df.insert(0, "comment_type", None)
-        self.gisaid_df.insert(0, "covv_comment", None)
+        self.gisaid_df = add_cols(obj = self,
+            df = self.gisaid_df,
+            col_lst = self.add_col_lst,
+            col_func_map = self.col_func_map)
+        
+        
+        # self.gisaid_df.insert(0, "submitter", self.user)
+        # self.gisaid_df.insert(0, "fn", self.filepath)
+        # self.gisaid_df["covv_virus_name"] = self.gisaid_df.apply(lambda row: self.get_virus_name(row), axis=1)
+        # self.gisaid_df.insert(0, "covv_type", "betacoronavirus")
+        # self.gisaid_df.insert(0, "covv_passage", "Original")
+        # self.gisaid_df["covv_collection_date"] = self.gisaid_df.apply(lambda row: get_collection_date(row), axis=1)
+        
+        # self.gisaid_df["covv_location"] = self.gisaid_df.apply(lambda row: get_location(row), axis=1)
+        # self.gisaid_df.insert(0, "covv_add_location", "unknown")
+        # self.gisaid_df.insert(0, "covv_host", "Human")
+        # self.gisaid_df.insert(0, "covv_add_host_info", "unknown")
+        # self.gisaid_df["covv_gender"] = self.gisaid_df.apply(lambda row: get_sex(row), axis=1)
+        # self.gisaid_df.insert(0, "covv_patient_status", "unknown")
+        # self.gisaid_df.insert(0, "covv_specimen", "unknown")
+        # self.gisaid_df.insert(0, "covv_outbreak", "unknown")
+        # self.gisaid_df.insert(0, "covv_last_vaccinated", "unknown")
+        # self.gisaid_df.insert(0, "covv_treatment", "unknown")
+        # self.gisaid_df.insert(0, "covv_seq_technology", "ClearLabs")
+        # self.gisaid_df.insert(0, "covv_assembly_method", "ClearLabs") 
+        # self.gisaid_df.insert(0, "covv_orig_lab", self.lab_name)
+        # self.gisaid_df.insert(0, "covv_orig_lab_addr", self.lab_addr)
+        # self.gisaid_df.insert(0, "covv_provider_sample_id", "unknown")
+        # self.gisaid_df.insert(0, "covv_subm_lab", self.lab_name)
+        # self.gisaid_df.insert(0, "covv_subm_lab_addr", self.lab_addr)
+        # self.gisaid_df.insert(0, "covv_subm_sample_id", "unknown")
+        # self.gisaid_df.insert(0, "covv_authors", self.authors)
+        # self.gisaid_df.insert(0, "comment_type", None)
+        # self.gisaid_df.insert(0, "covv_comment", None)
 
     def make_fasta_file(self):
         # make the fasta file
@@ -111,23 +118,11 @@ class gisaid_obj(workflow_obj):
     def make_gisaid_file(self):
         # order columns/remove unnecessary columns
         self.gisaid_df = self.gisaid_df[self.full_gisaid_cols_lst]
-
-        # # now, open the template workbook, and append the new
-        # templatedf = pd.read_excel(self.path_to_template, sheet_name="Submissions", engine='xlrd')
-        # self.gisaid_df = templatedf.append(self.gisaid_df)
         
         date2 = datetime.datetime.today().strftime("%Y%m%d")
-        #templatefilepath = date2 + "_" + str(self.file_no) + "_EpiCoV_BulkUpload_Template.xls"
         templatefilepath = date2 + "_" + str(self.file_no) + "_sql.xlsx"
 
         self.gisaid_df.to_excel(self.folderpath + templatefilepath, index=False, header=True)
-
-        # # write the previous information page to the new workbook
-        # rb = open_workbook(self.folderpath + templatefilepath, formatting_info=True)
-        # wb = xl_copy(rb)
-        # # add sheet 
-        # Sheet1 = wb.add_sheet('Instructions')
-        # wb.save(self.folderpath + templatefilepath)
 
     def database_push(self):
         # put the updated gisaid_nums with the correct samples
@@ -144,6 +139,9 @@ class gisaid_obj(workflow_obj):
         self.next_gisaid += 1
         return "hCoV-19/USA/KS-KHEL-" + gisaid_str + "/" + year
 
+    def get_location(self, row):
+        return "North America / USA / " + str(row["state"]) if str(row["state"]) != "unknown" else self.default_state
+
 
 def get_hsn(row):
     hsn = str(row["HSN"])
@@ -151,5 +149,14 @@ def get_hsn(row):
         return hsn
     else:
         return hsn[:-2]
+
+
+def get_collection_date(row):
+    return str(row["doc"])
+
+
+
+def get_sex(row):
+    return str(row["sex"]).lower()
 
 

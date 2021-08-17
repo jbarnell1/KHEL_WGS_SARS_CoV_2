@@ -109,6 +109,81 @@
             ],
             "Report_Sent_Date": [
                 "get_today"
+            ],
+            "submitter": [
+                "user"
+            ],
+            "fn": [
+                "filepath"
+            ],
+            "covv_virus_name": [
+                "get_virus_name"
+            ],
+            "covv_type": [
+                "covv_type"
+            ],
+            "covv_passage": [
+                "covv_passage"
+            ],
+            "covv_collection_date": [
+                "get_collection_date"
+            ],
+            "covv_location": [
+                "get_location"
+            ],
+            "covv_add_location": [
+                "unknown"
+            ],
+            "covv_host": [
+                "host"
+            ],
+            "covv_add_host_info": [
+                "unknown"
+            ],
+            "covv_gender": [
+                "get_sex"
+            ],
+            "covv_patient_status": [
+                "unknown"
+            ],
+            "covv_specimen": [
+                "unknown"
+            ],
+            "covv_outbreak": [
+                "unknown"
+            ],
+            "covv_last_vaccinated": [
+                "unknown"
+            ],
+            "covv_treatment": [
+                "unknown"
+            ],
+            "covv_seq_technology": [
+                "seq_tech"
+            ],
+            "covv_assembly_method": [
+                "assembly_method"
+            ],
+            "covv_orig_lab": [
+                "lab_name"
+            ],
+            "covv_orig_lab_addr": [
+                "lab_addr"
+            ],
+            "covv_provider_sample_id": [
+                "unknown"
+            ],
+            "covv_subm_lab": [
+                "lab_name"
+            ],
+            "covv_subm_lab_addr": [
+                "lab_addr"
+            ],
+            "covv_subm_sample_id": [
+                "unknown"
+            ],
+            "covv_authors": [
+                "authors"
             ]
         }
     },
@@ -606,10 +681,45 @@
         ]
     },
     "gisaid": {
+        "covv_type": "betacoronavirus",
+        "covv_passage": "Original",
+        "unknown": "unknown",
+        "host":"Human",
+        "seq_tech":"ClearLabs",
+        "assembly_method":"ClearLabs",
         "rename_gisaid_cols_lst": {
             "age": "covv_patient_age",
             "avg_depth": "covv_coverage"
         },
+        "add_col_lst":[
+            "submitter",
+            "fn",
+            "covv_virus_name",
+            "covv_type",
+            "covv_passage",
+            "covv_collection_date",
+            "covv_location",
+            "covv_add_location",
+            "covv_host",
+            "covv_add_host_info",
+            "covv_gender",
+            "covv_patient_status",
+            "covv_specimen",
+            "covv_outbreak",
+            "covv_last_vaccinated",
+            "covv_treatment",
+            "covv_seq_technology",
+            "covv_assembly_method",
+            "covv_orig_lab",
+            "covv_orig_lab_addr",
+            "covv_provider_sample_id",
+            "covv_subm_lab",
+            "covv_subm_lab_addr",
+            "covv_subm_sample_id",
+            "covv_authors",
+            "covv_comment",
+            "comment_type"
+        ],
         "full_gisaid_cols_lst": [
             "submitter",
             "fn",
@@ -665,11 +775,6 @@
             "UPDATE dbo.Table_1",
             "SET gisaid_num = {1}",
             "WHERE hsn = {0}"
-        ],
-        "read_query_tbl1_gsaid": [
-            "SELECT gisaid_num",
-            "FROM dbo.Table_1",
-            "ORDER BY gisaid_num DESC"
         ]
     },
     "outside_lab": {

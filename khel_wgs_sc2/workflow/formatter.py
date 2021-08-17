@@ -90,7 +90,7 @@ def add_cols(obj=None, df=None, col_lst=None, col_func_map=None):
         else:
             # try to insert the column
             try:
-                df.insert(0, k, np.nan)
+                df.insert(0, k, None)
             # ValueError raised if column already exists in dataframe
             except ValueError:
                 pass
