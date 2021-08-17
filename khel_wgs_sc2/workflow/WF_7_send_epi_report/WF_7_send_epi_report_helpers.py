@@ -31,7 +31,7 @@ class WorkflowObj7(workflow_obj):
 
     def make_transporter(self):
         
-        print("\nEstablishing database connection...")
+        print("\nBuilding Transporter Object...")
         # establish connection
         transport = pk.Transport((self.location, int(self.port)))
         transport.connect(username=self.sftp_user, password=self.sftp_pwd)

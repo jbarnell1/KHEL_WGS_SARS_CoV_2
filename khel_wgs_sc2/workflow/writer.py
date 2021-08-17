@@ -34,14 +34,13 @@ def save_csv(df):
     return
 
 
-def save_epi_csv(df, bad_df):
+def save_epi_csv(df, bad_df, path):
     # get today's date to produce file names
     today = datetime.datetime.today().strftime("%m%d%y")
     filename_df = "KHEL_Variant_" + today + ".csv"
     filename_bad_df = "KHEL_Variant_" + today + "_bad.csv"
 
     # make new folder to save to
-    path = get_path_folder()
     if not os.path.isdir(path):
         os.makedirs(path)
     
