@@ -57,8 +57,6 @@ class gisaid_obj(workflow_obj):
 
     def compile_gisaid(self):
         # compile the gisaid template
-        lab_name = "Kansas Health and Environmental Lab"
-        lab_addr = "6810 SE Dwight Street, Topeka, KS 66620"
         self.gisaid_df = pd.DataFrame(self.gisaid_start.rename(columns=self.rename_gisaid_cols_lst))
         self.gisaid_df.sort_values(['wgs_run_date', 'hsn'], inplace=True)
         self.gisaid_df.insert(0, "submitter", self.user)
@@ -80,11 +78,11 @@ class gisaid_obj(workflow_obj):
         self.gisaid_df.insert(0, "covv_seq_technology", "ClearLabs")
         self.gisaid_df.insert(0, "covv_assembly_method", "ClearLabs")
         #TODO make variable lab names and lab addresses
-        self.gisaid_df.insert(0, "covv_orig_lab", lab_name)
-        self.gisaid_df.insert(0, "covv_orig_lab_addr", lab_addr)
+        self.gisaid_df.insert(0, "covv_orig_lab", self.lab_name)
+        self.gisaid_df.insert(0, "covv_orig_lab_addr", self.lab_addr)
         self.gisaid_df.insert(0, "covv_provider_sample_id", "unknown")
-        self.gisaid_df.insert(0, "covv_subm_lab", lab_name)
-        self.gisaid_df.insert(0, "covv_subm_lab_addr", lab_addr)
+        self.gisaid_df.insert(0, "covv_subm_lab", self.lab_name)
+        self.gisaid_df.insert(0, "covv_subm_lab_addr", self.lab_addr)
         self.gisaid_df.insert(0, "covv_subm_sample_id", "unknown")
         self.gisaid_df.insert(0, "covv_authors", self.authors)
         self.gisaid_df.insert(0, "comment_type", None)
