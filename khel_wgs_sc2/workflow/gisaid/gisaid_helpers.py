@@ -1,8 +1,5 @@
 from ..workflow_obj import workflow_obj
 from ..ui import progressBar
-from ..reader import get_pandas
-from xlrd import open_workbook
-from xlutils.copy import copy as xl_copy
 import os
 import datetime
 import pandas as pd
@@ -121,10 +118,9 @@ class gisaid_obj(workflow_obj):
         
         date2 = datetime.datetime.today().strftime("%Y%m%d")
         #templatefilepath = date2 + "_" + str(self.file_no) + "_EpiCoV_BulkUpload_Template.xls"
-        templatefilepath = date2 + "_" + str(self.file_no) + "_sql.csv"
+        templatefilepath = date2 + "_" + str(self.file_no) + "_sql.xlsx"
 
-        # write the information to the template
-        self.gisaid_df.to_csv(self.folderpath + templatefilepath, index=False, header=True)
+        self.gisaid_df.to_excel(self.folderpath + templatefilepath, index=False, header=True)
 
         # # write the previous information page to the new workbook
         # rb = open_workbook(self.folderpath + templatefilepath, formatting_info=True)
@@ -140,7 +136,7 @@ class gisaid_obj(workflow_obj):
         self.db_handler.lst_ptr_push(df_lst=gisaid_df_update_lst, query=self.write_query_tbl1)
 
     def get_virus_name(self, row):
-        year = str(row["doc"])[0:4]
+        year = str(datetime.datetime.strptime(str(row["doc"]), "%Y-%m-%d").year)
         gisaid = int(self.next_gisaid)
         gisaid_str = f'{gisaid:04}'
         self.hsn_dict['hsn'].append(row["hsn"])
