@@ -7,15 +7,12 @@ import datetime
 
 class WorkflowObj6(workflow_obj):
     # constructor
-    def __init__(self, logger):
-        self.logger = logger
+    def __init__(self):
         self.id = "WF_6"
 
     # methods
     def get_json(self):
-        self.logger.info(self.id + ": Acquiring local data from cache")
         super().get_json(6)
-        self.logger.info(self.id + ": get_json finished!")
 
 
     def get_ui(self):

@@ -11,15 +11,14 @@ import pandas as pd
 
 class gisaid_obj(workflow_obj):
     # constructor
-    def __init__(self, logger):
-        self.logger = logger
+    def __init__(self):
         self.id = "gisaid"
 
     # methods
     def get_json(self):
-        self.logger.info(self.id + ': Aquiring local data from cache')
+        #self.logger.info(self.id + ': Aquiring local data from cache')
         super().get_json(-2)
-        self.logger.info(self.id + ': get_json finished!')
+        #self.logger.info(self.id + ': get_json finished!')
 
     def scan_db(self):
         # in this function, we need to get the maximum gisaid number

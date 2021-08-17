@@ -1,13 +1,13 @@
 import time
 from workflow.WF_2_parse_run_data.WF_2_helpers import WorkflowObj2
 
-def run_script_2(logger):
+def run_script_2():
     print("\n================================\nRun Data Import Script\n================================\n\n")
 
     # import relevant data from json file
     # get relative path to json cache file
     # READER
-    data_obj = WorkflowObj2(logger)
+    data_obj = WorkflowObj2()
     data_obj.get_json()
 
     # get information from user

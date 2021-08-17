@@ -7,18 +7,17 @@ import pandas as pd
 
 class query_obj(workflow_obj):
     # constructor
-    def __init__(self, logger):
-        self.logger = logger
+    def __init__(self):
         self.id = 'query'
 
     # methods
     def get_json(self):
-        self.logger.info(self.id + ": Acquiring local data from cache")
+        #self.logger.info(self.id + ": Acquiring local data from cache")
         super().get_json(-4)
-        self.logger.info(self.id + ": get_json finished!")
+        #self.logger.info(self.id + ": get_json finished!")
 
     def get_ui(self):
-        self.logger.info(self.id + ": getting dataframes from user input")
+        #self.logger.info(self.id + ": getting dataframes from user input")
         print("\n================================\nSnapshot Generator\n================================\n\n")
 
         self.uniquefilename = ""
@@ -175,14 +174,14 @@ By source                           -type 'source'\n\
             else:
                 print("\nInvalid input! Please try again.\n")
                 pass
-        self.logger.info(self.id + ": get_query_dfs_from_ui finished!")
+        #self.logger.info(self.id + ": get_query_dfs_from_ui finished!")
         lst.append(self.percent_cvg_cutoff)
         lst.append(self.avg_depth_cutoff)
         return lst
         
 
     def write_df_to_excel(self):
-        self.logger.info(self.id + ": writing the dataframe to excel file")
+        #self.logger.info(self.id + ": writing the dataframe to excel file")
         # Now that we have dataframe, we can convert it to an excel file
         datetoday = datetime.datetime.today().strftime("%m%d%y")
         folder_path = self.folder_path_base + datetoday + "\\"
@@ -196,7 +195,7 @@ By source                           -type 'source'\n\
             filepath = self.uniquefilename + "_" + str(file_no) + ".xlsx"
 
         self.df.to_excel(folder_path + filepath)
-        self.logger.info(self.id + ": write_df_to_excel finished!")
+        #self.logger.info(self.id + ": write_df_to_excel finished!")
 
     def database_push(self):
         pass

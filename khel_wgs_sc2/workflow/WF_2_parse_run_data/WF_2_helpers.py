@@ -6,19 +6,15 @@ import pandas as pd
 
 class WorkflowObj2(workflow_obj):
     # constructor
-    def __init__(self, logger):
+    def __init__(self):
         self.id = "WF_2"
-        self.logger = logger
 
     # methods
     def get_json(self):
-        self.logger.info(self.id + ': Acquiring local data from cache')
         super().get_json(2)
-        self.logger.info(self.id + ': get_json finished!')
 
 
     def get_info_from_user(self):
-        self.logger.info(self.id + ": Getting input from user")
         run_data, self.machine_num, self.wgs_run_date, \
             self.day_run_num, self.platform = get_run_data()
 
@@ -41,12 +37,9 @@ class WorkflowObj2(workflow_obj):
         
         # create dataframe for QC/Research table
         self.df_qc = pd.DataFrame.from_dict(run_data)
-        
-        self.logger.info(self.id + ": get_info_from_user finished")
 
 
     def format_dataframe(self):
-        self.logger.info(self.id + ": Formatting dataframe")
         self.df_qc = remove_pools(self.df_qc, 'hsn')
         self.df_qc = remove_blanks(self.df_qc, 'hsn')
         # add columns
@@ -65,11 +58,9 @@ class WorkflowObj2(workflow_obj):
         neg_idx = self.df_results.index[self.df_results['hsn'] == self.neg_name][0]
         pos_idx = self.df_results.index[self.df_results['hsn'] == self.pos_name][0]
         self.df_results.drop([pos_idx, neg_idx], inplace=True)
-        self.logger.info(self.id + ": format_dataframe finished")
 
 
     def database_push(self):
-        self.logger.info(self.id + ": Pushing info to database")
         super().setup_db()
         # query for updating results table (only update table1 if qc is better)
         # update table 2 regardless
@@ -81,8 +72,7 @@ class WorkflowObj2(workflow_obj):
             self.write_query_tbl1 = self.write_query_tbl1.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
             self.db_handler.lst_ptr_push(df_lst=df_results_lst, query=self.write_query_tbl1)
         else:
-            self.logger.warning(self.id + f": neg: {self.neg_ctrl_pass}, pos: {self.pos_ctrl_pass}... \
-                Run not added to Results table")
+            pass
         
         #TYPE: LST
         df_qc_lst = self.df_qc.values.astype(str).tolist()
@@ -94,4 +84,3 @@ class WorkflowObj2(workflow_obj):
             raise ValueError("\n-------------------------------------------------------------------------------------------------------------------\
                 \nEntry already exists in the database! The clearlabs data for this run has likely already been added to the database\
                 \n-------------------------------------------------------------------------------------------------------------------")
-        self.logger.info(self.id + ": database_push finished!")

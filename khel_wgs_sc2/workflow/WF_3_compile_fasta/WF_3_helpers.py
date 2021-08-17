@@ -8,18 +8,14 @@ import datetime
 
 class WorkflowObj3(workflow_obj):
     # constructor
-    def __init__(self, logger):
-        self.logger = logger
+    def __init__(self):
         self.id = "WF_3"
     
     # methods
     def get_json(self):
-        self.logger.info(self.id + ": Acquiring local data from cache")
         super().get_json(3)
-        self.logger.info(self.id + ": get_json finished!")
 
     def compile_fasta(self):
-        self.logger.info(self.id + ": Compiling fasta files")
         print("Use the following dialog box to select the folder with all FASTA files")
         self.path = get_path_folder()
         # make new folder/file to save to
@@ -61,10 +57,8 @@ class WorkflowObj3(workflow_obj):
                     ctr += 1
                     self.seqName_lst.append(file)
         f.close()
-        self.logger.info(self.id + ": compile_fasta finished!")
 
     def get_fasta_path_df(self):
-        self.logger.info(self.id + ": gathering paths to each fasta file")
         # transform dictionary of hsn/path into dataframe
         self.df = pd.DataFrame(self.seqName_lst, columns=['seqName'])
         # remove pooled samples from dataframe
@@ -96,14 +90,11 @@ class WorkflowObj3(workflow_obj):
         self.df.rename(columns={"day_run_num_var":"day_run_num", \
             "wgs_run_date_var":"wgs_run_date"}, inplace=True)
 
-        self.logger.info(self.id + ": get_fasta_path_df finished!")
 
     def database_push(self):
         # attempt to connect to database
         super().setup_db()
-        self.logger.info(self.id + ": Pushing info to database")
         df_lst = self.df.values.astype(str).tolist()
         self.db_handler.lst_ptr_push(df_lst=df_lst, query=self.write_query_tbl2)
-        self.logger.info(self.id + ": database_push finished!")
 
 

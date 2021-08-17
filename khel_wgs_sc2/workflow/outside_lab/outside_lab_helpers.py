@@ -1,5 +1,6 @@
 from ..workflow_obj import workflow_obj
 import time
+from ..reader import get_pandas
 from tkinter import filedialog
 from tkinter import *
 import re
@@ -10,35 +11,20 @@ from decimal import *
 
 class outside_lab_obj(workflow_obj):
     # constructor
-    def __init__(self, logger):
-        self.logger = logger
-        self.write_query_tbl1 = None
-        self.write_query_tbl2 = None
-        self.db_handler = None
+    def __init__(self):
         self.id = "outside_lab"
-        self.dbo_tbl_1_cols = None
-        self.dbo_tbl_2_cols = None
-        self.date_cols = None
-        self.str_cols = None
-        self.rename_dict = None
-        self.sql_user = None
-        self.sql_pass = None
-        self.sql_server = None
-        self.sql_db = None
-        self.df_table1 = None
-        self.df_table2 = None
 
     # methods
     def get_json(self):
-        self.logger.info(self.id + ": Acquiring local data from cache")
+        #self.logger.info(self.id + ": Acquiring local data from cache")
         super().get_json(-3)
-        self.logger.info(self.id + ": get_json finished!")
+        #self.logger.info(self.id + ": get_json finished!")
 
     def get_outside_lab_dfs(self):
         print("\nUse the following window to open the excel workbook...")
         xl_path = get_path()
-        self.logger.info(self.id + ": Getting outside lab data from worksheet")
-        df = get_pandas(xl_path, 'outside_lab', 'outside_lab', ',', self.logger)
+        #self.logger.info(self.id + ": Getting outside lab data from worksheet")
+        df = get_pandas(xl_path, 'outside_lab', 'outside_lab', ',')
         all_cols = self.dbo_tbl_1_cols + list(set(self.dbo_tbl_2_cols) - set(self.dbo_tbl_1_cols))
         df.columns = [str(col).strip() for col in list(df.columns)]
         df.rename(columns=self.rename_dict, inplace=True)
@@ -105,7 +91,7 @@ class outside_lab_obj(workflow_obj):
         self.df_table2['hsn'] = self.df_table2.apply(lambda row: drop_letter(row), axis=1)
         df_2_row_lst = remove_m(self.df_table2)
         self.df_table2 = pd.DataFrame(df_2_row_lst, columns = list(self.df_table2.columns))
-        self.logger.info(self.id + ": get_outside_lab_dfs finished!")
+        #self.logger.info(self.id + ": get_outside_lab_dfs finished!")
         
 
     def database_push(self):
@@ -120,7 +106,7 @@ class outside_lab_obj(workflow_obj):
         df_table2_lst = self.df_table2.values.astype(str).tolist()
         self.db_handler.lst_ptr_push(df_lst=df_table2_lst, query=self.write_query_tbl1, full=True, df=self.df_table2)
 
-        self.logger.info(self.id + ": database_push finished!")
+        #self.logger.info(self.id + ": database_push finished!")
 
 
 

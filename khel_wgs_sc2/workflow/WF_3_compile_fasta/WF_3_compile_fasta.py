@@ -1,10 +1,10 @@
 import time
 from workflow.WF_3_compile_fasta.WF_3_helpers import WorkflowObj3
 
-def run_script_3(logger):
+def run_script_3():
     print("\n================================\nall.fasta script\n================================\n\n")
     # import relevant data from json file
-    data_obj = WorkflowObj3(logger)
+    data_obj = WorkflowObj3()
     data_obj.get_json()
 
 

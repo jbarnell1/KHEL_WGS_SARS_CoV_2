@@ -2,12 +2,12 @@ from workflow.epi_isl.epi_isl_helpers import epi_isl_obj
 import time
 
 
-def run_epi_isl(logger):
+def run_epi_isl():
     print("\n================================\EPI_ISL Import Script\n================================\n\n")
     print("Importing data from cache...")
 
     # import relevant data from json file
-    data_obj = epi_isl_obj(logger)
+    data_obj = epi_isl_obj()
     data_obj.get_json()
 
     # open epi_isl workbook path --> pandas dataframe

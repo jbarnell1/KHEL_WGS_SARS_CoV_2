@@ -7,24 +7,20 @@ import re
 
 class epi_isl_obj(workflow_obj):
     # constructor
-    def __init__(self, logger):
-        self.logger = logger
+    def __init__(self):
         self.id = "epi_isl"
 
 
     # methods
     def get_json(self):
-        self.logger.info(self.id + ": Acquiring local data from cache")
         super().get_json('epi_isl')
-        self.logger.info(self.id + ": get_json finished!")
 
 
     def get_epi_isl_dfs(self):
         # open demo path --> pandas dataframe
         print("\nUse the following window to open the epi_isl results workbook...\n")
         epi_isl_path = get_path()
-        self.logger.info(self.id + ": Getting epi_isl data from worksheet")
-        self.df = get_pandas(epi_isl_path, self.id, self.id, '\t', self.logger)
+        self.df = get_pandas(epi_isl_path, self.id, self.id, '\t')
         print("Renaming columns...")
         self.df = self.df.rename(columns=self.rename_epi_isl_cols_lst)
         print(" Done!\n")
@@ -32,7 +28,6 @@ class epi_isl_obj(workflow_obj):
         self.df["gisaid_num"] = self.df.apply(lambda row: parse_gisaid_num(row), axis=1)
         # remove columns/split dataframes
         self.df = self.df[self.full_lst]
-        self.logger.info(self.id + ": get_epi_isl_dfs finished!")
 
 
     def database_push(self):
@@ -42,7 +37,7 @@ class epi_isl_obj(workflow_obj):
         super().database_push()
         df_epi_isl_lst = self.df.values.astype(str).tolist()
         self.db_handler.lst_ptr_push(df_lst=df_epi_isl_lst, query=self.write_query_tbl1)
-        self.logger.info(self.id + ": database_push finished!")
+        #self.logger.info(self.id + ": database_push finished!")
 
 
 def parse_gisaid_num(row):

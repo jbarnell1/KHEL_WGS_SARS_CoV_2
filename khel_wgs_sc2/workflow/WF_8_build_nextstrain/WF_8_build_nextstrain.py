@@ -2,7 +2,7 @@ from workflow.WF_8_build_nextstrain.WF_8_helpers import WorkflowObj8
 import time
 
 
-def run_script_8(logger):
+def run_script_8():
 
     print("\n================================\nSafe file transfer protocol - WGS\n================================\n\n")
 

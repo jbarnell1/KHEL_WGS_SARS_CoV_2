@@ -1,12 +1,12 @@
 import time
 from workflow.WF_1_import_demos.WF_1_helpers import WorkflowObj1
 
-def run_script_1(logger):
+def run_script_1():
     print("\n================================\nDemographics Import Script\n================================\n\n")
 
     # import relevant data from json file
     # READER
-    data_obj = WorkflowObj1(logger)
+    data_obj = WorkflowObj1()
     data_obj.get_json()
 
     # open demo path --> pandas dataframe

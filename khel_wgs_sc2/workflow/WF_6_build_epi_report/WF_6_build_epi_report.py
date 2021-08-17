@@ -1,12 +1,12 @@
 from workflow.WF_6_build_epi_report.WF_6_build_epi_report_helpers import WorkflowObj6
 import time
 
-def run_script_6(logger):
+def run_script_6():
     # Print welcome message
     print("\n================================\nReport Generator\n================================\n\n")
     
     # import relevant data from json file
-    data_obj = WorkflowObj6(logger)
+    data_obj = WorkflowObj6()
     data_obj.get_json()
 
     # open sql database --> pandas dataframe

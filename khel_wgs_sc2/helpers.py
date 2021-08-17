@@ -12,32 +12,7 @@ from workflow.outside_lab.outside_lab import run_outside_lab
 from workflow.query.query import run_query
 from workflow.refresh.refresh import run_refresh
 import pyodbc
-import logging
 import time
-
-
-def config_logger(log_name):
-    logger = logging.getLogger(__name__)
-    # unfortunately, the script and IDE see the structure differently, 
-    # so we have to force a try-except block here
-    try:
-        actual = 'ide'
-        # IDE 
-        f_handler = logging.FileHandler('khel_wgs_sc2/khel_wgs_sc2/logs/' + log_name + '.txt', 'w+')
-        actual = 'windows'
-        # windows
-        f_handler = logging.FileHandler('logs/' + log_name + '.txt', 'w+')
-    except FileNotFoundError:
-        if actual == 'ide':
-            f_handler = logging.FileHandler('logs/' + log_name + '.txt', 'w+')
-        else:
-            f_handler = logging.FileHandler('khel_wgs_sc2/khel_wgs_sc2/logs/' + log_name + '.txt', 'w+')
-    f_handler.setLevel(logging.DEBUG)
-    f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    f_handler.setFormatter(f_format)
-    logger.addHandler(f_handler)
-    logger.info("Logger configured.")
-    return logger
 
 
 def run():
@@ -55,23 +30,21 @@ def run():
                 tracker = 1
                 while True:
                     try:
-                        # configure logger
-                        logger = config_logger('khel_wgs_sc2')
                         # run script
                         if tracker == 1:
-                            run_script_1(logger)
+                            run_script_1()
                             tracker += 1
                         elif tracker == 2:
-                            run_script_2(logger)
+                            run_script_2()
                             tracker += 1
                         elif tracker == 3:
-                            run_script_3(logger)
+                            run_script_3()
                             tracker += 1
                         elif tracker == 4:
-                            run_script_4(logger)
+                            run_script_4()
                             tracker += 1
                         elif tracker == 5:
-                            run_script_5(logger)
+                            run_script_5()
                             tracker += 1
                         else:
                             print("\n ___________________________________________________\n|  _______________________________________________  |\n| |\033[4m      SARS-CoV-2 daily workflow complete!      \033[0m| |\n|___________________________________________________|\n")
@@ -86,79 +59,53 @@ def run():
                         time.sleep(5)
 
             elif u_input.strip().lower() == '1':
-                # configure logger
-                logger = config_logger('import_demos')
                 # run script
-                run_script_1(logger)
+                run_script_1()
                 
             elif u_input.strip().lower() == '2':
-                # configure logger
-                logger = config_logger('parse_run_data')
                 # run script
-                run_script_2(logger)
+                run_script_2()
                 
             elif u_input.strip().lower() == '3':
-                # configure logger
-                logger = config_logger('compile_fasta')
                 # run script
-                run_script_3(logger)
+                run_script_3()
                 
             elif u_input.strip().lower() == '4':
-                # configure logger
-                logger = config_logger('parse_nextclade')
                 # run script
-                run_script_4(logger)
+                run_script_4()
                 
             elif u_input.strip().lower() == '5':
-                # configure logger
-                logger = config_logger('parse_pangolin')
                 # run script
-                run_script_5(logger)
+                run_script_5()
                 
             elif u_input.strip().lower() == '6':
-                # configure logger
-                logger = config_logger('build_epi')
-                run_script_6(logger)
+                run_script_6()
                 
             elif u_input.strip().lower() == '7':
-                # configure logger
-                logger = config_logger('send_epi')
-                run_script_7(logger)
+                run_script_7()
                 
             elif u_input.strip().lower() == '8':
-                # configure logger
-                logger = config_logger('build_nextstrain')
-                run_script_8(logger)
+                run_script_8()
             
             elif u_input.strip().lower() == 'refresh':
-                # configure logger
-                logger = config_logger('refresh')
                 # run script
-                run_refresh(logger)
+                run_refresh()
                 
             elif u_input.strip().lower() == 'query':
-                # configure logger
-                logger = config_logger('query')
                 # run script
-                run_query(logger)
+                run_query()
                 
             elif u_input.strip().lower() == 'outside lab':
-                # configure logger
-                logger = config_logger('outside_lab')
                 # run script
-                run_outside_lab(logger)
+                run_outside_lab()
 
             elif u_input.strip().lower() == 'gisaid':
-                # configure logger
-                logger = config_logger('gisaid')
                 # run script
-                run_gisaid(logger)
+                run_gisaid()
             
             elif u_input.strip().lower() == 'epi isl':
-                # configure logger
-                logger = config_logger('epi_isl')
                 # run script
-                run_epi_isl(logger)
+                run_epi_isl()
                 
             elif u_input.strip().lower() == 'q':
                 ask = False

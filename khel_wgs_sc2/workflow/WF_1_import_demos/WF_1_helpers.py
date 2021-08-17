@@ -10,22 +10,18 @@ import pandas as pd
 
 class WorkflowObj1(workflow_obj):
     # constructor
-    def __init__(self, logger):
+    def __init__(self):
         self.id = "WF_1"
-        self.logger = logger
 
     # methods
     def get_json(self):
-        self.logger.info(f"{self.id}: Acquiring local data from cache")
         super().get_json(1)
-        self.logger.info(f"{self.id}: get_json finished!")
 
 
     def get_initial_demo_df(self):
         print("\nUse the following window to open the wgs run order worksheet...")
         self.demo_path = get_path()
-        self.logger.info(f"{self.id}: Getting demographics from worksheet")
-        self.df_right = get_pandas(self.demo_path, 'WF_1', 'run order', ',', self.logger)
+        self.df_right = get_pandas(self.demo_path, 'WF_1', 'run order', ',')
         # drop controls from index
         neg = False
         pos = False
@@ -39,21 +35,16 @@ class WorkflowObj1(workflow_obj):
             if neg and pos:
                 break
         self.df_right.drop([pos_idx, neg_idx], inplace=True)
-        
-        self.logger.info(f"{self.id}: get_demo_df finished!")
 
 
     def format_demo_df(self):
-        self.logger.info(f"{self.id}: formatting data inside df.right")
         self.df_right = format_hsn_col(\
             df=self.df_right, \
             hsn_colname='Sample ID', \
             hsn_only=True)
-        self.logger.info(f"{self.id}: format_demo_df finished!")
         
 
     def get_initial_lims_df(self):
-        self.logger.info(f"{self.id}: Getting demographics from LIMS")
         # establish connection
         print("\nEstablishing database connection...")
         conn = co.connect(self.lims_conn)
@@ -74,28 +65,22 @@ class WorkflowObj1(workflow_obj):
         self.df = pd.read_sql(query, conn)
         conn.close()
         print(" Done!\n")
-        self.logger.info(f"{self.id}: get_lims_df finished!")
 
 
     def format_lims_df(self):
-        self.logger.info(f"{self.id}: Formatting demographics from LIMS")
         # manipulate sql database to format accepted by the master EXCEL worksheet
         print("\nManipulating demographics to database format...")
         self.df = self.df.rename(columns = self.demo_names)
         self.df["hsn"] = self.df.apply(lambda row: str(row["hsn"]), axis=1)
         print(" Done!\n")
-        self.logger.info(f"{self.id}: get_lims_demos finished!")
 
     def merge_dfs(self):
-        self.logger.info(f"{self.id}: Merging dataframes from LIMS and run order sheet")
         print("\nMerging dataframes...")
         self.df = pd.merge(self.df, self.df_right, how="right", on="hsn")
         print(" Done!\n")
-        self.logger.info(f"{self.id}: merge_dfs finished!")
 
     
     def format_dfs(self):
-        self.logger.info(f"{self.id}: Formatting joined dataframes")
         # get the date for wgs_run_date column
         path_arr = self.demo_path.split("/")
         name = path_arr[-1]
@@ -111,25 +96,20 @@ class WorkflowObj1(workflow_obj):
             col_lst=self.add_col_lst, \
             col_func_map=self.col_func_map)
 
-        self.logger.info(f"{self.id}: format_dfs finished!")
         # sort/remove columns to match list
         self.df = self.df[self.sample_data_col_order]
 
 
     def get_initial_hsn_df(self):
-        self.logger.info(f"{self.id}: getting HSNs common to database and df")
         # attempt to connect to database
-        self.logger.info(f'{self.id}: Querying data from database')
         super().setup_db()
         # What HSNs included in our dataframe already exist in the database?
         hsn_lst = self.df['hsn'].to_list()
         self.hsn_df = self.db_handler.sub_lst_read(query=self.read_query_tbl1, lst=hsn_lst)
         self.qr = self.hsn_df["hsn"].values.astype(str).tolist()
-        self.logger.info(f"{self.id}: get_initial_hsn_df finished!")
 
 
     def remove_existing_hsns(self):
-        self.logger.info(f"{self.id}: removing HSNs from df that are already in database")
         # create new dataframe that excludes hsn's already common to database and dataframe
         lst = list(self.df.columns)
         size = self.df.index
@@ -147,13 +127,10 @@ class WorkflowObj1(workflow_obj):
         
         # now, transform list of non-common rows back into dataframe
         self.df_new_rows = pd.DataFrame(new_row, columns= list(self.df.columns))
-        self.logger.info(f"{self.id}: remove_existing_hsns finished!")
         
 
     def database_push(self):
-        self.logger.info(f"{self.id}: Pushing df to database")
         self.db_handler.to_sql_push(df=self.df_new_rows, tbl_name="Table_1")
-        self.logger.info(f"{self.id}: database_push finished!")
 
 
 

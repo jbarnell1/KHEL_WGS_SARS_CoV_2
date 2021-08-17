@@ -5,15 +5,12 @@ from ..formatter import add_cols, remove_blanks, remove_pools, merge_dataframes
 
 class WorkflowObj4(workflow_obj):
     # constructor
-    def __init__(self, logger):
-        self.logger = logger
+    def __init__(self):
         self.id = "WF_4"
 
     # methods
     def get_json(self):
-        self.logger.info(self.id + ": Acquiring local data from cache")
         super().get_json(4)
-        self.logger.info(self.id + ": get_json finished!")
 
     def get_nextclade_dfs(self):
         # open nextclade path --> pandas dataframe
@@ -24,8 +21,7 @@ class WorkflowObj4(workflow_obj):
         data = parent_folder.split(".")
         neg_name = "1" + "".join(data)
         pos_name = "2" + "".join(data)
-        self.logger.info(self.id + ": Getting nextclade data from worksheet")
-        df = get_pandas(nc_path, "WF_4", "nextclade", '\t', self.logger)
+        df = get_pandas(nc_path, "WF_4", "nextclade", '\t')
         df = df.rename(columns=self.rename_nc_cols_lst)
         
         # remove pooled samples from the run
@@ -62,10 +58,8 @@ class WorkflowObj4(workflow_obj):
             "machine_num_var":"machine_num"}, inplace=True)
         self.df_qc = df[self.nc_qc_cols_lst]
         self.df_results = df[self.nc_results_cols_lst]
-        self.logger.info(self.id + ": get_nextclade_dfs finished!")
 
     def database_push(self):
-        self.logger.info(self.id + ": Pushing info to database")
         # attempt to connect to database
         # db = establish_db(self, 'WF_4')
 
@@ -91,5 +85,4 @@ class WorkflowObj4(workflow_obj):
         print("Updating rows in the results table...")
 
         self.db_handler.lst_ptr_push(df_lst=df_results_final_lst, query=self.write_query_tbl1)
-        self.logger.info(self.id + ": database_push finished!")
 

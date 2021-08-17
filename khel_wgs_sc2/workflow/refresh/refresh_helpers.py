@@ -14,21 +14,18 @@ from decimal import *
 
 class refresh_obj(workflow_obj):
     # constructor
-    def __init__(self, logger):
-        self.logger = logger
+    def __init__(self):
         self.id = "refresh"
     
     # methods
     def get_json(self):
-        self.logger.info(self.id + ": Acquiring local data from cache")
         super().get_json(-5)
-        self.logger.info(self.id + ": get_json finished!")
 
     def get_refresh_dfs(self):
         print("\nUse the following window to open the excel workbook...")
         xl_path = get_path()
-        self.logger.info(self.id + ": Getting outside lab data from worksheet")
-        df = get_pandas(xl_path, 'refresh', 'refresh', ',', self.logger)
+        #self.logger.info(self.id + ": Getting outside lab data from worksheet")
+        df = get_pandas(xl_path, 'refresh', 'refresh', ',')
         df.rename(columns=self.rename_dict, inplace=True)
 
 
@@ -121,7 +118,7 @@ class refresh_obj(workflow_obj):
         self.df_table2['hsn'] = self.df_table2.apply(lambda row: drop_letter(row), axis=1)
         df_2_row_lst = remove_m(self.df_table2)
         self.df_table2 = pd.DataFrame(df_2_row_lst, columns = list(self.df_table2.columns))
-        self.logger.info(self.id + ": get_refresh_dfs finished!")
+        #self.logger.info(self.id + ": get_refresh_dfs finished!")
 
     def database_clear(self):
         super().setup_db()
@@ -129,7 +126,7 @@ class refresh_obj(workflow_obj):
 
 
     def database_push(self):
-        self.logger.info(self.id + ": Pushing info to database")
+        #self.logger.info(self.id + ": Pushing info to database")
         # pushing to database....
         df_table1_lst = self.df_table1.values.astype(str).tolist()
         self.db_handler.lst_ptr_push(df_lst=df_table1_lst, query=self.write_query_tbl1, full=True, df=self.df_table1)
@@ -137,7 +134,7 @@ class refresh_obj(workflow_obj):
         df_table2_lst = self.df_table2.values.astype(str).tolist()
         self.db_handler.lst_ptr_push(df_lst=df_table2_lst, query=self.write_query_tbl2, full=True, df=self.df_table2)
         
-        self.logger.info(self.id + ": database_push finished!")
+        #self.logger.info(self.id + ": database_push finished!")
 
     def get_path_to_fasta(self, row):
         # if other lab submitted

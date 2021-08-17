@@ -6,15 +6,12 @@ from ..formatter import add_cols, remove_pools, remove_blanks, merge_dataframes
 
 class WorkflowObj5(workflow_obj):
     # constructor
-    def __init__(self, logger):
-        self.logger = logger
+    def __init__(self):
         self.id = "WF_5"
 
     # methods
     def get_json(self):
-        self.logger.info(self.id + ": Acquiring local data from cache")
         super().get_json(5)
-        self.logger.info(self.id + ": get_json finished!")
 
 
     def get_pango_dfs(self):
@@ -25,8 +22,7 @@ class WorkflowObj5(workflow_obj):
         data = parent_folder.split(".")
         neg_name = "1" + "".join(data)
         pos_name = "2" + "".join(data)
-        self.logger.info(self.id + ": Getting pangolin data from worksheet")
-        df = get_pandas(pango_path, 'WF_5', 'pangolin', ',', self.logger)
+        df = get_pandas(pango_path, 'WF_5', 'pangolin', ',')
         df = df.rename(columns=self.rename_po_cols_lst)
 
         # remove pooled samples from the run
@@ -64,7 +60,6 @@ class WorkflowObj5(workflow_obj):
         # remove columns/split dataframes
         self.df_qc = df[self.full_lst]
         self.df_results = df[self.full_lst]
-        self.logger.info(self.id + ": get_pango_dfs finished!")
 
     def database_push(self):
         super().setup_db()
@@ -80,4 +75,3 @@ class WorkflowObj5(workflow_obj):
 
         df_results_final_lst = df_results_final.values.astype(str).tolist()
         self.db_handler.lst_ptr_push(df_lst=df_results_final_lst, query=self.write_query_tbl1)
-        self.logger.info(self.id + ": database_push finished!")

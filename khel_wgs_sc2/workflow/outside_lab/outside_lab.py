@@ -2,12 +2,12 @@ import time
 from workflow.outside_lab.outside_lab_helpers import outside_lab_obj
 
 
-def run_outside_lab(logger):
+def run_outside_lab():
     print("\n================================\nImport Excel file to database\n================================\n\n")
     print("Importing data from cache...")
 
     # import relevant data from json file
-    data_obj = outside_lab_obj(logger)
+    data_obj = outside_lab_obj()
     data_obj.get_json()
 
     # open outside lab path --> pandas dataframe

@@ -4,7 +4,7 @@ import pandas as pd
 import sys
 
 
-def get_pandas(path, log_name, workbook_name, separator, logger):
+def get_pandas(path, log_name, workbook_name, separator):
     try:
         ext = path.split(".")[-1]
         if ext == "csv" or ext == "tsv":
@@ -14,7 +14,7 @@ def get_pandas(path, log_name, workbook_name, separator, logger):
     except Exception as o:
         print("\nThere is an issue opening the " + workbook_name + " workbook!")
         print(o)
-        logger.critical(log_name + ": There is an issue opening the " + workbook_name + " workbook")
+        #logger.critical(log_name + ": There is an issue opening the " + workbook_name + " workbook")
         time.sleep(10)
         sys.exit()
     print(" Done!\n")

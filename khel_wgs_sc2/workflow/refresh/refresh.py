@@ -2,11 +2,11 @@ import time
 from workflow.refresh.refresh_helpers import refresh_obj
 
 
-def run_refresh(logger):
+def run_refresh():
     print("\n================================\nImport Excel file to database\n================================\n\n")
 
     # import relevant data from json file
-    data_obj = refresh_obj(logger)
+    data_obj = refresh_obj()
     data_obj.get_json()
 
     # open master path --> pandas dataframe

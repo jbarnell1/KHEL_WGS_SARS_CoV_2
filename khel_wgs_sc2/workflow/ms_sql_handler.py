@@ -14,7 +14,7 @@ class ms_sql_handler():
         self.sql_pass = obj.sql_pass
         self.sql_server = obj.sql_server
         self.sql_db = obj.sql_db
-        self.logger = obj.logger
+        #self.logger = obj.logger
         self.log_name = obj.id
         self.avg_depth_cutoff = obj.avg_depth_cutoff
         self.percent_cvg_cutoff = obj.percent_cvg_cutoff
@@ -27,19 +27,19 @@ class ms_sql_handler():
             self.engine = create_engine('mssql+pyodbc://' + self.sql_user + ':' + self.sql_pass + '@' + self.sql_server + '/' + self.sql_db + '?driver=SQL+Server')
         except Exception as e:
             print(e)
-            self.logger.critical(self.log_name + ": Issue in connection to mssql database")
+            #self.logger.critical(self.log_name + ": Issue in connection to mssql database")
             time.sleep(20)
             sys.exit
 
     # Clear (DELETE)
     def clear_db(self):
         with self.engine.connect() as conn:
-            self.logger.info("refresh: deleting all information from database")
+            #self.logger.info("refresh: deleting all information from database")
             query = "DELETE FROM dbo.Table_1"
             res = conn.execute(query)
             query = "DELETE FROM dbo.Table_2"
             res = conn.execute(query)
-        self.logger.info("refresh: database_clear finished!")
+        #self.logger.info("refresh: database_clear finished!")
     
 
     # Read

@@ -2,12 +2,12 @@ import time
 from workflow.gisaid.gisaid_helpers import gisaid_obj
 
 
-def run_gisaid(logger):
+def run_gisaid():
     print("\n================================\nGISAID Report Script\n================================\n\n")
     print("Importing data from cache...")
 
     # import relevant data from json file
-    data_obj = gisaid_obj(logger)
+    data_obj = gisaid_obj()
     data_obj.get_json()
 
 
