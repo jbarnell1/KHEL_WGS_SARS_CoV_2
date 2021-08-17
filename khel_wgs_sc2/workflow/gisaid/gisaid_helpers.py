@@ -27,7 +27,7 @@ class gisaid_obj(workflow_obj):
         # samples eligible for upload based on the qc cutoffs set
         # in data/static_cache.json
         super().setup_db()
-        self.next_gisaid = int(self.db_handler.ss_read(query=self.read_query_tbl1_max_gisaid).iat[0, 0])
+        self.next_gisaid = int(self.db_handler.ss_read(query=self.read_query_tbl1_max_gisaid).iat[0, 0]) + 1
         prev_week = (datetime.date.today() - datetime.timedelta(days = 7)).strftime("%Y%m%d")
         self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{prev_week}", prev_week)
         self.hsn_lst = self.db_handler.sub_read(query=self.read_query_tbl1_eligible_hsn)['hsn'].astype(str).tolist()
@@ -35,7 +35,7 @@ class gisaid_obj(workflow_obj):
     def get_gisaid_df(self):
         # use the hsn list from above to get all hsns into single dataframe
         self.gisaid_start = self.db_handler.sub_lst_read(query=self.read_query_tbl1, lst=self.hsn_lst)
-        self.user = input("\nPlease input the user for this report\n-->")
+        self.user = input("\nPlease input the user for this report\n--> ")
         self.hsn_dict = {'hsn':[], 'gisaid':[]}
 
     def compile_fasta(self):
@@ -43,7 +43,7 @@ class gisaid_obj(workflow_obj):
         # make both destination files for metadata and fasta
         self.file_no = 1
         date1 = datetime.datetime.today().strftime("%m%d%y")
-        self.folderpath = self.folderpathbase + "\\" + date1 + "\\SQL\\"
+        self.folderpath = self.folderpathbase + "\\" + date1 + "\\"
         if not os.path.exists(self.folderpath):
             os.makedirs(self.folderpath)
         self.filepath = date1 + "_" + str(self.file_no) + ".fasta"
@@ -86,20 +86,21 @@ class gisaid_obj(workflow_obj):
         self.gisaid_df.insert(0, "covv_subm_lab", lab_name)
         self.gisaid_df.insert(0, "covv_subm_lab_addr", lab_addr)
         self.gisaid_df.insert(0, "covv_subm_sample_id", "unknown")
-        self.gisaid_df.insert(0, "covv_authors", "Mike Grose, Katherine Wiggins, Jonathan Barnell, Ben Olsen, and Phil Adam")
+        self.gisaid_df.insert(0, "covv_authors", self.authors)
         self.gisaid_df.insert(0, "comment_type", None)
         self.gisaid_df.insert(0, "covv_comment", None)
 
     def make_fasta_file(self):
         # make the fasta file
+        print("\nBuilding the all.fasta file...\n")
         s = ""
         f = open(self.folderpath + self.filepath, "w")
-        for fasta in self.file_lst:
+        for fasta in progressBar(self.file_lst, prefix='Progress', suffix='Complete', length=50):
             curr_file = open(fasta, "r")
             file_contents = curr_file.readlines()
             curr_file.close()
             s += "\n\n"
-            for line in progressBar(file_contents, prefix='Progress', suffix='Complete', length=50):
+            for line in file_contents:
                 if line[0] != ">":
                     s += line
                 else:

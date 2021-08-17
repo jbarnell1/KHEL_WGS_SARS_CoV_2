@@ -75,6 +75,7 @@ class workflow_obj(ABC):
                 self.lims_conn = working_private_cache['lims_conn']
             if wf == -2:
                 self.folderpathbase = working_private_cache['folderpathbase']
+                self.authors = working_private_cache['authors']
             if wf == 7:
                 self.destination = working_private_cache['destination']
                 self.location = working_private_cache['location']
@@ -100,6 +101,7 @@ results on-device so you won't have to enter them again).")
             if wf == -2:
                 print("Please select the folder you'd like to contain the finished file")
                 self.folderpathbase = get_path_folder()
+                self.authors = input("Please type the authors of the document\n--> ")
             if wf == 7:
                 self.destination = input("\nType the relative path of the destination folder\n-->")
                 self.location = input("\nType the address of the final location of sftp transfer\n-->")
@@ -134,6 +136,7 @@ future for any reason, modify the cache file: daily_workflow/data/private_cache.
                 full_private_cache[workflow]['lims_conn'] = self.lims_conn
             if wf == -2:
                 full_private_cache[workflow]['folderpathbase'] = self.folderpathbase
+                full_private_cache[workflow]['authors'] = self.authors
             if wf == 7:
                 full_private_cache[workflow]['destination'] = self.destination
                 full_private_cache[workflow]['location'] = self.location

@@ -650,17 +650,16 @@
             "FROM dbo.Table_1",
             "WHERE wgs_run_date >= '{prev_week}'",
             "AND percent_cvg > {percent_cvg_cutoff} ",
-            "AND path_to_fasta IS NOT NULL"
+            "AND path_to_fasta IS NOT NULL",
+            "AND gisaid_num IS NULL",
+            "AND gisaid_epi_isl IS NULL",
+            "AND doc IS NOT NULL"
         ],
         "read_query_tbl1": [
             "SELECT *",
             "FROM dbo.Table_1",
             "WHERE hsn IN {hsn_query}"
         ],
-
-
-
-
 
         "write_query_tbl1": [
             "UPDATE dbo.Table_1",
