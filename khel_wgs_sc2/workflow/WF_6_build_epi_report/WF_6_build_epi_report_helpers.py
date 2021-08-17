@@ -80,7 +80,6 @@ class WorkflowObj6(workflow_obj):
         self.df = clean_df(self.df)
 
         # format bad df
-        self.bad_df = self.bad_df.rename(columns= self.rename_col_lst)
         self.bad_df = add_cols(obj=self, \
             df = self.bad_df, \
             col_lst = self.csv_headers, \

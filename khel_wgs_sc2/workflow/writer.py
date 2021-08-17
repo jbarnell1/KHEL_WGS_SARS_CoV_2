@@ -47,8 +47,8 @@ def save_epi_csv(df, bad_df):
     
     # save files
     try:
-        df.to_csv(path + filename_df, index = False)
-        bad_df.to_csv(path + filename_bad_df, index=False)
+        df.to_csv(path + "\\" + filename_df, index = False)
+        bad_df.to_csv(path + "\\" + filename_bad_df, index=False)
         #bad_df.to_csv(path + filename_baddf, index = False)
         print("The program will close automatically in 5 seconds")
     except PermissionError as e:
