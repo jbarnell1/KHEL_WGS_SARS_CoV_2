@@ -33,7 +33,7 @@ class WorkflowObj7(workflow_obj):
         
         print("\nEstablishing database connection...")
         # establish connection
-        transport = pk.Transport((self.location, self.port))
+        transport = pk.Transport((self.location, int(self.port)))
         transport.connect(username=self.sftp_user, password=self.sftp_pwd)
         self.sftp = pk.SFTPClient.from_transport(transport)
 
