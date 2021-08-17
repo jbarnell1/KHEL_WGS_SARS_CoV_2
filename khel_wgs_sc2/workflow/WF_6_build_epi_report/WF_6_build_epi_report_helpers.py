@@ -1,5 +1,5 @@
 from ..workflow_obj import workflow_obj
-from ..writer import save_csv
+from ..writer import save_epi_csv
 from ..formatter import add_cols, cap_all, format_sex, unkwn
 import datetime
 
@@ -40,6 +40,10 @@ class WorkflowObj6(workflow_obj):
                 self.read_date_query_tbl1 = self.read_date_query_tbl1.replace("{start}", date_start)
                 self.query = self.read_date_query_tbl1.replace("{end}", date_end)
                 self.query = self.query.replace("{percent_cvg_cutoff}", self.percent_cvg_cutoff)
+
+                self.bad_query = self.read_bad_date_query_tbl1.replace("{start}", date_start)
+                self.bad_query = self.bad_query.replace("{end}", date_end)
+                self.bad_query = self.bad_query.replace("{percent_cvg_cutoff}", self.percent_cvg_cutoff)
                 break
             elif user_selection.lower() == 'a':
                 self.a = True
@@ -60,6 +64,7 @@ class WorkflowObj6(workflow_obj):
     def get_df(self):
         super().setup_db()
         self.df = self.db_handler.ss_read(query=self.query)
+        self.bad_df = self.db_handler.ss_read(query=self.bad_query)
         #TODO fill out rest of functionality
 
     def format_df(self):
@@ -75,10 +80,18 @@ class WorkflowObj6(workflow_obj):
 
         # format values appropriately
         self.df = clean_df(self.df)
+
+        # format bad df
+        self.bad_df = self.bad_df.rename(columns= self.rename_col_lst)
+        self.bad_df = add_cols(obj=self, \
+            df = self.bad_df, \
+            col_lst = self.csv_headers, \
+            col_func_map= self.col_func_map)
+        self.bad_df = clean_df(self.bad_df)
     
     def write_epi_report(self):
         # save both files to csv
-        save_csv(self.df)
+        save_epi_csv(self.df, self.bad_df)
 
 
 def clean_df(df):
