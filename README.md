@@ -76,9 +76,12 @@ _______________________________________
  - Save report to appropriate folder for easy access in the future
 
 <br />
-<br />
 
 All of these workflows can be run on their own, but I've provided a runner script that can call workflows 1-5, waiting on input from the user to complete the critical steps.  It is recommended to create a simple script outside of the package for even easier access to call the runner script.  For more information, see the [docs](docs/overview.md).
+
+<br />
+
+# Other Scripts included in this package
 
 In addition to the standard workflows, I have included several scripts which can also be called individually from the runner and add essential functionality.
 
