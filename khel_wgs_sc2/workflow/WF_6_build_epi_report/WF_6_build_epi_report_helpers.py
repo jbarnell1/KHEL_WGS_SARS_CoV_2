@@ -84,7 +84,9 @@ class WorkflowObj6(workflow_obj):
             df = self.bad_df, \
             col_lst = self.csv_headers, \
             col_func_map= self.col_func_map)
+        self.bad_df = self.bad_df[self.bad_df_headers]
         self.bad_df = clean_df(self.bad_df)
+
     
     def write_epi_report(self):
         # save both files to csv

@@ -490,6 +490,22 @@
             "Performing_Lab",
             "Report_Sent_Date"
         ],
+        "bad_df_headers": [
+            "hsn",
+            "percent_cvg",
+            "avg_depth",
+            "total_ns", 
+            "pos_pass", 
+            "neg_pass", 
+            "clade",
+            "lineage_id", 
+            "facility", 
+            "f_name", 
+            "l_name", 
+            "sex", 
+            "age", 
+            "dob"
+        ],
         "read_date_query_tbl1": [
             "SELECT results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
             "FROM dbo.Table_1 results",
