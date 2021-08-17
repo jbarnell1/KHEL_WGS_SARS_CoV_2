@@ -1,7 +1,7 @@
 import json
 import datetime
 import os
-from workflow.ui import get_path
+from workflow.ui import get_path_folder
 
 
 def write_json(path, py_dict):
@@ -19,7 +19,7 @@ def save_csv(df):
     filename_baddf = "KHEL_Variant_" + today + "_bad.csv"
 
     # make new folder to save to
-    path = get_path()
+    path = get_path_folder()
     if not os.path.isdir(path):
         os.makedirs(path)
     
@@ -39,7 +39,7 @@ def save_facility_csv(df, facility):
     filename_df = facility + "_" + today + ".csv"
 
     # make new folder to save to
-    path = get_path()
+    path = get_path_folder()
     if not os.path.isdir(path):
         os.makedirs(path)
     
