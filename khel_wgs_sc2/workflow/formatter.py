@@ -294,7 +294,7 @@ def parse_path(row, path):
     new_path = path + "/" + row["seqName"]
     if not os.path.exists(new_path):
         raise ValueError("The parser generated a path to a fasta file that is not valid!!")
-
+    return new_path
 
 def get_gisaid(row):
     if np.isnan(row["gisaid_num"]) or pd.isna(row["gisaid_num"]):
