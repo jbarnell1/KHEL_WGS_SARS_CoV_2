@@ -1,6 +1,7 @@
 from ..workflow_obj import workflow_obj
 from ..ui import get_path_folder
 from ..formatter import add_cols, remove_pools, remove_blanks
+from ..writer import save
 import os
 import pandas as pd
 import datetime
@@ -34,7 +35,7 @@ class WorkflowObj3(workflow_obj):
         filename = "all_" + today + "_" + machinenum + ".fasta"
 
         # make file to save to
-        if splt[-3] == "ClearLabs downloads":
+        if splt[-3] == "ClearLabs":
             path_write = "\\".join(splt[:-1]) + "\\" + filename
         else:
             path_write = "DOES NOT EXIST"
