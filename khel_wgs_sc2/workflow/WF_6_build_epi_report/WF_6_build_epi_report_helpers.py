@@ -39,11 +39,11 @@ class WorkflowObj6(workflow_obj):
 
                 self.read_date_query_tbl1 = self.read_date_query_tbl1.replace("{start}", date_start)
                 self.query = self.read_date_query_tbl1.replace("{end}", date_end)
-                self.query = self.query.replace("{percent_cvg_cutoff}", self.percent_cvg_cutoff)
+                self.query = self.query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
 
                 self.bad_query = self.read_bad_date_query_tbl1.replace("{start}", date_start)
                 self.bad_query = self.bad_query.replace("{end}", date_end)
-                self.bad_query = self.bad_query.replace("{percent_cvg_cutoff}", self.percent_cvg_cutoff)
+                self.bad_query = self.bad_query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
                 break
             elif user_selection.lower() == 'a':
                 self.a = True
@@ -70,14 +70,12 @@ class WorkflowObj6(workflow_obj):
     def format_df(self):
         # rename/drop/add/sort appropriate columns
         self.df = self.df.rename(columns = self.rename_col_lst)
-
         self.df = add_cols(obj=self, \
             df = self.df, \
             col_lst = self.csv_headers, \
             col_func_map = self.col_func_map)
         
         self.df = self.df[self.csv_headers]
-
         # format values appropriately
         self.df = clean_df(self.df)
 
