@@ -39,6 +39,7 @@ class WorkflowObj6(workflow_obj):
 
                 self.read_date_query_tbl1 = self.read_date_query_tbl1.replace("{start}", date_start)
                 self.query = self.read_date_query_tbl1.replace("{end}", date_end)
+                self.query = self.query.replace("{percent_cvg_cutoff}", self.percent_cvg_cutoff)
                 break
             elif user_selection.lower() == 'a':
                 self.a = True

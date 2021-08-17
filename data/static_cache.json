@@ -508,7 +508,8 @@
             "AND results.doc IS NOT NULL",
             "AND results.dob IS NOT NULL",
             "AND qc.pos_pass = 1",
-            "AND qc.neg_pass = 1"
+            "AND qc.neg_pass = 1",
+            "AND results.percent_cvg > {percent_cvg_cutoff}"
         ],
         "read_facility_query_tbl1": [
             "SELECT f_name, l_name, dob, sex, facility, hsn, doc, source, wgs_run_date, lineage_id, clade, gisaid_num, race, Ethnicity",
