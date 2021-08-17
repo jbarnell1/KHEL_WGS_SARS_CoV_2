@@ -85,8 +85,43 @@ In addition to the standard workflows, I have included several scripts which can
 <br />
 
 ### **[EPI_ISL:](docs/epi_isl.md)**
-  - dlskjf
-  - 
+  - User submits a simple workbook downloaded from the GISAID website, containing the sample's gisaid number (which already exists in the database) and the EPI_ISL number (which does not).
+  - The sql database is updated such that all EPI_ISL numbers are matched with the appropriate gisaid numbers.
+
+  > The file can contain samples that already have EPI_ISL numbers in the database as these numbers will not change.
+
+<br />
+<br />
+
+### **[GISAID:](docs/gisaid.md)**
+  - This script scans through the database to find samples that are eligible for upload to the GISAID database.
+  - After identifying eligible samples, it compiles two files formatted for upload to GISAID: a `.xlsx` file, and a `.fasta` file.
+  - The xlsx file contents must be copied into the template provided by GISAID's website (`.xls` file).  After copying, the two files may be uploaded to the database.
+  - This script also updates the GISAID numbers in the sql database for easy identification in the future.
+
+<br />
+<br />
+
+### **[Outside Lab:](docs/outside_lab.md)**
+  - This script uploads data to the database.
+  - The supplied template must be used in order to ensure all data is imported.
+  - NOT YET IMPLEMENTED
+
+<br />
+<br />
+
+### **[Query:](docs/query.md)**
+  - This script seeks to simplify queries made to the database by simplifying queries into selectable statements.
+  - After querying the database, the query is saved to an excel workbook for easy data manipulation/viewing
+  - NOT YET IMPLEMENTED
+
+<br />
+<br />
+
+### **[Refresh:](docs/refresh.md)**
+  - This script seeks to simplify queries made to the database by simplifying queries into selectable statements.
+  - After querying the database, the query is saved to an excel workbook for easy data manipulation/viewing
+  - NOT YET IMPLEMENTED
 
 <br />
 <br />
