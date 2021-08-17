@@ -1,7 +1,6 @@
 from ..workflow_obj import workflow_obj
 from ..ui import get_path_folder
 from ..formatter import add_cols, remove_pools, remove_blanks
-from ..writer import save
 import os
 import pandas as pd
 import datetime
