@@ -1,4 +1,17 @@
 data/private_cache.json
 
-__pycache__/
-
+khel_wgs_sc2/__pycache__/
+khel_wgs_sc2/workflow/__pycache__/
+khel_wgs_sc2/workflow/epi_isl/__pycache__/
+khel_wgs_sc2/workflow/gisaid/__pycache__/
+khel_wgs_sc2/workflow/outside_lab/__pycache__/
+khel_wgs_sc2/workflow/query/__pycache__/
+khel_wgs_sc2/workflow/refresh/__pycache__/
+khel_wgs_sc2/workflow/WF_1_import_demos/__pycache__/
+khel_wgs_sc2/workflow/WF_2_parse_run_data/__pycache__/
+khel_wgs_sc2/workflow/WF_3_compile_fasta/__pycache__/
+khel_wgs_sc2/workflow/WF_4_parse_nextclade/__pycache__/
+khel_wgs_sc2/workflow/WF_5_parse_pangolin/__pycache__/
+khel_wgs_sc2/workflow/WF_6_build_epi_report/__pycache__/
+khel_wgs_sc2/workflow/WF_7_send_epi_report/__pycache__/
+khel_wgs_sc2/workflow/WF_8_build_nextstrain/__pycache__/
