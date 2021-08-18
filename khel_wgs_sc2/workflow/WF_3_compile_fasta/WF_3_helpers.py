@@ -25,7 +25,7 @@ class WorkflowObj3(workflow_obj):
                 \nThe selected folder is unexpected!  Select a folder with the name 'FAST files'\
                 \n-------------------------------------------------------------------------------------------------------------------")
         folder_name = splt[-2]
-        date = datetime.datetime.strptime(str(folder_name.split("."))[0], "%m%d%y").strftime("%m%d%y")
+        date = datetime.datetime.strptime(folder_name.split(".")[0], "%m%d%y").strftime("%m%d%y")
         machinenum = folder_name[-4:-2]
         filename = "all_" + date + "_" + machinenum + ".fasta"
 
