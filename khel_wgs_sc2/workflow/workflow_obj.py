@@ -123,7 +123,7 @@ results on-device so you won't have to enter them again).")
             if wf == 6:
                 self.lab = input("\nType the name of the lab submitting the report\n--> ")
                 self.p_lab = input("\nType the name of the lab performing the tests to appear on this report\n-->")
-                print("\nPlease select the path to the GISAID folder where the reports should be saved.")
+                print("\nPlease select the path to the Results folder where the reports should be saved.")
                 self.folderpathbase = get_path_folder()
             if wf == -5:
                 print("\nPlease select the path to the folder where ClearLabs \

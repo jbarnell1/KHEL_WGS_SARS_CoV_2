@@ -251,7 +251,7 @@ def format_l_name(row):
         return None
     else:
         full_name = str(row["name"])
-        names = full_name.split(" ")
+        names = full_name.split()
         if re.search("jr", names[-1].lower()) or re.search("sr", names[-1].lower()):
             return names[-2].capitalize() + ", " + names[-1].capitalize()
         return names[-1].capitalize()
