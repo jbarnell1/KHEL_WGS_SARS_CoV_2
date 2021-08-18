@@ -90,6 +90,7 @@ class workflow_obj(ABC):
             if wf == 6:
                 self.lab = working_private_cache['lab']
                 self.p_lab = working_private_cache['p_lab']
+                self.folderpathbase = working_private_cache['folderpathbase']
             if wf == -5:
                 self.base_path = working_private_cache['base_path']
                 self.new_base_path = working_private_cache['new_base_path']
@@ -122,6 +123,8 @@ results on-device so you won't have to enter them again).")
             if wf == 6:
                 self.lab = input("\nType the name of the lab submitting the report\n--> ")
                 self.p_lab = input("\nType the name of the lab performing the tests to appear on this report\n-->")
+                print("\nPlease select the path to the GISAID folder where the reports should be saved.")
+                self.folderpathbase = get_path_folder()
             if wf == -5:
                 print("\nPlease select the path to the folder where ClearLabs \
 Downloads used to be stored.")
@@ -158,6 +161,7 @@ future for any reason, modify the cache file: daily_workflow/data/private_cache.
             if wf == 6:
                 full_private_cache[workflow]['lab'] = self.lab
                 full_private_cache[workflow]['p_lab'] = self.p_lab
+                full_private_cache[workflow]['folderpathbase'] = self.folderpathbase
             full_private_cache["all_workflows"]['sql_user'] = self.sql_user
             full_private_cache["all_workflows"]['sql_pass'] = self.sql_pass
             full_private_cache["all_workflows"]['sql_server'] = self.sql_server

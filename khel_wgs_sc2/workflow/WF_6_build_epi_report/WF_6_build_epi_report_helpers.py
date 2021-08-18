@@ -1,5 +1,6 @@
 from ..workflow_obj import workflow_obj
 from ..writer import save_epi_csv
+from ..ui import get_path_folder
 from ..formatter import add_cols, cap_all, format_sex, unkwn
 import datetime
 

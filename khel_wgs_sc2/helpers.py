@@ -48,6 +48,7 @@ def run():
                             tracker += 1
                         else:
                             print("\n ___________________________________________________\n|  _______________________________________________  |\n| |\033[4m      SARS-CoV-2 daily workflow complete!      \033[0m| |\n|___________________________________________________|\n")
+                            break
 
                     # catch errors and perform logic here
                     except pyodbc.IntegrityError as i:
