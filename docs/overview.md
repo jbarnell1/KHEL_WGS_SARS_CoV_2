@@ -28,7 +28,7 @@ _______________________________________
 <br />
 
 - **Reliability:**
-  - In order to improve reliability, testing functions using pytest or unittest
+  - In order to improve reliability, functions will be tested using pytest or unittest
   - On the user side, this means that having the correct packages and file structure is ensured.
   - On the developer side, this means robust testing before each release.
 
@@ -62,4 +62,12 @@ _______________________________________
   - After the 'start' workflow has finished, the user should generate a report of results added to the database, and may send it if they so choose.  This is done through workflows [6](WF_6_build_epi_report) and [7](WF_7_send_epi_report), respectively.  
   - As before, the script will walk you through any initial set up required, and will store results in the `data/private_cache.json` file within the package *locally*.
 
+<br />
 
+- **Beyond:**
+  - There are several other scripts that users may select from, and shortcuts to those scripts are below:
+    - [Import epi_isl numbers](epi_isl.md)
+    - [Generate report for submission to GISAID](gisaid.md)
+    - [Import data to database from template excel file](outside_lab.md)
+    - [Querying the database simplified](query.md)
+    - [Reset the database and import all data from an excel file](refresh.md)
