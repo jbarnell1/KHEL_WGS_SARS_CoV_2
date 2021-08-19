@@ -37,7 +37,7 @@ class gisaid_obj(workflow_obj):
         self.hsn_dict = {'hsn':[], 'gisaid':[]}
 
     def compile_fasta(self):
-        # create the file that will hold the completed fasta data
+        # create the name of the file that will hold the completed fasta data
         # make both destination files for metadata and fasta
         self.file_no = 1
         date1 = datetime.datetime.today().strftime("%m%d%y")
@@ -90,6 +90,8 @@ class gisaid_obj(workflow_obj):
         self.gisaid_df.insert(0, "covv_authors", self.authors)
         self.gisaid_df.insert(0, "comment_type", None)
         self.gisaid_df.insert(0, "covv_comment", None)
+        # order columns/remove unnecessary columns
+        self.gisaid_df = self.gisaid_df[self.full_gisaid_cols_lst]
 
     def make_fasta_file(self):
         # make the fasta file
@@ -115,8 +117,6 @@ class gisaid_obj(workflow_obj):
         f.close()
 
     def make_gisaid_file(self):
-        # order columns/remove unnecessary columns
-        self.gisaid_df = self.gisaid_df[self.full_gisaid_cols_lst]
         date2 = datetime.datetime.today().strftime("%Y%m%d")
         templatefilepath = date2 + "_" + str(self.file_no) + "_sql.xlsx"
         self.gisaid_df.to_excel(self.folderpath + templatefilepath, index=False, header=True)
