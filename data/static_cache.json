@@ -692,6 +692,7 @@
             "avg_depth": "covv_coverage"
         },
         "add_col_lst":[
+            "hsn",
             "submitter",
             "fn",
             "covv_virus_name",
@@ -702,6 +703,7 @@
             "covv_add_location",
             "covv_host",
             "covv_add_host_info",
+            "covv_sampling_strategy",
             "covv_gender",
             "covv_patient_status",
             "covv_specimen",
@@ -721,6 +723,7 @@
             "comment_type"
         ],
         "full_gisaid_cols_lst": [
+            "hsn",
             "submitter",
             "fn",
             "covv_virus_name",
@@ -731,6 +734,7 @@
             "covv_add_location",
             "covv_host",
             "covv_add_host_info",
+            "covv_sampling_strategy",
             "covv_gender",
             "covv_patient_age",
             "covv_patient_status",

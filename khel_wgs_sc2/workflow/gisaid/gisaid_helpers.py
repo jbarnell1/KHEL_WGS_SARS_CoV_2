@@ -61,19 +61,18 @@ class gisaid_obj(workflow_obj):
         #     df = self.gisaid_df,
         #     col_lst = self.add_col_lst,
         #     col_func_map = self.col_func_map)
-        
-        
+        self.gisaid_df["hsn"] = self.gisaid_df.apply(lambda row: row['hsn'], axis=1)
         self.gisaid_df.insert(0, "submitter", self.user)
         self.gisaid_df.insert(0, "fn", self.filepath)
         self.gisaid_df["covv_virus_name"] = self.gisaid_df.apply(lambda row: self.get_virus_name(row), axis=1)
         self.gisaid_df.insert(0, "covv_type", "betacoronavirus")
         self.gisaid_df.insert(0, "covv_passage", "Original")
         self.gisaid_df["covv_collection_date"] = self.gisaid_df.apply(lambda row: get_collection_date(row), axis=1)
-        
         self.gisaid_df["covv_location"] = self.gisaid_df.apply(lambda row: self.get_location(row), axis=1)
         self.gisaid_df.insert(0, "covv_add_location", "unknown")
         self.gisaid_df.insert(0, "covv_host", "Human")
         self.gisaid_df.insert(0, "covv_add_host_info", "unknown")
+        self.gisaid_df.insert(0, "covv_sampling_strategy", "unknown")
         self.gisaid_df["covv_gender"] = self.gisaid_df.apply(lambda row: get_sex(row), axis=1)
         self.gisaid_df.insert(0, "covv_patient_status", "unknown")
         self.gisaid_df.insert(0, "covv_specimen", "unknown")

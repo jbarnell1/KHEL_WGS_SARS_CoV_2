@@ -122,9 +122,7 @@ In addition to the standard workflows, I have included several scripts which can
 <br />
 
 ### **[Refresh:](docs/refresh.md)**
-  - This script seeks to simplify queries made to the database by simplifying queries into selectable statements.
-  - After querying the database, the query is saved to an excel workbook for easy data manipulation/viewing
-  - NOT YET IMPLEMENTED
+  - This script completely empties the database and uploads all data contained in the user-selected excel workbook to the database.
 
 <br />
 <br />
