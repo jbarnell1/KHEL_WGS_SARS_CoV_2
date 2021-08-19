@@ -72,7 +72,7 @@ class gisaid_obj(workflow_obj):
         self.gisaid_df.insert(0, "covv_add_location", "unknown")
         self.gisaid_df.insert(0, "covv_host", "Human")
         self.gisaid_df.insert(0, "covv_add_host_info", "unknown")
-        self.gisaid_df.insert(0, "covv_sampling_strategy", "unknown")
+        self.gisaid_df.insert(0, "covv_sampling_strategy", "baseline suveillance")
         self.gisaid_df["covv_gender"] = self.gisaid_df.apply(lambda row: get_sex(row), axis=1)
         self.gisaid_df.insert(0, "covv_patient_status", "unknown")
         self.gisaid_df.insert(0, "covv_specimen", "unknown")
