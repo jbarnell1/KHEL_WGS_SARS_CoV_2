@@ -25,16 +25,12 @@ class outside_lab_obj(workflow_obj):
         xl_path = get_path()
         #self.logger.info(self.id + ": Getting outside lab data from worksheet")
         df = get_pandas(xl_path, 'outside_lab', 'outside_lab', ',')
-        all_cols = self.dbo_tbl_1_cols + list(set(self.dbo_tbl_2_cols) - set(self.dbo_tbl_1_cols))
         df.columns = [str(col).strip() for col in list(df.columns)]
         df.rename(columns=self.rename_dict, inplace=True)
-        df.insert(0, "pangolin_version", None)
-        df.insert(0, "nextclade_version", None)
-        pd.set_option('display.max_columns', None)
 
         # add columns
         print("\nAdding 'path_to_fasta' column...")
-        df['path_to_fasta'] = df.apply(lambda row: get_path_to_fasta(row), axis = 1)
+        df['path_to_fasta'] = None
         print("\nAdding 'avg_depth' column...")
         df['avg_depth'] = df.apply(lambda row: get_avg_depth(row), axis=1)
         print("\nAdding 'percent_cvg' column...")
@@ -56,6 +52,7 @@ class outside_lab_obj(workflow_obj):
         print("\nAdding 'gisaid_num' column...")
         df['gisaid_num'] = df.apply(lambda row: parse_gisaid_num(row), axis=1)
         df['source'] = df.apply(lambda row: format_source(row), axis=1)
+        df['age'] = df.apply(lambda row: get_age(row), axis=1)
         df.replace(to_replace="UNKNOWN", value = None, inplace=True)
         df.replace(to_replace="Unknown", value = None, inplace=True)
         df.replace(to_replace="unknown", value = None, inplace=True)
@@ -68,7 +65,6 @@ class outside_lab_obj(workflow_obj):
         for column in self.str_cols:
             df[column] = df.apply(lambda row: fix_single_quote(row, column), axis=1)
 
-        print(df)
 
         # sort/remove columns into the two dataframes
         self.df_table1 = pd.DataFrame(df)
@@ -87,10 +83,11 @@ class outside_lab_obj(workflow_obj):
         self.df_table1 = remove_dups(self.df_table1)
         self.df_table1 = pd.DataFrame(self.df_table1, columns=self.dbo_tbl_1_cols)
         self.df_table1['hsn'] = self.df_table1.apply(lambda row: drop_letter(row), axis=1)
-
+        print(self.df_table1)
         self.df_table2['hsn'] = self.df_table2.apply(lambda row: drop_letter(row), axis=1)
         df_2_row_lst = remove_m(self.df_table2)
         self.df_table2 = pd.DataFrame(df_2_row_lst, columns = list(self.df_table2.columns))
+        print(self.df_table2)
         #self.logger.info(self.id + ": get_outside_lab_dfs finished!")
         
 
@@ -99,12 +96,12 @@ class outside_lab_obj(workflow_obj):
         # attempt to connect to database
 
         # pushing to database....
-        super().database_push()
+        super().setup_db()
         df_table1_lst = self.df_table1.values.astype(str).tolist()
-        self.db_handler(df_lst=df_table1_lst, query=self.write_query_tbl1, full=True, df=self.df_table1)
+        self.db_handler.lst_ptr_push(df_lst=df_table1_lst, query=self.write_query_tbl1, full=True, df=self.df_table1)
 
         df_table2_lst = self.df_table2.values.astype(str).tolist()
-        self.db_handler.lst_ptr_push(df_lst=df_table2_lst, query=self.write_query_tbl1, full=True, df=self.df_table2)
+        self.db_handler.lst_ptr_push(df_lst=df_table2_lst, query=self.write_query_tbl2, full=True, df=self.df_table2)
 
         #self.logger.info(self.id + ": database_push finished!")
 
@@ -152,7 +149,7 @@ def parse_seq_id(row, arg):
 
 def get_name(row, arg):
     full_name = str(row["name"]).strip()
-    names = full_name.split(" ")
+    names = full_name.split()
     if arg == "last":
         if names[-1].lower() == "jr" or names[-1].lower() == "sr":
             return names[-2] + ", " + names[-1]
@@ -202,8 +199,8 @@ def get_percent_cvg(row):
     # remove percentage signs
     result = float(str(row['assembly_coverage']).replace("%", ""))
     # convert to decimal percentage
-    if result <= 1:
-        result *= 100
+    if result > 1:
+        result /= 100
     return f'{result:.2f}'
 
 
@@ -382,6 +379,8 @@ def fix_single_quote(row, column):
 
 
 def format_source(row):
+    if len(str(row['source'])) == 2:
+        return str(row['source'])
     if str(row['source']).lower() == "nasopharygeal":
         return "NP"
     elif str(row['source']).lower() == "nasopharnygeal":
@@ -392,3 +391,23 @@ def format_source(row):
         return "SV"
     else:
         return "OT"
+
+
+def get_age(row):
+    try:
+        return int(row['age'])
+    except Exception:
+        try:
+            born = datetime.datetime.strptime(row["dob"], "%m/%d/%Y").date()
+        except Exception:
+            born = row["dob"].to_pydatetime().date()
+
+        try:
+            tested = row['doc'].to_pydatetime().date()
+        except Exception:
+            tested = datetime.datetime.strptime(row['doc'], "%m/%d/%Y").date()
+        if pd.isnull(born) or pd.isnull(tested):
+            return -1
+        days_in_year = 365.2425   
+        age = int((tested - born).days / days_in_year)
+        return age

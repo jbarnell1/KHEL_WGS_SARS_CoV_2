@@ -240,7 +240,7 @@ def format_f_name(row):
         return None
     else:
         full_name = str(row["name"])
-        names = full_name.split(" ")
+        names = full_name.split()
         return names[0].capitalize()
 
 

@@ -13,20 +13,25 @@ def write_json(path, py_dict):
     except:
         return 1
 
-def save_csv(df):
+def save_csv(df, path, user_selection, lab):
     # get today's date to produce file names
     today = datetime.datetime.today().strftime("%m%d%y")
     filename_df = "KHEL_Variant_" + today + "sql_test" + ".csv"
-    filename_baddf = "KHEL_Variant_" + today + "_bad.csv"
 
-    # make new folder to save to
-    path = get_path_folder()
     if not os.path.isdir(path):
         os.makedirs(path)
     
+    if user_selection == 'a':
+        filename_df = "whole_db_" + today + ".csv"
+    elif user_selection == 's':
+        filename_df = "submitted_" + lab + "_" + today + ".csv"
+    elif user_selection == 'f':
+        filename_df = lab + "_" + today + ".csv"
+    else:
+        pass
     # save files
     try:
-        df.to_csv(path + filename_df, index = False)
+        df.to_csv(path + "\\" + filename_df, index = False)
         #bad_df.to_csv(path + filename_baddf, index = False)
         print("The program will close automatically in 5 seconds")
     except PermissionError as e:
