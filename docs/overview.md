@@ -71,3 +71,7 @@ _______________________________________
     - [Import data to database from template excel file](outside_lab.md)
     - [Querying the database simplified](query.md)
     - [Reset the database and import all data from an excel file](refresh.md)
+
+
+
+
