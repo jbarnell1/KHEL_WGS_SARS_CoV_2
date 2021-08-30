@@ -23,7 +23,8 @@
                 "format_f_name"
             ],
             "l_name": [
-                "format_l_name"
+                "format_l_name",
+                "not_real_l_names"
             ],
             "age": [
                 "get_age"
@@ -314,6 +315,22 @@
             "MATRIX": "source",
             "CUST_NAME": "facility"
         },
+        "not_real_l_names": [
+            "jr", 
+            "sr",
+            "i",
+            "ii", 
+            "iii", 
+            "iv", 
+            "v", 
+            "vi", 
+            "vii", 
+            "viii", 
+            "ix", 
+            "x", 
+            "xi", 
+            "xii"
+        ],
         "sample_data_col_order": [
             "hsn",
             "race",

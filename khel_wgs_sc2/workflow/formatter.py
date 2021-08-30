@@ -74,7 +74,7 @@ def add_cols(obj=None, df=None, col_lst=None, col_func_map=None):
                     # try to catch v[1] as an object variable
                     df[k] = df.apply(lambda row: globals()[v[0]](row, val), axis=1)
                 except Exception:
-                    # use v[1] as a string argument to the function
+                    # use v[1] as a constant argument to the function
                     df[k] = df.apply(lambda row: globals()[v[0]](row, v[1]), axis=1)
             # no additional variables to supply to apply function
             except IndexError:
@@ -236,7 +236,7 @@ def add_cols_by_name(df, lst):
 def format_f_name(row):
     if pd.isna(row['name']):
         return None
-    elif row['name'] == "":
+    elif row['name'].strip() == "":
         return None
     else:
         full_name = str(row["name"])
@@ -244,16 +244,19 @@ def format_f_name(row):
         return names[0].capitalize()
 
 
-def format_l_name(row):
+def format_l_name(row, lst):
     if pd.isna(row['name']):
         return None
-    elif row['name'] == "":
+    elif row['name'].strip() == "":
         return None
     else:
         full_name = str(row["name"])
         names = full_name.split()
-        if re.search("jr", names[-1].lower()) or re.search("sr", names[-1].lower()):
-            return names[-2].capitalize() + ", " + names[-1].capitalize()
+        for item in lst:
+            if item == names[-1].lower():
+                return names[-2].capitalize() + ", " + names[-1].upper()
+        # if re.search("jr", names[-1].lower()) or re.search("sr", names[-1].lower()):
+        #     return names[-2].capitalize() + ", " + names[-1].capitalize()
         return names[-1].capitalize()
 
 
