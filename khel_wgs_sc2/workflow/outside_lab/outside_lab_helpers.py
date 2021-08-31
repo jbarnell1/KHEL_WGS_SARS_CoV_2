@@ -173,7 +173,7 @@ def format_date(row, colName):
     else:
         if type(date1) == str:
             date2 = datetime.datetime.strptime(date1, "%m/%d/%Y")
-            return datetime.datetime.strftime(date2, "%Y-%m-%d")
+            return date2.strftime("%Y-%m-%d")
         else:
             return None
 
@@ -402,10 +402,14 @@ def get_age(row):
         except Exception:
             born = row["dob"].to_pydatetime().date()
 
-        try:
-            tested = row['doc'].to_pydatetime().date()
-        except Exception:
-            tested = datetime.datetime.strptime(row['doc'], "%m/%d/%Y").date()
+        tested = row['doc']
+        if type(tested) != datetime.datetime:
+            try:
+                tested = tested.to_pydatetime().date()
+            except Exception:
+                tested = datetime.datetime.strptime(tested, "%m/%d/%Y").date()
+        else:
+            tested = tested.date()
         if pd.isnull(born) or pd.isnull(tested):
             return -1
         days_in_year = 365.2425   
