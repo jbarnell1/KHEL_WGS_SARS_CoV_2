@@ -9,7 +9,7 @@ def run_script_3():
 
 
     # create master FASTA file
-    data_obj.compile_fasta()
+    compiled_fasta_path = data_obj.compile_fasta()
 
     # create dataframe identifying paths to each fasta file
     data_obj.get_fasta_path_df()
@@ -20,5 +20,7 @@ def run_script_3():
 
     print("\n================================\nSuccess! Script Finished.\n================================\n\n")
     time.sleep(2)
+
+    return compiled_fasta_path
 
     

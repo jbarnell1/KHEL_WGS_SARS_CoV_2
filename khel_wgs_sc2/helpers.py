@@ -38,13 +38,13 @@ def run():
                             run_script_2()
                             tracker += 1
                         elif tracker == 3:
-                            run_script_3()
+                            compiled_fasta_path = run_script_3()
                             tracker += 1
                         elif tracker == 4:
-                            run_script_4()
+                            run_script_4(compiled_fasta_path)
                             tracker += 1
                         elif tracker == 5:
-                            run_script_5()
+                            run_script_5(compiled_fasta_path)
                             tracker += 1
                         else:
                             print("\n ___________________________________________________\n|  _______________________________________________  |\n| |\033[4m      SARS-CoV-2 daily workflow complete!      \033[0m| |\n|___________________________________________________|\n")

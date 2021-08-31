@@ -14,9 +14,11 @@ class WorkflowObj5(workflow_obj):
         super().get_json(5)
 
 
-    def get_pango_dfs(self):
-        print("\nUse the following window to open the pangolin results workbook...")
-        pango_path = get_path()
+    def get_pango_dfs(self, po_path=False):
+        # open pangolin path --> pandas dataframe
+        if not po_path:
+            print("\nUse the following window to open the pangolin results workbook...")
+            pango_path = get_path()
         splt = pango_path.split("/")
         parent_folder = splt[-2]
         data = parent_folder.split(".")
@@ -75,3 +77,67 @@ class WorkflowObj5(workflow_obj):
 
         df_results_final_lst = df_results_final.values.astype(str).tolist()
         self.db_handler.lst_ptr_push(df_lst=df_results_final_lst, query=self.write_query_tbl1)
+
+
+    def send_fasta(self, compiled_fasta_path):
+        # establish connection to server
+        super().setup_ssh()
+        # send the fasta file to the server, at the specified location
+        self.ssh_handler.ssh_send_file(compiled_fasta_path)
+
+
+    def run_pangolin(self):
+        # connection to the server has already been established
+        # check for updates and update if needed
+        stdin, stdout, stderr = self.ssh_handler.ssh_exec("""cd <path to pangolin file>""")
+        lines = stdout.readlines()
+        errors = stderr.readlines()
+        for e in errors:
+            print('\n\nerror: ', e)
+        for l in lines:
+            print('\nline: ', l)
+
+        stdin, stdout, stderr = self.ssh_handler.ssh_exec("""conda activate pangolin""")
+        lines = stdout.readlines()
+        errors = stderr.readlines()
+        for e in errors:
+            print('\n\nerror: ', e)
+        for l in lines:
+            print('\nline: ', l)
+        
+        stdin, stdout, stderr = self.ssh_handler.ssh_exec("""git pull""")
+        lines = stdout.readlines()
+        errors = stderr.readlines()
+        for e in errors:
+            print('\n\nerror: ', e)
+        for l in lines:
+            print('\nline: ', l)
+        
+        stdin, stdout, stderr = self.ssh_handler.ssh_exec("""conda env update -f environment.yml""")
+        lines = stdout.readlines()
+        errors = stderr.readlines()
+        for e in errors:
+            print('\n\nerror: ', e)
+        for l in lines:
+            print('\nline: ', l)
+        
+        stdin, stdout, stderr = self.ssh_handler.ssh_exec("""pip install .""")
+        lines = stdout.readlines()
+        errors = stderr.readlines()
+        for e in errors:
+            print('\n\nerror: ', e)
+        for l in lines:
+            print('\nline: ', l)
+        
+        # execute command
+        stdin, stdout, stderr = self.ssh_handler.ssh_exec("""pangolin <fasta path>""")
+        lines = stdout.readlines()
+        errors = stderr.readlines()
+        for e in errors:
+            print('\n\nerror: ', e)
+        for l in lines:
+            print('\nline: ', l)
+        
+    
+    def receive_pangolin_df(self, po_local_path):
+        self.ssh_handler.ssh_receive_file(po_local_path + "")

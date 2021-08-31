@@ -1,6 +1,7 @@
 from abc import ABC
 from workflow.ui import get_path_folder
 from workflow.ms_sql_handler import ms_sql_handler
+from workflow.ssh_handler import ssh_handler
 from workflow.reader import read_json
 from workflow.ui import get_path
 from workflow.ui import get_path_folder
@@ -71,6 +72,19 @@ class workflow_obj(ABC):
             self.sql_server = gen_private_cache['sql_server']
             self.sql_db = gen_private_cache['sql_db']
             need_sql=False
+
+            need_analysis_pathway = True
+            need_ssh = True
+            self.analysis_pathway = gen_private_cache['analysis_pathway']
+            need_analysis_pathway = False
+            if self.analysis_pathway == "cli":
+                self.ssh_ip = gen_private_cache['ssh_ip']
+                self.ssh_user = gen_private_cache['ssh_user']
+                self.ssh_pwd = gen_private_cache['ssh_pwd']
+                self.ssh_port = gen_private_cache['port']
+                self.ssh_dest = gen_private_cache['ssh_dest']
+                need_ssh = False
+
             if wf == 1:
                 self.lims_conn = working_private_cache['lims_conn']
             if wf == -2:
@@ -139,6 +153,18 @@ Downloads are now stored.")
                 self.sql_server = input("\nPlease enter the server name for the sql database:\n-->")
                 self.sql_db = input("\nPlease enter the name for the sql database:\n-->")
 
+            if need_analysis_pathway:
+                self.analysis_pathway = input("\nPlease enter 'online' if you plan to perform the nextclade and pangolin analysis \
+using the online tools.\nPlease enter 'cli' if you plan to perform the nextclade and pangolin analysis using a separate system\n-->")
+
+            if need_ssh:
+                self.ssh_ip = input("\nPlease type the ip address of the server you'd like to access (if you will run the pangolin/nextclade \
+analysis on the current computer, use '127.0.0.1')\n-->")
+                self.ssh_user = input("\nPlease enter the user name of the server to be used for the pangolin/nextclade analysis\n-->")
+                self.ssh_pwd = input("\nPlease enter the password of the server to be used for the pangolin/nextclade analysis\n-->")
+                self.ssh_port = input("\nPlease enter the port number to use for communication with the server for pangolin/nextclade analysis \
+(typically port '8080' or '8088' will work fine.)\n-->")
+                self.ssh_dest = input("\nPlease type the location of the nextclade package on the server.\n-->")
             
             print("\nFinished! If you need to change these values in the \
 future for any reason, modify the cache file: daily_workflow/data/private_cache.json")
@@ -166,6 +192,13 @@ future for any reason, modify the cache file: daily_workflow/data/private_cache.
             full_private_cache["all_workflows"]['sql_pass'] = self.sql_pass
             full_private_cache["all_workflows"]['sql_server'] = self.sql_server
             full_private_cache["all_workflows"]['sql_db'] = self.sql_db
+            full_private_cache["all_workflows"]['analysis_pathway'] = self.analysis_pathway
+            full_private_cache["all_workflows"]['ssh_ip'] = self.ssh_ip
+            full_private_cache["all_workflows"]['ssh_user'] = self.ssh_user
+            full_private_cache["all_workflows"]['ssh_pwd'] = self.ssh_pwd
+            full_private_cache["all_workflows"]['ssh_port'] = self.ssh_port
+            full_private_cache["all_workflows"]['ssh_dest'] = self.ssh_dest
+
             print("\nStoring data for future use...")
             res = write_json(path_to_private_cache, full_private_cache)
             if res != 0:
@@ -178,3 +211,10 @@ future for any reason, modify the cache file: daily_workflow/data/private_cache.
     def setup_db(self):
         self.db_handler = ms_sql_handler(self)
         self.db_handler.establish_db()
+
+    def setup_ssh(self):
+        self.ssh_handler = ssh_handler(self)
+        # client_ssh is for sending commands to server
+        self.ssh_handler.establish_client_ssh()
+        # transporter is for sending/receiving files
+        self.ssh_handler.establish_transporter()

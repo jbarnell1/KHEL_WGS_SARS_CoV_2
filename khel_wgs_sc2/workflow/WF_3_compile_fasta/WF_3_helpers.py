@@ -57,6 +57,10 @@ class WorkflowObj3(workflow_obj):
                     ctr += 1
                     self.seqName_lst.append(file)
         f.close()
+        if self.analysis_pathway == "cli":
+            return path_write
+        else:
+            return ""
 
     def get_fasta_path_df(self):
         # transform dictionary of hsn/path into dataframe

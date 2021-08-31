@@ -12,10 +12,11 @@ class WorkflowObj4(workflow_obj):
     def get_json(self):
         super().get_json(4)
 
-    def get_nextclade_dfs(self):
+    def get_nextclade_dfs(self, nc_path=False):
         # open nextclade path --> pandas dataframe
-        print("\nUse the following window to open the nextclade results workbook...")
-        nc_path = get_path()
+        if not nc_path:
+            print("\nUse the following window to open the nextclade results workbook...")
+            nc_path = get_path()
         splt = nc_path.split("/")
         parent_folder = splt[-2]
         data = parent_folder.split(".")
@@ -85,4 +86,43 @@ class WorkflowObj4(workflow_obj):
         print("Updating rows in the results table...")
 
         self.db_handler.lst_ptr_push(df_lst=df_results_final_lst, query=self.write_query_tbl1)
+
+
+    def send_fasta(self, compiled_fasta_path):
+        # establish connection to server
+        super().setup_ssh()
+        # send the fasta file to the server, at the specified location
+        self.ssh_handler.ssh_send_file(compiled_fasta_path)
+
+
+    def run_nextclade(self):
+        # connection to the server has already been established
+        # check for updates and update if needed
+        stdin, stdout, stderr = self.ssh_handler.ssh_exec("""curl -fsSL "https://github.com/nextstrain/nextclade/releases/latest/download/nextclade-Linux-x86_64" -o "nextclade" && chmod +x nextclade""")
+        lines = stdout.readlines()
+        errors = stderr.readlines()
+        for e in errors:
+            print('\n\nerror: ', e)
+        for l in lines:
+            print('\nline: ', l)
+
+
+
+        # env activation REQUIRED???
+
+
+
+        # execute command
+        stdin, stdout, stderr = self.ssh_handler.ssh_exec("""nextclade --in-order --input-fasta=data/sars-cov-2/<file_name> --output-tsv=output/nextclade.tsv""")
+        lines = stdout.readlines()
+        errors = stderr.readlines()
+        for e in errors:
+            print('\n\nerror: ', e)
+        for l in lines:
+            print('\nline: ', l)
+
+    
+    def receive_nextclade_df(self, nc_local_path):
+        self.ssh_handler.ssh_receive_file(nc_local_path + "/nextclade.tsv")
+
 

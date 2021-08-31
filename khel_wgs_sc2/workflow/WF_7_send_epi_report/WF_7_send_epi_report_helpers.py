@@ -50,7 +50,6 @@ class WorkflowObj7(workflow_obj):
             print("An error has occurred!")
             print("\n\n", e)
             time.sleep(5)
-            sys.exit()
         finally:
             self.sftp.close()
         
