@@ -80,6 +80,11 @@ class WorkflowObj5(workflow_obj):
         self.db_handler.lst_ptr_push(df_lst=df_results_final_lst, query=self.write_query_tbl1)
 
 
+    def get_fasta_path(self):
+        print("\nUse the following window to open the fasta file you'd like to send for pangolin analysis...")
+        return get_path()
+
+
     def send_fasta(self, compiled_fasta_path):
         # store the fasta file name
         folders = compiled_fasta_path.split("/")

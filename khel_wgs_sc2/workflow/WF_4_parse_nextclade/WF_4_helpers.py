@@ -88,6 +88,11 @@ class WorkflowObj4(workflow_obj):
         self.db_handler.lst_ptr_push(df_lst=df_results_final_lst, query=self.write_query_tbl1)
 
 
+    def get_fasta_path(self):
+        print("\nUse the following window to open the fasta file you'd like to send for nextclade analysis...")
+        return get_path()
+
+
     def send_fasta(self, compiled_fasta_path):
         # establish connection to server
         super().setup_ssh()

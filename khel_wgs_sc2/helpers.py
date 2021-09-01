@@ -73,11 +73,11 @@ def run():
                 
             elif u_input.strip().lower() == '4':
                 # run script
-                run_script_4()
+                run_script_4("single_step")
                 
             elif u_input.strip().lower() == '5':
                 # run script
-                run_script_5()
+                run_script_5("single_step")
                 
             elif u_input.strip().lower() == '6':
                 run_script_6()
