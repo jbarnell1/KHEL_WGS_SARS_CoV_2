@@ -134,7 +134,7 @@ class gisaid_obj(workflow_obj):
         self.hsn_dict['hsn'].append(row["hsn"])
         self.hsn_dict['gisaid'].append(gisaid)
         self.next_gisaid += 1
-        return "hCoV-19/USA/" + "" +            "-KHEL-" + gisaid_str + "/" + year
+        return "hCoV-19/USA/" + self.state_abbrev[str(row['state'])] + "-KHEL-" + gisaid_str + "/" + year if str(row['state']).lower() != "unknown" else "hCoV-19/USA/KS" + "-KHEL-" + gisaid_str + "/" + year
 
     def get_location(self, row):
         return "North America / USA / " + str(row["state"]) if str(row["state"]) != "unknown" else self.default_state
