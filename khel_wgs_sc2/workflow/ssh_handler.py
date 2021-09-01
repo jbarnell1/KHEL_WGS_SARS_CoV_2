@@ -17,9 +17,9 @@ class ssh_handler():
     def establish_client_ssh(self):
         try:
             print("\nBuilding SSH Client Object...")
-            ssh = pk.SSHClient()
+            self.conn = ssh = pk.SSHClient()
             ssh.set_missing_host_key_policy(pk.AutoAddPolicy())
-            self.conn = ssh.connect(self.ssh_ip, username=self.ssh_user, password=self.pwd, port=self.port)
+            ssh.connect(self.ssh_ip, username=self.ssh_user, password=self.pwd, port=self.port)
             print(" Connected!\n")
         except:
             time.sleep(4)
@@ -52,12 +52,23 @@ class ssh_handler():
             self.ssh_sftp.close()
 
 
-    def ssh_receive_file(self, dest_path):
+    def ssh_receive_file(self, dest_path, app):
+        # check which application is being used to generate paths
+        if app == "nextclade":
+            path_to_result = "nextclade-master/output/nextclade.tsv"
+        # if not nextclade, it is pangolin
+        else:
+            path_to_result = "pangolin-master/pangolin/pangolin/data/lineage_report.csv"
         try:
-            self.ssh_sftp.get(self.ssh_dest + "/output/nextclade.tsv", dest_path)
+            self.ssh_sftp.get(self.ssh_dest + path_to_result, dest_path)
         except Exception as e:
             print("An error has occurred!")
             print("\n\n", e)
             time.sleep(5)
         finally:
             self.ssh_sftp.close()
+
+
+    def close_connections(self):
+        self.conn.close()
+        self.ssh_sftp.close()

@@ -108,7 +108,7 @@ class WorkflowObj4(workflow_obj):
 
 
 
-        # env activation REQUIRED???
+        # env activation REQUIRED??? -see wf5 helpers and documentation
 
 
 
@@ -126,3 +126,5 @@ class WorkflowObj4(workflow_obj):
         self.ssh_handler.ssh_receive_file(nc_local_path + "/nextclade.tsv")
 
 
+    def clean_connections(self):
+        self.ssh_handler.close_connections()

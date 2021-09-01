@@ -15,6 +15,7 @@ def run_script_4(compiled_fasta_path):
         data_obj.run_nextclade()
         data_obj.receive_nextclade_df(target_folder)
         data_obj.get_nextclade_dfs(nc_path=target_folder + "/nextclade.tsv")
+        data_obj.clean_connections()
 
     else:
         # open nextclade path --> pandas dataframe

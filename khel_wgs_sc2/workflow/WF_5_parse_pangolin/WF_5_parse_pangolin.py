@@ -14,8 +14,9 @@ def run_script_5(compiled_fasta_path):
         data_obj.send_fasta(compiled_fasta_path)
         data_obj.run_pangolin()
         data_obj.receive_pangolin_df(target_folder)
+        data_obj.clean_connections()
         data_obj.get_pango_dfs(po_path=target_folder + "/results.csv")
-
+        
     else:
         # open demo path --> pandas dataframe
         data_obj.get_pango_dfs()
