@@ -62,13 +62,10 @@ class WorkflowObj4(workflow_obj):
 
     def database_push(self):
         # attempt to connect to database
-        # db = establish_db(self, 'WF_4')
-
         super().setup_db()
         df_qc_update_lst = self.df_qc.values.astype(str).tolist()
         self.db_handler.lst_ptr_push(df_lst=df_qc_update_lst, query=self.write_query_tbl2)
         all_time_df_qc = self.db_handler.sub_read(query=self.read_query_tbl2)
-        
         
         df_results_final = merge_dataframes(\
             df1=all_time_df_qc, \
@@ -94,42 +91,50 @@ class WorkflowObj4(workflow_obj):
 
 
     def send_fasta(self, compiled_fasta_path):
+        # store the fasta file name
+        folders = compiled_fasta_path.split("/")
+        self.fasta_filename = folders[-1]
+        print("\nSetting up TCP connection to server")
         # establish connection to server
         super().setup_ssh()
+        print(" Connection established!")
         # send the fasta file to the server, at the specified location
-        self.ssh_handler.ssh_send_file(compiled_fasta_path)
+        print("\nSending fasta file to server...")
+        self.ssh_handler.ssh_send_file(compiled_fasta_path, "nextclade")
+        print(" File sent successfully!")
 
 
     def run_nextclade(self):
         # connection to the server has already been established
         # check for updates and update if needed
-        stdin, stdout, stderr = self.ssh_handler.ssh_exec("""curl -fsSL "https://github.com/nextstrain/nextclade/releases/latest/download/nextclade-Linux-x86_64" -o "nextclade" && chmod +x nextclade""")
-        lines = stdout.readlines()
-        errors = stderr.readlines()
-        for e in errors:
-            print('\n\nerror: ', e)
-        for l in lines:
-            print('\nline: ', l)
+        exec_cmd = "./nextclade --in-order --input-fasta=data/sars-cov-2/input/" + self.fasta_filename + \
+" --input-dataset=data/sars-cov-2 --output-tsv=output/nextclade.tsv --output-dir=output/ --output-basename=nextclade"
+        cmd_lst = [
+            'cd nextclade-master',
+            'curl -fsSL "https://github.com/nextstrain/nextclade/releases/latest/download/nextclade-Linux-x86_64" -o "nextclade" && chmod +x nextclade',
+            exec_cmd
+        ]
 
-
-
-        # env activation REQUIRED??? -see wf5 helpers and documentation
-
-
-
+        command_str = " ; ".join(cmd_lst)
+        print("\nAttempting to update and run the Nextclade application, please be patient.\n")
         # execute command
-        stdin, stdout, stderr = self.ssh_handler.ssh_exec("""nextclade --in-order --input-fasta=data/sars-cov-2/<file_name> --output-tsv=output/nextclade.tsv""")
+        stdin, stdout, stderr = self.ssh_handler.ssh_exec(command_str)
         lines = stdout.readlines()
         errors = stderr.readlines()
         for e in errors:
-            print('\n\nerror: ', e)
+            print(e[:-1])
         for l in lines:
-            print('\nline: ', l)
+            print(l[:-1])
+        print(" Nextclade analysis finished!")
 
     
-    def receive_nextclade_df(self, nc_local_path):
-        self.ssh_handler.ssh_receive_file(nc_local_path + "/nextclade.tsv")
+    def receive_nextclade_df(self, dest):
+        print("\nPulling nextclade results file from server...")
+        self.ssh_handler.ssh_receive_file(dest + "/nextclade.tsv", "nextclade")
+        print(" Nextclade results file successfully received!")
 
 
     def clean_connections(self):
+        print("\nSigning out of server...")
         self.ssh_handler.close_connections()
+        print(" Sign out successful\n")

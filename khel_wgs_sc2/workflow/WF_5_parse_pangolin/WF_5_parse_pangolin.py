@@ -14,11 +14,15 @@ def run_script_5(compiled_fasta_path):
             compiled_fasta_path = data_obj.get_fasta_path()
             target_folders = compiled_fasta_path.split("/")
         target_folder = "/".join(target_folders[:-1])
-        data_obj.send_fasta(compiled_fasta_path)
-        data_obj.run_pangolin()
-        data_obj.receive_pangolin_df(target_folder)
-        data_obj.clean_connections()
-        data_obj.get_pango_dfs(po_path=target_folder + "/results.csv")
+        try:
+            data_obj.send_fasta(compiled_fasta_path)
+            data_obj.run_pangolin()
+            data_obj.receive_pangolin_df(target_folder)
+            data_obj.clean_connections()
+        except Exception as e:
+            data_obj.clean_connections()
+            raise ValueError("Possible Connection error: " + e)
+        data_obj.get_pango_dfs(pango_path=target_folder + "/results.csv")
         
     else:
         # open demo path --> pandas dataframe

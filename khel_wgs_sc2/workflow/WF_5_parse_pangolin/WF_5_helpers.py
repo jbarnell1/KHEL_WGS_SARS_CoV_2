@@ -15,9 +15,9 @@ class WorkflowObj5(workflow_obj):
         super().get_json(5)
 
 
-    def get_pango_dfs(self, po_path=False):
+    def get_pango_dfs(self, pango_path=False):
         # open pangolin path --> pandas dataframe
-        if not po_path:
+        if not pango_path:
             print("\nUse the following window to open the pangolin results workbook...")
             pango_path = get_path()
         splt = pango_path.split("/")
@@ -89,82 +89,72 @@ class WorkflowObj5(workflow_obj):
         # store the fasta file name
         folders = compiled_fasta_path.split("/")
         self.fasta_filename = folders[-1]
+        print("\nSetting up TCP connection to server")
         # establish connection to server
         super().setup_ssh()
+        print(" Connection established!")
         # send the fasta file to the server, at the specified location
-        self.ssh_handler.ssh_send_file(compiled_fasta_path)
+        print("\nSending fasta file to server...")
+        self.ssh_handler.ssh_send_file(compiled_fasta_path, "pangolin")
+        print(" File sent successfully!")
+
 
 
     def run_pangolin(self):
         # connection to the server has already been established
         # check for updates and update if needed
-        stdin, stdout, stderr = self.ssh_handler.ssh_exec("""cd pangolin-master/pangolin""")
-        lines = stdout.readlines()
-        errors = stderr.readlines()
-        for e in errors:
-            print('\n\nerror: ', e)
-        for l in lines:
-            print('\nline: ', l)
+        exec_cmd = "pangolin " + "pangolin/data/" + self.fasta_filename
+        cmd_lst_monday = [
+            "source ~/miniconda3/bin/activate pangolin",
+            "cd pangolin-master/pangolin",
+            "git pull",
+            "conda env update -f environment.yml",
+            "pip install .",
+            exec_cmd
+        ]
 
-        stdin, stdout, stderr = self.ssh_handler.ssh_exec("""conda activate pangolin""")
-        lines = stdout.readlines()
-        errors = stderr.readlines()
-        for e in errors:
-            print('\n\nerror: ', e)
-        for l in lines:
-            print('\nline: ', l)
+        cmd_lst = [
+            "source ~/miniconda3/bin/activate pangolin",
+            "cd pangolin-master/pangolin",
+            "pangolin --update",
+            exec_cmd
+        ]
+
 
         # if monday, do major update
         if datetime.date.today().weekday() == 0:
-            print("\nAttempting to update the Pangolin application, please be patient \
+            command_str = " ; ".join(cmd_lst_monday)
+            print("\nAttempting to update and run the Pangolin application, please be patient \
 as this could take a few minutes.\n")
-            stdin, stdout, stderr = self.ssh_handler.ssh_exec("""git pull""")
+            stdin, stdout, stderr = self.ssh_handler.ssh_exec(command_str)
             lines = stdout.readlines()
             errors = stderr.readlines()
             for e in errors:
-                print('\n\nerror: ', e)
+                print(e[:-1])
             for l in lines:
-                print('\nline: ', l)
-            
-            stdin, stdout, stderr = self.ssh_handler.ssh_exec("""conda env update -f environment.yml""")
-            lines = stdout.readlines()
-            errors = stderr.readlines()
-            for e in errors:
-                print('\n\nerror: ', e)
-            for l in lines:
-                print('\nline: ', l)
-            
-            stdin, stdout, stderr = self.ssh_handler.ssh_exec("""pip install .""")
-            lines = stdout.readlines()
-            errors = stderr.readlines()
-            for e in errors:
-                print('\n\nerror: ', e)
-            for l in lines:
-                print('\nline: ', l)
+                print(l[:-1])
         
         # if not monday, do minor update check
         else:
-            stdin, stdout, stderr = self.ssh_handler.ssh_exec("""pangolin --update""")
+            print("\nRunning the pangolin analysis, please wait...\n")
+            command_str = " ; ".join(cmd_lst)
+            stdin, stdout, stderr = self.ssh_handler.ssh_exec(command_str)
             lines = stdout.readlines()
             errors = stderr.readlines()
             for e in errors:
-                print('\n\nerror: ', e)
+                print(e[:-1])
             for l in lines:
-                print('\nline: ', l)
-
-        # execute command
-        stdin, stdout, stderr = self.ssh_handler.ssh_exec("pangolin " + self.fasta_filename)
-        lines = stdout.readlines()
-        errors = stderr.readlines()
-        for e in errors:
-            print('\n\nerror: ', e)
-        for l in lines:
-            print('\nline: ', l)
+                print(l[:-1])
+        print(" Pangolin analysis finished!")
         
     
     def receive_pangolin_df(self, dest):
-        self.ssh_handler.ssh_receive_file(dest + "results.csv")
+        print("\nPulling pangolin results file from server...")
+        self.ssh_handler.ssh_receive_file(dest + "/results.csv", "pangolin")
+        print(" Pangolin results file successfully received!")
 
     
     def clean_connections(self):
+        print("\nSigning out of server...")
         self.ssh_handler.close_connections()
+        print(" Sign out successful\n")

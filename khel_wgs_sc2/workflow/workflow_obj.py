@@ -81,7 +81,7 @@ class workflow_obj(ABC):
                 self.ssh_ip = gen_private_cache['ssh_ip']
                 self.ssh_user = gen_private_cache['ssh_user']
                 self.ssh_pwd = gen_private_cache['ssh_pwd']
-                self.ssh_port = gen_private_cache['port']
+                self.ssh_port = gen_private_cache['ssh_port']
                 self.ssh_dest = gen_private_cache['ssh_dest']
                 need_ssh = False
 
@@ -216,5 +216,3 @@ future for any reason, modify the cache file: daily_workflow/data/private_cache.
         self.ssh_handler = ssh_handler(self)
         # client_ssh is for sending commands to server
         self.ssh_handler.establish_client_ssh()
-        # transporter is for sending/receiving files
-        self.ssh_handler.establish_transporter()

@@ -506,9 +506,12 @@
     },
     "workflow5": {
         "rename_po_cols_lst": {
+            "taxon": "Sequence name",
             "Lineage": "lineage_id",
+            "lineage": "lineage_id",
             "pangolin version": "pangolin_version",
-            "pangoLEARN version": "pango_learn_version"
+            "pangoLEARN version": "pango_learn_version",
+            "pangoLEARN_version": "pango_learn_version"
         },
         "full_lst": [
             "hsn",
