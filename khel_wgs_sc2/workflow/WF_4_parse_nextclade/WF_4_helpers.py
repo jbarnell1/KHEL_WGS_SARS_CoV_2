@@ -57,6 +57,8 @@ class WorkflowObj4(workflow_obj):
         df.rename(columns={"day_run_num_var":"day_run_num",
             "wgs_run_date_var":"wgs_run_date",
             "machine_num_var":"machine_num"}, inplace=True)
+
+        df.fillna("", inplace=True)
         self.df_qc = df[self.nc_qc_cols_lst]
         self.df_results = df[self.nc_results_cols_lst]
 

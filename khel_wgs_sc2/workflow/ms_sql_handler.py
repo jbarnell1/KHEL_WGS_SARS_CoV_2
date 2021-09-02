@@ -121,8 +121,11 @@ class ms_sql_handler():
                 query_track = list(set(re.findall("({.*?})", new_query)))
                 # replace all occurrances of '{\d}' with the corresponding
                 # values in the df_lst
-                for item in query_track:
-                    new_query = new_query.replace(item, df_lst[i][int(item[1:-1])])
+                try:
+                    for item in query_track:
+                        new_query = new_query.replace(item, df_lst[i][int(item[1:-1])])
+                except IndexError:
+                    pass
                 # if outside_lab or refresh, we are using full excel file, replace
                 # missing data as needed
                 if full:
@@ -136,6 +139,7 @@ class ms_sql_handler():
                     new_query = new_query.replace("other", "OT")
                     new_query = new_query.replace("(, ", "(")
                     new_query = new_query.replace("KS", "Kansas")
+                new_query = new_query.replace("= ,", "= NULL,")
                 res = conn.execute(new_query)
 
 
