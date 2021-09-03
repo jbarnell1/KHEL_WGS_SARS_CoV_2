@@ -1,5 +1,5 @@
 
-# Daily Workflow
+# General Package for State Lab SARS-CoV-2 Analysis
 _______________________________________
 
 ## The daily workflow package contains the following workflows in their respective subdirectories:
