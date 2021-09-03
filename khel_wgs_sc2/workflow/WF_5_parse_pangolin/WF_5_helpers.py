@@ -103,7 +103,7 @@ class WorkflowObj5(workflow_obj):
     def run_pangolin(self):
         # connection to the server has already been established
         # check for updates and update if needed
-        exec_cmd = "pangolin " + "pangolin/data/" + self.fasta_filename
+        exec_cmd = "cd pangolin-master/pangolin && source ~/miniconda3/bin/activate pangolin && pangolin " + "pangolin/data/" + self.fasta_filename
 
         print("\nRunning the pangolin analysis, please wait...\n")
         stdin, stdout, stderr = self.ssh_handler.ssh_exec(exec_cmd)

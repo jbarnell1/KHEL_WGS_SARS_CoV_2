@@ -109,7 +109,7 @@ class WorkflowObj4(workflow_obj):
     def run_nextclade(self):
         # connection to the server has already been established
         # check for updates and update if needed
-        exec_cmd = "./nextclade --in-order --input-fasta=data/sars-cov-2/input/" + self.fasta_filename + \
+        exec_cmd = "cd nextclade-master && ./nextclade --in-order --input-fasta=data/sars-cov-2/input/" + self.fasta_filename + \
 " --input-dataset=data/sars-cov-2 --output-tsv=output/nextclade.tsv --output-dir=output/ --output-basename=nextclade"
 
         print("\nAttempting to run the Nextclade application, please wait.\n")
