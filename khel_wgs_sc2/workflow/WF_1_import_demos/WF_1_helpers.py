@@ -98,35 +98,6 @@ class WorkflowObj1(workflow_obj):
 
         # sort/remove columns to match list
         self.df = self.df[self.sample_data_col_order]
-
-
-    # def get_initial_hsn_df(self):
-    #     # attempt to connect to database
-    #     super().setup_db()
-    #     # What HSNs included in our dataframe already exist in the database?
-    #     hsn_lst = self.df['hsn'].to_list()
-    #     self.hsn_df = self.db_handler.sub_lst_read(query=self.read_query_tbl1, lst=hsn_lst)
-    #     self.qr = self.hsn_df["hsn"].values.astype(str).tolist()
-
-
-    # def remove_existing_hsns(self):
-    #     # create new dataframe that excludes hsn's already common to database and dataframe
-    #     lst = list(self.df.columns)
-    #     size = self.df.index
-    #     new_row = []
-    #     self.already_exist = []
-    #     for i in range(len(size)):
-    #         # cell_val = hsn of row we are currently evaluating
-    #         cell_val = str(self.df.iloc[i][lst.index("hsn")])
-    #         currentrow = self.df.iloc[i]
-    #         currentrow = currentrow.values.tolist()
-    #         if cell_val not in self.qr:
-    #             new_row.append(currentrow)
-    #         else:
-    #             self.already_exist.append(cell_val)
-        
-        # # now, transform list of non-common rows back into dataframe
-        # self.df_new_rows = pd.DataFrame(new_row, columns= list(self.df.columns))
         
 
     def database_push(self):

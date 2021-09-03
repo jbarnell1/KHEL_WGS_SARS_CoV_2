@@ -31,15 +31,6 @@ def run_script_1():
     data_obj.merge_dfs()
     data_obj.format_dfs()
 
-    # capture existing hsns from database
-    # READER
-    #data_obj.get_initial_hsn_df()
-
-    # eliminate any rows from joined dataframe
-    # if already exist in database
-    # FORMATTER
-    #data_obj.remove_existing_hsns()
-
     # get info into database
     # DB_HANDLER
     data_obj.database_push()
