@@ -31,7 +31,7 @@ class WorkflowObj3(workflow_obj):
 
         # make file to save to
         if splt[-3] == "ClearLabs" or splt[-3] == "ClearLabs downloads":
-            path_write = "\\".join(splt[:-1]) + "\\" + filename
+            path_write = "/".join(splt[:-1]) + "/" + filename
         else:
             path_write = "DOES NOT EXIST"
         extension = ".fasta"

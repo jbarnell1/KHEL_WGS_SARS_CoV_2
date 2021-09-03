@@ -140,6 +140,7 @@ class ms_sql_handler():
                     new_query = new_query.replace("(, ", "(")
                     new_query = new_query.replace("KS", "Kansas")
                 new_query = new_query.replace("= ,", "= NULL,")
+                new_query = new_query.replace("= \'None\',", "= NULL,")
                 res = conn.execute(new_query)
 
 
