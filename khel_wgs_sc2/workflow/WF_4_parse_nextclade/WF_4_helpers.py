@@ -111,16 +111,10 @@ class WorkflowObj4(workflow_obj):
         # check for updates and update if needed
         exec_cmd = "./nextclade --in-order --input-fasta=data/sars-cov-2/input/" + self.fasta_filename + \
 " --input-dataset=data/sars-cov-2 --output-tsv=output/nextclade.tsv --output-dir=output/ --output-basename=nextclade"
-        cmd_lst = [
-            'cd nextclade-master',
-            'curl -fsSL "https://github.com/nextstrain/nextclade/releases/latest/download/nextclade-Linux-x86_64" -o "nextclade" && chmod +x nextclade',
-            exec_cmd
-        ]
 
-        command_str = " ; ".join(cmd_lst)
-        print("\nAttempting to update and run the Nextclade application, please be patient.\n")
+        print("\nAttempting to run the Nextclade application, please wait.\n")
         # execute command
-        stdin, stdout, stderr = self.ssh_handler.ssh_exec(command_str)
+        stdin, stdout, stderr = self.ssh_handler.ssh_exec(exec_cmd)
         lines = stdout.readlines()
         errors = stderr.readlines()
         for e in errors:

@@ -104,47 +104,15 @@ class WorkflowObj5(workflow_obj):
         # connection to the server has already been established
         # check for updates and update if needed
         exec_cmd = "pangolin " + "pangolin/data/" + self.fasta_filename
-        cmd_lst_monday = [
-            "source ~/miniconda3/bin/activate pangolin",
-            "cd pangolin-master/pangolin",
-            "git pull",
-            "conda env update -f environment.yml",
-            "pip install .",
-            exec_cmd
-        ]
 
-        cmd_lst = [
-            "source ~/miniconda3/bin/activate pangolin",
-            "cd pangolin-master/pangolin",
-            "pangolin --update",
-            exec_cmd
-        ]
-
-
-        # if monday, do major update
-        if datetime.date.today().weekday() == 0:
-            command_str = " ; ".join(cmd_lst_monday)
-            print("\nAttempting to update and run the Pangolin application, please be patient \
-as this could take a few minutes.\n")
-            stdin, stdout, stderr = self.ssh_handler.ssh_exec(command_str)
-            lines = stdout.readlines()
-            errors = stderr.readlines()
-            for e in errors:
-                print(e[:-1])
-            for l in lines:
-                print(l[:-1])
-        
-        # if not monday, do minor update check
-        else:
-            print("\nRunning the pangolin analysis, please wait...\n")
-            command_str = " ; ".join(cmd_lst)
-            stdin, stdout, stderr = self.ssh_handler.ssh_exec(command_str)
-            lines = stdout.readlines()
-            errors = stderr.readlines()
-            for e in errors:
-                print(e[:-1])
-            for l in lines:
-                print(l[:-1])
+        print("\nRunning the pangolin analysis, please wait...\n")
+        stdin, stdout, stderr = self.ssh_handler.ssh_exec(exec_cmd)
+        lines = stdout.readlines()
+        errors = stderr.readlines()
+        for e in errors:
+            print(e[:-1])
+        for l in lines:
+            print(l[:-1])
         print(" Pangolin analysis finished!")
         
     
