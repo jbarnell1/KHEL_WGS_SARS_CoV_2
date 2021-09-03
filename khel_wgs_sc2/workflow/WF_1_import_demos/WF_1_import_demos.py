@@ -33,20 +33,20 @@ def run_script_1():
 
     # capture existing hsns from database
     # READER
-    data_obj.get_initial_hsn_df()
+    #data_obj.get_initial_hsn_df()
 
     # eliminate any rows from joined dataframe
     # if already exist in database
     # FORMATTER
-    data_obj.remove_existing_hsns()
+    #data_obj.remove_existing_hsns()
 
     # get info into database
     # DB_HANDLER
     data_obj.database_push()
 
-    print("\nThe following HSN's already existed in the database, and were not added:")
-    print(data_obj.already_exist)
-    print("^^ " + str(len(data_obj.already_exist)) + " total samples^^\n")
+    # print("\nThe following HSN's already existed in the database, and were not added:")
+    # print(data_obj.already_exist)
+    # print("^^ " + str(len(data_obj.already_exist)) + " total samples^^\n")
 
     print("\n================================\nSUCCESS - END OF SCRIPT\n================================\n\n")
     time.sleep(2)

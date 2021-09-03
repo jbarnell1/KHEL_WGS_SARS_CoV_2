@@ -371,6 +371,30 @@
             "SELECT hsn",
             "FROM dbo.Table_1",
             "WHERE hsn IN {hsn_query}"
+        ],
+        "write_query_tbl1":[
+            "UPDATE dbo.Table_1",
+            "SET race = '{1}',",
+            "facility = '{2}',",
+            "county = '{3}',",
+            "state = '{4}',",
+            "dob = CAST('{5}' AS DATE),",
+            "age = {6},",
+            "sex = '{7}',",
+            "f_name = '{8}',",
+            "l_name = '{9}',",
+            "Ethnicity = '{10}',",
+            "wgs_run_date = CAST('{11}' AS DATE),",
+            "pcr_run_date = CAST('{12}' AS DATE),",
+            "date_recd = CAST('{13}' AS DATE),",
+            "doc = CAST('{14}' AS DATE),",
+            "facility_id = {15},",
+            "facility_category = '{16}',",
+            "source = '{17}'",
+            "WHERE hsn = {0}",
+            "IF @@ROWCOUNT=0",
+            "INSERT INTO dbo.Table_1 {df_table_col_query} VALUES",
+            "({0}, '{1}', '{2}', '{3}', '{4}', CAST('{5}' AS DATE), {6}, '{7}', '{8}', '{9}', '{10}', CAST('{11}' AS DATE), CAST('{12}' AS DATE), CAST('{13}' AS DATE), CAST('{14}' AS DATE), {15}, '{16}', '{17}')"
         ]
     },
     "workflow2": {

@@ -4,6 +4,7 @@ from workflow.ui import progressBar
 import time
 import sys
 import pandas as pd
+import re
 
 
 
@@ -141,6 +142,8 @@ class ms_sql_handler():
                     new_query = new_query.replace("KS", "Kansas")
                 new_query = new_query.replace("= ,", "= NULL,")
                 new_query = new_query.replace("= \'None\',", "= NULL,")
+                new_query = new_query.replace("CAST('nan' AS DATE)", "NULL")
+                new_query = new_query.replace("luke's", 'lukes')
                 res = conn.execute(new_query)
 
 
