@@ -25,7 +25,7 @@ class outside_lab_obj(workflow_obj):
         xl_path = get_path()
         #self.logger.info(self.id + ": Getting outside lab data from worksheet")
         df = get_pandas(xl_path, 'outside_lab', 'outside_lab', ',')
-        df.columns = [str(col).strip() for col in list(df.columns)]
+        df.columns = [str(col).strip().lower() for col in list(df.columns)]
         df.rename(columns=self.rename_dict, inplace=True)
 
         # add columns
