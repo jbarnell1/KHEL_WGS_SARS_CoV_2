@@ -369,11 +369,11 @@
         ],
         "read_query_tbl1": [
             "SELECT hsn",
-            "FROM dbo.Table_1",
+            "FROM dbo.Results",
             "WHERE hsn IN {hsn_query}"
         ],
         "write_query_tbl1":[
-            "UPDATE dbo.Table_1",
+            "UPDATE dbo.Results",
             "SET race = '{1}',",
             "facility = '{2}',",
             "county = '{3}',",
@@ -393,7 +393,7 @@
             "source = '{17}'",
             "WHERE hsn = {0}",
             "IF @@ROWCOUNT=0",
-            "INSERT INTO dbo.Table_1 {df_table_col_query} VALUES",
+            "INSERT INTO dbo.Results {df_table_col_query} VALUES",
             "({0}, '{1}', '{2}', '{3}', '{4}', CAST('{5}' AS DATE), {6}, '{7}', '{8}', '{9}', '{10}', CAST('{11}' AS DATE), CAST('{12}' AS DATE), CAST('{13}' AS DATE), CAST('{14}' AS DATE), {15}, '{16}', '{17}')"
         ]
     },
@@ -417,7 +417,7 @@
             "wgs_run_date"
         ],
         "write_query_tbl1": [
-            "UPDATE dbo.Table_1",
+            "UPDATE dbo.Results",
             "SET avg_depth = {1}, percent_cvg = {2}, wgs_run_date = CAST('{3}' AS DATE)",
             "WHERE (hsn = {0} AND percent_cvg IS NULL AND avg_depth IS NULL)",
             "OR (hsn = {0} AND percent_cvg < {2} AND {1} >= {avg_depth_cutoff})"
@@ -435,7 +435,7 @@
     },
     "workflow3": {
         "write_query_tbl2": [
-            "UPDATE dbo.Table_2",
+            "UPDATE dbo.Run_Stats",
             "SET path_to_fasta = '{5}'",
             "WHERE hsn = {0} AND wgs_run_date = CAST('{4}' AS DATE) AND machine_num = {1} AND position = {2} AND day_run_num = {3}"
         ],
@@ -507,21 +507,21 @@
             "nextclade_version"
         ],
         "write_query_tbl2": [
-            "UPDATE dbo.Table_2",
+            "UPDATE dbo.Run_Stats",
             "SET total_ns = {5}, qc_snpclusters_status = '{6}', qc_overall_status = '{7}'",
             "WHERE hsn = {0} AND wgs_run_date = CAST('{1}' AS DATE) AND machine_num = {2} AND position = {3} AND day_run_num = {4}"
         ],
         "write_query_tbl1": [
-            "UPDATE dbo.Table_1",
+            "UPDATE dbo.Results",
             "SET clade = '{1}', total_ns = {2}, total_mutations = {3}, total_aa_changes = {4}, aa_substitutions = '{5}', pcr_primer_changes = '{6}', nextclade_version = CAST('{7}' AS DATE), path_to_fasta ='{11}'",
             "WHERE hsn = {0}"
         ],
         "read_query_tbl2": [
             "SELECT row.*",
-            "FROM dbo.Table_2 row",
+            "FROM dbo.Run_Stats row",
             "INNER JOIN",
             "(SELECT hsn, MAX(percent_cvg) AS MaxPercentCoverage",
-            "FROM dbo.Table_2",
+            "FROM dbo.Run_Stats",
             "GROUP BY hsn) grouped_row",
             "ON row.hsn = grouped_row.hsn",
             "AND row.percent_cvg = grouped_row.MaxPercentCoverage",
@@ -555,16 +555,16 @@
             "wgs_run_date_var"
         ],
         "write_query_tbl1": [
-            "UPDATE dbo.Table_1",
+            "UPDATE dbo.Results",
             "SET lineage_id = '{1}', pangolin_version = '{2}', pango_learn_version = CAST('{3}' AS DATE)",
             "WHERE hsn = {0}"
         ],
         "read_query_tbl2": [
             "SELECT row.*",
-            "FROM dbo.Table_2 row",
+            "FROM dbo.Run_Stats row",
             "INNER JOIN",
             "(SELECT hsn, MAX(percent_cvg) AS MaxPercentCoverage",
-            "FROM dbo.Table_2",
+            "FROM dbo.Run_Stats",
             "GROUP BY hsn) grouped_row",
             "ON row.hsn = grouped_row.hsn",
             "AND row.percent_cvg = grouped_row.MaxPercentCoverage",
@@ -627,10 +627,10 @@
         ],
         "read_date_query_tbl1": [
             "SELECT results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
-            "FROM dbo.Table_1 results",
+            "FROM dbo.Results results",
             "INNER JOIN",
             "(SELECT hsn, pos_pass, neg_pass",
-            "FROM dbo.Table_2) qc",
+            "FROM dbo.Run_Stats) qc",
             "ON results.hsn = qc.hsn",
             "WHERE results.wgs_run_date >= CAST('{start}' AS DATE)",
             "AND results.wgs_run_date <= CAST('{end}' AS DATE)",
@@ -648,10 +648,10 @@
         ],
         "read_bad_date_query_tbl1":[
             "SELECT *",
-            "FROM dbo.Table_1 results",
+            "FROM dbo.Results results",
             "INNER JOIN",
             "(SELECT hsn, pos_pass, neg_pass",
-            "FROM dbo.Table_2) qc",
+            "FROM dbo.Run_Stats) qc",
             "ON results.hsn = qc.hsn",
             "WHERE results.wgs_run_date >= CAST('{start}' AS DATE)",
             "AND results.wgs_run_date <= CAST('{end}' AS DATE)",
@@ -667,10 +667,10 @@
         ],
         "read_facility_query_tbl1": [
             "SELECT results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
-            "FROM dbo.Table_1 results",
+            "FROM dbo.Results results",
             "INNER JOIN",
             "(SELECT hsn, pos_pass, neg_pass",
-            "FROM dbo.Table_2) qc",
+            "FROM dbo.Run_Stats) qc",
             "ON results.hsn = qc.hsn",
             "WHERE results.facility = '{facility}'",
             "AND results.lineage_id IS NOT NULL",
@@ -684,10 +684,10 @@
         ],
         "read_bad_facility_query_tbl1": [
             "SELECT results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
-            "FROM dbo.Table_1 results",
+            "FROM dbo.Results results",
             "INNER JOIN",
             "(SELECT hsn, pos_pass, neg_pass",
-            "FROM dbo.Table_2) qc",
+            "FROM dbo.Run_Stats) qc",
             "ON results.hsn = qc.hsn",
             "WHERE results.facility = '{facility}'",
             "AND results.lineage_id IS NOT NULL",
@@ -701,10 +701,10 @@
         ],
         "read_sfacility_query_tbl1": [
             "SELECT results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
-            "FROM dbo.Table_1 results",
+            "FROM dbo.Results results",
             "INNER JOIN",
             "(SELECT hsn, pos_pass, neg_pass",
-            "FROM dbo.Table_2) qc",
+            "FROM dbo.Run_Stats) qc",
             "ON results.hsn = qc.hsn",
             "WHERE results.submitting_lab = '{sub_lab}'",
             "AND results.lineage_id IS NOT NULL",
@@ -719,10 +719,10 @@
         ],
         "read_bad_sfacility_query_tbl1": [
             "SELECT results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
-            "FROM dbo.Table_1 results",
+            "FROM dbo.Results results",
             "INNER JOIN",
             "(SELECT hsn, pos_pass, neg_pass",
-            "FROM dbo.Table_2) qc",
+            "FROM dbo.Run_Stats) qc",
             "ON results.hsn = qc.hsn",
             "WHERE results.submitting_lab = '{sub_lab}'",
             "AND results.lineage_id IS NOT NULL",
@@ -737,11 +737,11 @@
         ],
         "read_all_query_tbl1": [
             "SELECT *",
-            "FROM dbo.Table_1"
+            "FROM dbo.Results"
         ],
         "read_bad_all_query_tbl1": [
             "SELECT *",
-            "FROM dbo.Table_1",
+            "FROM dbo.Results",
             "WHERE 1=0"
         ]
     },
@@ -755,7 +755,7 @@
             "gisaid_epi_isl"
         ],
         "write_query_tbl1": [
-            "UPDATE dbo.Table_1",
+            "UPDATE dbo.Results",
             "SET gisaid_epi_isl = '{1}'",
             "WHERE gisaid_num = {0}"
         ]
@@ -888,11 +888,11 @@
         ],
         "read_query_tbl1_max_gisaid": [
             "SELECT MAX(gisaid_num)",
-            "FROM dbo.Table_1"
+            "FROM dbo.Results"
         ],
         "read_query_tbl1_eligible_hsn": [
             "SELECT hsn",
-            "FROM dbo.Table_1",
+            "FROM dbo.Results",
             "WHERE wgs_run_date >= '{prev_week}'",
             "AND percent_cvg > {percent_cvg_cutoff} ",
             "AND path_to_fasta IS NOT NULL",
@@ -902,12 +902,12 @@
         ],
         "read_query_tbl1": [
             "SELECT *",
-            "FROM dbo.Table_1",
+            "FROM dbo.Results",
             "WHERE hsn IN {hsn_query}"
         ],
 
         "write_query_tbl1": [
-            "UPDATE dbo.Table_1",
+            "UPDATE dbo.Results",
             "SET gisaid_num = {1}",
             "WHERE hsn = {0}"
         ]
@@ -1015,11 +1015,11 @@
             "ethnicity": "Ethnicity"
         },
         "write_query_tbl1": [
-            "INSERT INTO dbo.Table_1 {df_table_col_query} VALUES",
+            "INSERT INTO dbo.Results {df_table_col_query} VALUES",
             "({0}, '{1}', '{2}', {3}, '{4}', '{5}', {6}, {7}, {8}, '{9}', '{10}', '{11}', '{12}', '{13}', CAST('{14}' AS DATE), {15}, '{16}', '{17}', '{18}', CAST('{19}' AS DATE), '{20}', CAST('{21}' AS DATE), CAST('{22}' AS DATE), '{23}', CAST('{24}' AS DATE), CAST('{25}' AS DATE), {26}, '{27}', '{28}', {29}, {30}, '{31}', '{32}', {33}, {34}, '{35}', CAST('{36}' AS DATE), CAST('{37}' AS DATE))"
         ],
         "write_query_tbl2": [
-            "INSERT INTO dbo.Table_2 {df_table_col_query} VALUES",
+            "INSERT INTO dbo.Run_Stats {df_table_col_query} VALUES",
             "({0}, '{1}', {2}, {3}, {4}, {5}, {6}, {7}, '{8}', '{9}', CAST('{10}' AS DATE), '{11}')"
         ]
     },
@@ -1097,53 +1097,53 @@
             "county"
         ],
         "read_query_min": [
-            "SELECT * FROM dbo.Table_1",
+            "SELECT * FROM dbo.Results",
             "WHERE {1} >= {2} And avg_depth >= {4}"
         ],
         "read_query_date": [
-            "SELECT * FROM dbo.Table_1",
+            "SELECT * FROM dbo.Results",
             "WHERE {0} >= CAST('{1}' AS DATE) And {0} <= CAST('{2}' AS DATE)"
         ],
         "read_query_str": [
-            "SELECT * FROM dbo.Table_1",
+            "SELECT * FROM dbo.Results",
             "WHERE UPPER({0}) LIKE UPPER('%{1}%')"
         ],
         "read_query_unique": [
             "SELECT {1}, count(*)",
-            "FROM dbo.Table_1",
+            "FROM dbo.Results",
             "WHERE {1} IS NOT NULL",
             "GROUP BY {1}"
         ],
         "read_query_all": [
             "SELECT *",
-            "FROM dbo.Table_1"
+            "FROM dbo.Results"
         ],
         "read_query_all_valid": [
             "SELECT *",
-            "FROM dbo.Table_1",
+            "FROM dbo.Results",
             "WHERE percent_cvg > {3}"
         ],
         "read_query_else": [
             "SELECT *",
-            "FROM dbo.Table_1",
+            "FROM dbo.Results",
             "WHERE {0} = {1}"
         ],
         "read_query_merge_all": [
             "SELECT row.*",
-            "FROM dbo.Table_2 row",
+            "FROM dbo.Run_Stats row",
             "INNER JOIN",
             "(SELECT hsn, MAX(percent_cvg) AS MaxPercentCoverage",
-            "FROM dbo.Table_2",
+            "FROM dbo.Run_Stats",
             "GROUP BY hsn) grouped_row",
             "ON row.hsn = grouped_row.hsn",
             "AND row.percent_cvg = grouped_row.MaxPercentCoverage"
         ],
         "read_query_merge": [
             "SELECT row.*",
-            "FROM dbo.Table_2 row",
+            "FROM dbo.Run_Stats row",
             "INNER JOIN",
             "(SELECT hsn, MAX(percent_cvg) AS MaxPercentCoverage",
-            "FROM dbo.Table_2",
+            "FROM dbo.Run_Stats",
             "GROUP BY hsn) grouped_row",
             "ON row.hsn = grouped_row.hsn",
             "AND row.percent_cvg = grouped_row.MaxPercentCoverage",
@@ -1224,11 +1224,11 @@
             "ethnicity": "Ethnicity"
         },
         "write_query_tbl1": [
-            "INSERT INTO dbo.Table_1 {df_table_col_query} VALUES",
+            "INSERT INTO dbo.Results {df_table_col_query} VALUES",
             "({0}, '{1}', '{2}', {3}, '{4}', '{5}', {6}, {7}, {8}, '{9}', '{10}', '{11}', '{12}', '{13}', CAST('{14}' AS DATE), {15}, '{16}', '{17}', '{18}', CAST('{19}' AS DATE), '{20}', CAST('{21}' AS DATE), CAST('{22}' AS DATE), '{23}', CAST('{24}' AS DATE), CAST('{25}' AS DATE), {26}, '{27}', '{28}', {29}, {30}, '{31}', '{32}', {33}, {34}, '{35}', CAST('{36}' AS DATE), CAST('{37}' AS DATE))"
         ],
         "write_query_tbl2": [
-            "INSERT INTO dbo.Table_2 {df_table_col_query} VALUES",
+            "INSERT INTO dbo.Run_Stats {df_table_col_query} VALUES",
             "({0}, '{1}', {2}, {3}, {4}, {5}, {6}, {7}, '{8}', '{9}', CAST('{10}' AS DATE), '{11}')"
         ]
     }

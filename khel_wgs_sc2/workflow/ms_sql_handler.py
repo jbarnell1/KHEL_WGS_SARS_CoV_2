@@ -36,9 +36,9 @@ class ms_sql_handler():
     def clear_db(self):
         with self.engine.connect() as conn:
             #self.logger.info("refresh: deleting all information from database")
-            query = "DELETE FROM dbo.Table_1"
+            query = "DELETE FROM dbo.Results"
             res = conn.execute(query)
-            query = "DELETE FROM dbo.Table_2"
+            query = "DELETE FROM dbo.Run_Stats"
             res = conn.execute(query)
         #self.logger.info("refresh: database_clear finished!")
     
@@ -78,7 +78,7 @@ class ms_sql_handler():
             for i in progressBar(range(len(df_lst)), prefix='Progress:', suffix='Complete', length=50):
                 df_lst[i] = format_lst(df_lst[i])
                 df_lst_query = "(" + ", ".join(df_lst[i]) + ")"
-                query = f"""INSERT INTO dbo.Table_2 {df_cols} VALUES {df_lst_query}"""
+                query = f"""INSERT INTO dbo.Run_Stats {df_cols} VALUES {df_lst_query}"""
                 res = conn.execute(query)
 
     def lst_ptr_push(self, df_lst=None, query=None, full=False, df=None):
