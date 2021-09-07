@@ -11,7 +11,7 @@ _______________________________________
 <br />
 
  - **Step 1**
-   - Start the script, and type either `start` or `1` to enter the first step of the daily workflow script.
+   - Start the main script, and type either `start` or `1` to enter the first step of the daily workflow script.
      - If you enter `start`, the script will move from steps 1 to 5 automatically
 
 <br />
