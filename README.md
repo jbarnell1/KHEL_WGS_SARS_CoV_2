@@ -108,7 +108,6 @@ In addition to the standard workflows, I have included several scripts which can
 ### **[Outside Lab:](docs/outside_lab.md)**
   - This script uploads data to the database.
   - The supplied template must be used in order to ensure all data is imported.
-  - NOT YET IMPLEMENTED
 
 <br />
 <br />
