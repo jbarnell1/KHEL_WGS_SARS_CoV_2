@@ -3,7 +3,7 @@ import time
 
 
 def run_epi_isl():
-    print("\n================================\EPI_ISL Import Script\n================================\n\n")
+    print("\n================================\nEPI_ISL Import Script\n================================\n\n")
     print("Importing data from cache...")
 
     # import relevant data from json file
