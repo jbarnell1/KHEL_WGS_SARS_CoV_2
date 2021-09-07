@@ -54,7 +54,7 @@ _______________________________________
 
 ## How the GISAID report works:
 
-### I will split the logic up into the functions that the script calls from it's helper file.
+### I will split the logic up into the functions that the script calls from its helper file.
 
 <br />
 
