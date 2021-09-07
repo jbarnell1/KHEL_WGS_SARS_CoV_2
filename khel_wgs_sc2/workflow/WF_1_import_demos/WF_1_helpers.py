@@ -18,6 +18,18 @@ class WorkflowObj1(workflow_obj):
         super().get_json(1)
 
 
+    def verify_ctrls(self):
+        today = datetime.datetime.today()
+        print("\nVerifying control expiration dates...")
+        if self.pos_ctrl_exp >= today:
+            print("ALERT!! The positive control is out of spec!  Please update in data/private_cache.json")
+            raise ValueError("Positive Control is invalid- already expired")
+        if self.neg_ctrl_exp >= today:
+            print("ALERT!! The negative control is out of spec!  Please update in data/private_cache.json")
+            raise ValueError("Positive Control is invalid- already expired")
+        print(" Done!\n")
+
+
     def get_initial_demo_df(self):
         print("\nUse the following window to open the wgs run order worksheet...")
         self.demo_path = get_path()
@@ -106,7 +118,8 @@ class WorkflowObj1(workflow_obj):
         df_table_col_query = "(" + ", ".join(self.df.columns.astype(str).tolist()) + ")"
         self.write_query_tbl1 = self.write_query_tbl1.replace("{df_table_col_query}", df_table_col_query)
         self.db_handler.lst_ptr_push(df_lst=df_demo_lst, query=self.write_query_tbl1)
-        #self.db_handler.to_sql_push(df=self.df_new_rows, tbl_name="Table_1")
+        self.db_handler.lst_ptr_push(df_lst=df_demo_lst, query=self.write_query_tbl2)
+
 
 
 

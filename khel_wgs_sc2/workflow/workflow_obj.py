@@ -84,6 +84,13 @@ class workflow_obj(ABC):
                 self.ssh_port = gen_private_cache['ssh_port']
                 self.ssh_dest = gen_private_cache['ssh_dest']
                 need_ssh = False
+            
+            need_ctrls = True
+            self.neg_ctrl_lot = gen_private_cache['neg_ctrl_lot']
+            self.neg_ctrl_exp = gen_private_cache['neg_ctrl_exp']
+            self.pos_ctrl_lot = gen_private_cache['pos_ctrl_lot']
+            self.pos_ctrl_exp = gen_private_cache['pos_ctrl_exp']
+            need_ctrls = False
 
             if wf == 1:
                 self.lims_conn = working_private_cache['lims_conn']
@@ -166,6 +173,12 @@ analysis on the current computer, use '127.0.0.1')\n-->")
 (typically port '8080' or '8088' will work fine.)\n-->")
                 self.ssh_dest = input("\nPlease type the location of the nextclade package on the server.\n-->")
             
+            if need_ctrls:
+                self.neg_ctrl_lot = input("\nPlease type the lot number for the negative control (something like 'AF29484103')\n-->")
+                self.neg_ctrl_exp = input("\nPlease type the expiration date for the negative control, formatted YYYY-MM-DD (something like '2021-02-19')")
+                self.pos_ctrl_lot = input("\nPlease type the lot number for the positive control (something like 'AF29484103')\n-->")
+                self.pos_ctrl_exp = input("\nPlease type the expiration date for the positive control, formatted YYYY-MM-DD (something like '2021-02-19')")
+
             print("\nFinished! If you need to change these values in the \
 future for any reason, modify the cache file: daily_workflow/data/private_cache.json")
             if wf == 1:

@@ -9,6 +9,9 @@ def run_script_1():
     data_obj = WorkflowObj1()
     data_obj.get_json()
 
+    # verify that controls are valid
+    data_obj.verify_ctrls()
+
     # open demo path --> pandas dataframe
     # READER
     data_obj.get_initial_demo_df()

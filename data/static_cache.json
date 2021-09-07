@@ -40,6 +40,18 @@
             "sex": [
                 "format_sex"
             ],
+            "neg_ctrl_lot": [
+                "neg_ctrl_lot"
+            ],
+            "neg_ctrl_exp": [
+                "neg_ctrl_exp"
+            ],
+            "pos_ctrl_lot": [
+                "pos_ctrl_lot"
+            ],
+            "pos_ctrl_exp": [
+                "pos_ctrl_exp"
+            ],
             "state": [
                 "format_state",
                 "state_abbrev"
@@ -95,12 +107,6 @@
             ],
             "neg_pass": [
                 "neg_ctrl_pass"
-            ],
-            "neg_ctrl_lot": [
-                "neg_ctrl_lot"
-            ],
-            "pos_ctrl_lot": [
-                "pos_ctrl_lot"
             ],
             "Lab": [
                 "lab"
@@ -349,7 +355,11 @@
             "doc",
             "facility_id",
             "facility_category",
-            "source"
+            "source",
+            "neg_ctrl_lot",
+            "neg_ctrl_exp",
+            "pos_ctrl_lot",
+            "pos_ctrl_exp"
         ],
         "add_col_lst": [
             "pcr_run_date",
@@ -365,7 +375,11 @@
             "facility",
             "facility_category",
             "source",
-            "race"
+            "race",
+            "neg_ctrl_lot",
+            "neg_ctrl_exp",
+            "pos_ctrl_lot",
+            "pos_ctrl_exp"
         ],
         "read_query_tbl1": [
             "SELECT hsn",
@@ -395,6 +409,17 @@
             "IF @@ROWCOUNT=0",
             "INSERT INTO dbo.Results {df_table_col_query} VALUES",
             "({0}, '{1}', '{2}', '{3}', '{4}', CAST('{5}' AS DATE), {6}, '{7}', '{8}', '{9}', '{10}', CAST('{11}' AS DATE), CAST('{12}' AS DATE), CAST('{13}' AS DATE), CAST('{14}' AS DATE), {15}, '{16}', '{17}')"
+        ],
+        "write_query_tbl2":[
+            "UPDATE dbo.Run_Stats",
+            "neg_ctrl_lot = '{18}',",
+            "neg_ctrl_exp = CAST('{19}' AS DATE),",
+            "pos_ctrl_lot = '{20}',",
+            "pos_ctrl_exp = CAST('{21}' AS DATE),",
+            "WHERE hsn = {0},",
+            "IF @@ROWCOUNT=0",
+            "INSERT INTO dbo.Run_Stats (hsn, neg_ctrl_lot, neg_ctrl_exp, pos_ctrl_lot, pos_ctrl_exp) VALUES",
+            "({0}, '{18}', CAST('{19}' AS DATE), '{20}', CAST('{21}' AS DATE)"
         ]
     },
     "workflow2": {
