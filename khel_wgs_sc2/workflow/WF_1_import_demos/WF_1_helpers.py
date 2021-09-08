@@ -21,10 +21,10 @@ class WorkflowObj1(workflow_obj):
     def verify_ctrls(self):
         today = datetime.datetime.today()
         print("\nVerifying control expiration dates...")
-        if self.pos_ctrl_exp >= today:
+        if datetime.datetime.strptime(self.pos_ctrl_exp, "%Y-%m-%d") <= today:
             print("ALERT!! The positive control is out of spec!  Please update in data/private_cache.json")
             raise ValueError("Positive Control is invalid- already expired")
-        if self.neg_ctrl_exp >= today:
+        if datetime.datetime.strptime(self.neg_ctrl_exp, "%Y-%m-%d") <= today:
             print("ALERT!! The negative control is out of spec!  Please update in data/private_cache.json")
             raise ValueError("Positive Control is invalid- already expired")
         print(" Done!\n")
@@ -118,7 +118,7 @@ class WorkflowObj1(workflow_obj):
         df_table_col_query = "(" + ", ".join(self.df.columns.astype(str).tolist()) + ")"
         self.write_query_tbl1 = self.write_query_tbl1.replace("{df_table_col_query}", df_table_col_query)
         self.db_handler.lst_ptr_push(df_lst=df_demo_lst, query=self.write_query_tbl1)
-        self.db_handler.lst_ptr_push(df_lst=df_demo_lst, query=self.write_query_tbl2)
+        #self.db_handler.lst_ptr_push(df_lst=df_demo_lst, query=self.write_query_tbl2)
 
 
 

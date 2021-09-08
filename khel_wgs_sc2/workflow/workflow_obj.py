@@ -175,9 +175,9 @@ analysis on the current computer, use '127.0.0.1')\n-->")
             
             if need_ctrls:
                 self.neg_ctrl_lot = input("\nPlease type the lot number for the negative control (something like 'AF29484103')\n-->")
-                self.neg_ctrl_exp = input("\nPlease type the expiration date for the negative control, formatted YYYY-MM-DD (something like '2021-02-19')")
+                self.neg_ctrl_exp = input("\nPlease type the expiration date for the negative control, formatted YYYY-MM-DD (something like '2021-02-19')\n-->")
                 self.pos_ctrl_lot = input("\nPlease type the lot number for the positive control (something like 'AF29484103')\n-->")
-                self.pos_ctrl_exp = input("\nPlease type the expiration date for the positive control, formatted YYYY-MM-DD (something like '2021-02-19')")
+                self.pos_ctrl_exp = input("\nPlease type the expiration date for the positive control, formatted YYYY-MM-DD (something like '2021-02-19')\n-->")
 
             print("\nFinished! If you need to change these values in the \
 future for any reason, modify the cache file: daily_workflow/data/private_cache.json")
@@ -211,6 +211,10 @@ future for any reason, modify the cache file: daily_workflow/data/private_cache.
             full_private_cache["all_workflows"]['ssh_pwd'] = self.ssh_pwd
             full_private_cache["all_workflows"]['ssh_port'] = self.ssh_port
             full_private_cache["all_workflows"]['ssh_dest'] = self.ssh_dest
+            full_private_cache["all_workflows"]['neg_ctrl_lot'] = self.neg_ctrl_lot
+            full_private_cache["all_workflows"]['neg_ctrl_exp'] = self.neg_ctrl_exp
+            full_private_cache["all_workflows"]['pos_ctrl_lot'] = self.pos_ctrl_lot
+            full_private_cache["all_workflows"]['pos_ctrl_exp'] = self.pos_ctrl_exp
 
             print("\nStoring data for future use...")
             res = write_json(path_to_private_cache, full_private_cache)
