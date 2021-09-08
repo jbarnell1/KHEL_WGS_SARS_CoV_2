@@ -7,6 +7,6 @@ setup(name='KHEL Molecular Genomics (Jonathan Barnell',
     author_email='KDHE.MolecularGenomics@ks.gov',
     url='https://github.com/jbarnell1/KHEL_WGS_SARS_CoV_2',
     packages=['pandas', 'numpy', 'sqlalchemy',
-        'tk', 'cx_oracle', 'paramiko'],
+        'tk', 'cx_oracle', 'paramiko', 'openpyxl'],
     platforms=['Windows 10 64-bit'],
     )

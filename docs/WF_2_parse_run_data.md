@@ -12,6 +12,7 @@ _______________________________________
 
  - **Step 1**
    - Start the main script, and type `2` to enter the first step of the daily workflow script.
+   - Alternatively, this script is called as the second step to the `start` command.
 
 <br />
 
@@ -58,8 +59,8 @@ _______________________________________
 <br />
 
 - **format_dataframe()**
-  - Remove any samples with "pool" in the label, won't be in the LIMS database (case-insensitive)
-  - Remove any samples with "blank" in the label, won't be in the LIMS database (case-insensitive)
+  - Remove any samples with "pool" in the label
+  - Remove any samples with "blank" in the label
   - Format columns appropriately.  Alters/creates:
     - `platform`
     - `machine_num`
