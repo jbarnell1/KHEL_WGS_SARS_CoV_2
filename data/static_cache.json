@@ -91,6 +91,10 @@
                 "parse_seq_id",
                 "hsn"
             ],
+            "priority_spec": [
+                "get_priority",
+                "priority_lst"
+            ],
             "position": [
                 "parse_seq_id",
                 "pos"
@@ -397,10 +401,11 @@
             "facility_id = {15},",
             "facility_category = '{16}',",
             "source = '{17}'",
+            "priority_spec = {18}",
             "WHERE hsn = {0}",
             "IF @@ROWCOUNT=0",
-            "INSERT INTO dbo.Results (hsn, race, facility, county, state, dob, age, sex, f_name, l_name, Ethnicity, wgs_run_date, pcr_run_date, date_recd, doc, facility_id, facility_category, source) VALUES",
-            "({0}, '{1}', '{2}', '{3}', '{4}', CAST('{5}' AS DATE), {6}, '{7}', '{8}', '{9}', '{10}', CAST('{11}' AS DATE), CAST('{12}' AS DATE), CAST('{13}' AS DATE), CAST('{14}' AS DATE), {15}, '{16}', '{17}')"
+            "INSERT INTO dbo.Results (hsn, race, facility, county, state, dob, age, sex, f_name, l_name, Ethnicity, wgs_run_date, pcr_run_date, date_recd, doc, facility_id, facility_category, source, priority_spec) VALUES",
+            "({0}, '{1}', '{2}', '{3}', '{4}', CAST('{5}' AS DATE), {6}, '{7}', '{8}', '{9}', '{10}', CAST('{11}' AS DATE), CAST('{12}' AS DATE), CAST('{13}' AS DATE), CAST('{14}' AS DATE), {15}, '{16}', '{17}', {18})"
         ]
     },
     "workflow2": {
@@ -901,6 +906,11 @@
             "covv_authors",
             "covv_comment",
             "comment_type"
+        ],
+        "read_query_tbl1_priority": [
+            "SELECT hsn",
+            "FROM dbo.Results",
+            "WHERE priority=1"
         ],
         "read_query_tbl1_max_gisaid": [
             "SELECT MAX(gisaid_num)",

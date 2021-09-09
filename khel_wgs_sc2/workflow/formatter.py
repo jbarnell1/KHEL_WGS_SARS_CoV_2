@@ -325,3 +325,8 @@ def cap_all(row, col):
     return " ".join(newlst)
 
 
+def get_priority(row, lst):
+    if row['hsn'] in lst:
+        return 1
+    else:
+        return 0

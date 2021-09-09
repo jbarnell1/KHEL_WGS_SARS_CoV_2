@@ -21,8 +21,9 @@ class gisaid_obj(workflow_obj):
 
     def get_priority(self):
         print("\nGetting list of priority samples...")
-        lines = read_txt(self.priority_path)
-        self.priority_lst = [line.strip() for line in lines]
+        super().setup_db()
+        samples = list(self.db_handler.ss_read(query=self.read_query_tbl1_priority))
+        self.priority_lst = [sample.strip() for sample in samples]
         print(" Done!\n")
 
 
@@ -32,7 +33,6 @@ class gisaid_obj(workflow_obj):
         # we also will scan the database for the last seven days for
         # samples eligible for upload based on the qc cutoffs set
         # in data/static_cache.json
-        super().setup_db()
         self.next_gisaid = int(self.db_handler.ss_read(query=self.read_query_tbl1_max_gisaid).iat[0, 0]) + 1
         prev_week = (datetime.date.today() - datetime.timedelta(days = 7)).strftime("%Y%m%d")
         self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{prev_week}", prev_week)

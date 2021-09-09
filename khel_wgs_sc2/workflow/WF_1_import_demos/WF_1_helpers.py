@@ -1,5 +1,5 @@
 from ..workflow_obj import workflow_obj
-from ..reader import get_pandas
+from ..reader import get_pandas, read_txt
 from ..ui import get_path
 from ..formatter import add_cols, format_hsn_col
 import datetime
@@ -17,6 +17,13 @@ class WorkflowObj1(workflow_obj):
     def get_json(self):
         super().get_json(1)
 
+
+    def get_priority(self):
+        print("\nGetting list of priority samples...")
+        super().setup_db()
+        lines = read_txt(self.priority_path)
+        self.priority_lst = [line.strip() for line in lines]
+        print(" Done!\n")
 
     def verify_ctrls(self):
         today = datetime.datetime.today()
