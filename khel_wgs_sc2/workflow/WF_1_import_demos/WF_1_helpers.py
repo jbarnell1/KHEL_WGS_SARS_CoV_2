@@ -98,7 +98,7 @@ class WorkflowObj1(workflow_obj):
         self.df = pd.merge(self.df, self.df_right, how="right", on="hsn")
         print(" Done!\n")
 
-    
+
     def format_dfs(self):
         # get the date for wgs_run_date column
         path_arr = self.demo_path.split("/")
@@ -108,7 +108,6 @@ class WorkflowObj1(workflow_obj):
         self.wgs_run_date = self.wgs_run_date.strftime("%m/%d/%Y")
         # format columns, insert necessary values
         print("\nAdding/Formatting/Sorting columns...")
-        
 
         self.df = add_cols(obj=self, \
             df=self.df, \
@@ -125,9 +124,6 @@ class WorkflowObj1(workflow_obj):
         df_table_col_query = "(" + ", ".join(self.df.columns.astype(str).tolist()) + ")"
         self.write_query_tbl1 = self.write_query_tbl1.replace("{df_table_col_query}", df_table_col_query)
         self.db_handler.lst_ptr_push(df_lst=df_demo_lst, query=self.write_query_tbl1)
-        #self.db_handler.lst_ptr_push(df_lst=df_demo_lst, query=self.write_query_tbl2)
-
-
 
 
 
