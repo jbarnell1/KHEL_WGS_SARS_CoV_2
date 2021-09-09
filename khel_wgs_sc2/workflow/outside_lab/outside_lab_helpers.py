@@ -1,4 +1,5 @@
 from ..workflow_obj import workflow_obj
+from ..formatter import format_facility
 import time
 from ..reader import get_pandas
 from tkinter import filedialog
@@ -53,6 +54,9 @@ class outside_lab_obj(workflow_obj):
         df['gisaid_num'] = df.apply(lambda row: parse_gisaid_num(row), axis=1)
         df['source'] = df.apply(lambda row: format_source(row), axis=1)
         df['age'] = df.apply(lambda row: get_age(row), axis=1)
+        df['sex'] = df.apply(lambda row: row.capitalize(), axis=1)
+        df['state'] = df.apply(lambda row: row.capitalize(), axis=1)
+        df['facility'] = df.apply(lambda row: row.lower(), axis=1)
         df.replace(to_replace="UNKNOWN", value = None, inplace=True)
         df.replace(to_replace="Unknown", value = None, inplace=True)
         df.replace(to_replace="unknown", value = None, inplace=True)
@@ -153,9 +157,9 @@ def get_name(row, arg):
     if arg == "last":
         if names[-1].lower() == "jr" or names[-1].lower() == "sr":
             return names[-2] + ", " + names[-1]
-        return names[-1]
+        return names[-1].capitalize()
     if arg == "first":
-        return names[0]
+        return names[0].capitalize()
 
 
 def get_path_to_fasta(row):

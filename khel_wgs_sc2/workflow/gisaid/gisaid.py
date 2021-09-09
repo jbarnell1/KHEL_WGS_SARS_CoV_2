@@ -9,7 +9,7 @@ def run_gisaid():
     data_obj = gisaid_obj()
     data_obj.get_json()
 
-
+    data_obj.get_priority()
     data_obj.scan_db()
     data_obj.get_gisaid_df()
     data_obj.compile_fasta()

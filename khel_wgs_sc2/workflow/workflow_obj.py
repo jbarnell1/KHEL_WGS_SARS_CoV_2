@@ -95,6 +95,7 @@ class workflow_obj(ABC):
             if wf == 1:
                 self.lims_conn = working_private_cache['lims_conn']
             if wf == -2:
+                self.priority_path = working_private_cache['priority_path']
                 self.default_state = working_private_cache['default_state']
                 self.folderpathbase = working_private_cache['folderpathbase']
                 self.authors = working_private_cache['authors']
@@ -124,10 +125,12 @@ results on-device so you won't have to enter them again).")
                 self.lims_conn = input("\nPlease enter the string for the LIMS connection \
 (ie <user>/<password>@<db_tablename>\n-->")
             if wf == -2:
+                print("Please select the path to the excel document containing the list of priority samples")
+                self.priority_path = get_path()
                 print("Please select the folder you'd like to contain the finished file")
                 self.folderpathbase = get_path_folder()
                 self.default_state = input("\nPlease type the state you'd like unknown sample locations to default to \
-                    on reports.\n--> ")
+on reports.\n--> ")
                 self.authors = input("\nPlease type the authors of the document\n--> ")
                 self.lab_name = input("\nPlease type the name of the lab submitting the report\n--> ")
                 self.lab_addr = input("\nPlease type the address of the lab submitting the report\n--> ")
@@ -139,7 +142,7 @@ results on-device so you won't have to enter them again).")
                 self.sftp_pwd = input("\nType the password for sftp access\n--> ")
             if wf == -4:
                 print("\nPlease select the path to the folder where you would like the \
-                    queries to be stored.")
+queries to be stored.")
                 self.folder_path_base = get_path()
             if wf == 6:
                 self.lab = input("\nType the name of the lab submitting the report\n--> ")
@@ -184,6 +187,7 @@ future for any reason, modify the cache file: daily_workflow/data/private_cache.
             if wf == 1:
                 full_private_cache[workflow]['lims_conn'] = self.lims_conn
             if wf == -2:
+                full_private_cache[workflow]['priority_path'] = self.priority_path
                 full_private_cache[workflow]['default_state'] = self.default_state
                 full_private_cache[workflow]['folderpathbase'] = self.folderpathbase
                 full_private_cache[workflow]['authors'] = self.authors

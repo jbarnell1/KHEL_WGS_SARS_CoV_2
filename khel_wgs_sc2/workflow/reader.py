@@ -25,3 +25,9 @@ def read_json(path):
     with open(path, 'r') as json_cache:
         full_cache = json.load(json_cache)
     return full_cache
+
+
+def read_txt(path):
+    with open(path, 'r') as f:
+        lst = f.readlines()
+    return lst

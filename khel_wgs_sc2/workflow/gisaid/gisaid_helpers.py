@@ -1,6 +1,6 @@
 from ..workflow_obj import workflow_obj
 from ..ui import progressBar
-from ..formatter import add_cols
+from ..reader import read_txt
 import os
 import datetime
 import pandas as pd
@@ -17,6 +17,14 @@ class gisaid_obj(workflow_obj):
         #self.logger.info(self.id + ': Aquiring local data from cache')
         super().get_json(-2)
         #self.logger.info(self.id + ': get_json finished!')
+
+
+    def get_priority(self):
+        print("\nGetting list of priority samples...")
+        lines = read_txt(self.priority_path)
+        self.priority_lst = [line.strip() for line in lines]
+        print(" Done!\n")
+
 
     def scan_db(self):
         # in this function, we need to get the maximum gisaid number
@@ -72,7 +80,7 @@ class gisaid_obj(workflow_obj):
         self.gisaid_df.insert(0, "covv_add_location", "unknown")
         self.gisaid_df.insert(0, "covv_host", "Human")
         self.gisaid_df.insert(0, "covv_add_host_info", "unknown")
-        self.gisaid_df.insert(0, "covv_sampling_strategy", "baseline surveillance")
+        self.gisaid_df['covv_sampling_strategy'] = self.gisaid_df.apply(lambda row: self.get_comment(row), axis=1)
         self.gisaid_df["covv_gender"] = self.gisaid_df.apply(lambda row: get_sex(row), axis=1)
         self.gisaid_df.insert(0, "covv_patient_status", "unknown")
         self.gisaid_df.insert(0, "covv_specimen", "unknown")
@@ -124,6 +132,8 @@ class gisaid_obj(workflow_obj):
     def database_push(self):
         # put the updated gisaid_nums with the correct samples
         gisaid_df_update = pd.DataFrame.from_dict(self.hsn_dict)
+        gisaid_df_update.insert(2, "priority_spec", "0")
+        gisaid_df_update['priority_spec'] = gisaid_df_update.apply(lambda row: get_priority(row, self.priority_lst), axis=1)
         gisaid_df_update_lst = gisaid_df_update.values.astype(str).tolist()
         self.db_handler.lst_ptr_push(df_lst=gisaid_df_update_lst, query=self.write_query_tbl1)
 
@@ -139,6 +149,11 @@ class gisaid_obj(workflow_obj):
     def get_location(self, row):
         return "North America / USA / " + str(row["state"]) if str(row["state"]) != "unknown" else self.default_state
 
+    def get_comment(self, row):
+        if row['hsn'] in self.priority_lst:
+            return self.default_comment
+        else:
+            return self.priority_comment
 
 
 def get_hsn(row):
@@ -156,3 +171,12 @@ def get_collection_date(row):
 
 def get_sex(row):
     return str(row["sex"]).lower()
+
+
+def get_priority(row, lst):
+    if row['hsn'] in lst:
+        return 1
+    else:
+        return 0
+
+

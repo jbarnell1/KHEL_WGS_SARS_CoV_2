@@ -139,7 +139,7 @@ class ms_sql_handler():
                     new_query = new_query.replace(", \'extraction only, WGS\'", "")
                     new_query = new_query.replace("other", "OT")
                     new_query = new_query.replace("(, ", "(")
-                    new_query = new_query.replace("KS", "Kansas")
+                    new_query = new_query.replace(" KS", " Kansas")
                 new_query = new_query.replace("= ,", "= NULL,")
                 new_query = new_query.replace("= \'None\',", "= NULL,")
                 new_query = new_query.replace("CAST('nan' AS DATE)", "NULL")

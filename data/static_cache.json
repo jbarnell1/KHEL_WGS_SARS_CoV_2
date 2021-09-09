@@ -775,6 +775,8 @@
         ]
     },
     "gisaid": {
+        "default_comment": "baseline surveillance",
+        "priority_comment": "unknown",
         "covv_type": "betacoronavirus",
         "covv_passage": "Original",
         "unknown": "unknown",
@@ -923,6 +925,7 @@
         "write_query_tbl1": [
             "UPDATE dbo.Results",
             "SET gisaid_num = {1}",
+            "priority_spec = {2}",
             "WHERE hsn = {0}"
         ]
     },
