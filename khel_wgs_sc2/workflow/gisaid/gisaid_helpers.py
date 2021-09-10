@@ -150,7 +150,7 @@ class gisaid_obj(workflow_obj):
         return "North America / USA / " + str(row["state"]) if str(row["state"]) != "unknown" else self.default_state
 
     def get_comment(self, row):
-        if row['hsn'] in self.priority_lst:
+        if str(row['hsn']) in self.priority_lst:
             return self.default_comment
         else:
             return self.priority_comment
