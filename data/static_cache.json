@@ -912,7 +912,7 @@
         "read_query_tbl1_priority": [
             "SELECT hsn",
             "FROM dbo.Results",
-            "WHERE priority=1"
+            "WHERE priority_spec=1"
         ],
         "read_query_tbl1_max_gisaid": [
             "SELECT MAX(gisaid_num)",
@@ -936,7 +936,7 @@
 
         "write_query_tbl1": [
             "UPDATE dbo.Results",
-            "SET gisaid_num = {1}",
+            "SET gisaid_num = {1},",
             "priority_spec = {2}",
             "WHERE hsn = {0}"
         ]

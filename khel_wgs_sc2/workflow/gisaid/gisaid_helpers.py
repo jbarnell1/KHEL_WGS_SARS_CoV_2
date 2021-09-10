@@ -22,8 +22,8 @@ class gisaid_obj(workflow_obj):
     def get_priority(self):
         print("\nGetting list of priority samples...")
         super().setup_db()
-        samples = list(self.db_handler.ss_read(query=self.read_query_tbl1_priority))
-        self.priority_lst = [sample.strip() for sample in samples]
+        samples = self.db_handler.ss_read(query=self.read_query_tbl1_priority).values.astype(str).tolist()
+        self.priority_lst = [sample[0].strip() for sample in samples]
         print(" Done!\n")
 
 
@@ -174,7 +174,7 @@ def get_sex(row):
 
 
 def get_priority(row, lst):
-    if row['hsn'] in lst:
+    if str(row['hsn']) in lst:
         return 1
     else:
         return 0
