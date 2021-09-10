@@ -39,7 +39,7 @@ def get_run_data():
     # seq run order first
         ask = True
         while ask:
-            platform = input("\nSelect a platform.\n'c' for ClearLabs\n'i' for ISeq (Illumina)\n")
+            platform = input("\nSelect a platform.\n'c' for ClearLabs\n'i' for ISeq (Illumina)\n-->")
             if (platform.lower() == "c" or platform.lower() == "i"):
                 ask = False
         
@@ -50,7 +50,7 @@ def get_run_data():
             seq_run_id = ""
             ask = True
             while ask:
-                seq_run_id = input("\nPlease copy/paste the seq_run_id value from the ClearLabs website below\nExample: Run BB1L12.2021-06-16.01\n")
+                seq_run_id = input("\nPlease copy/paste the seq_run_id value from the ClearLabs website below\nExample: Run BB1L12.2021-06-16.01\n-->")
                 
                 # check that input is valid
                 if not re.search("Run BB\dL\d{2}.\d{4}-\d{2}-\d{2}.\d{2}", seq_run_id):
