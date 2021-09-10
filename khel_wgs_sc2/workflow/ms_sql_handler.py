@@ -69,7 +69,7 @@ class ms_sql_handler():
 
     def lst_push(self, df_lst=None, df_cols=None):
         """
-        push results to database with the replace (list/pointer) strategy
+        push results to database with the replace strategy
         @params:
             df_lst      - Required  : nested list that holds values to fill (List[List[]])
             df_cols     - Required  : list of column names for supplied list (List[])
