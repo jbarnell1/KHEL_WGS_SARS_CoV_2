@@ -20,9 +20,8 @@ class WorkflowObj1(workflow_obj):
 
     def get_priority(self):
         print("\nGetting list of priority samples...")
-        super().setup_db()
         lines = read_txt(self.priority_path)
-        self.priority_lst = [line.strip() for line in lines]
+        self.priority_lst = [line.strip("* \n") for line in lines]
         print(" Done!\n")
 
     def verify_ctrls(self):

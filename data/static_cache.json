@@ -359,7 +359,8 @@
             "doc",
             "facility_id",
             "facility_category",
-            "source"
+            "source",
+            "priority_spec"
         ],
         "add_col_lst": [
             "pcr_run_date",
@@ -375,7 +376,8 @@
             "facility",
             "facility_category",
             "source",
-            "race"
+            "race",
+            "priority_spec"
         ],
         "read_query_tbl1": [
             "SELECT hsn",
@@ -400,7 +402,7 @@
             "doc = CAST('{14}' AS DATE),",
             "facility_id = {15},",
             "facility_category = '{16}',",
-            "source = '{17}'",
+            "source = '{17}',",
             "priority_spec = {18}",
             "WHERE hsn = {0}",
             "IF @@ROWCOUNT=0",

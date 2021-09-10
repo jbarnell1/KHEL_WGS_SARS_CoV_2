@@ -10,6 +10,7 @@ def run_script_1():
     data_obj.get_json()
 
     # verify that controls are valid
+    data_obj.get_priority()
     data_obj.verify_ctrls()
 
     # open demo path --> pandas dataframe
