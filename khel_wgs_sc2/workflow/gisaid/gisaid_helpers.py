@@ -151,9 +151,9 @@ class gisaid_obj(workflow_obj):
 
     def get_comment(self, row):
         if str(row['hsn']) in self.priority_lst:
-            return self.default_comment
-        else:
             return self.priority_comment
+        else:
+            return self.default_comment
 
 
 def get_hsn(row):
