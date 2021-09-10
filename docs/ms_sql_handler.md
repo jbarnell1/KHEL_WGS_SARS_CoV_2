@@ -9,13 +9,28 @@ _______________________________________
 
 ## How the MS_SQL_Handler class works:
 
+### Variables
 
-### I will split the logic up into the functions that other scripts call.
+<br />
+
+- Created from class Function:
+  - **engine**
+- Pulled in from `private_cache.json` and `static_cache.json`
+  - **sql_user**
+  - **sql_pass**
+  - **sql_server**
+  - **sql_db**
+  - **avg_depth_cutoff**
+  - **percent_cvg_cutoff**
+
+<br />
+
+### Functions
 
 <br />
 
 - **establish_db()**
-  - Attempt to create [SQLAlchemy engine](https://docs.sqlalchemy.org/en/14/core/engines.html) using the private data (username, password, server, table name) from `private_cache.json`
+  - Attempt to create [SQLAlchemy engine](https://docs.sqlalchemy.org/en/14/core/engines.html) using the private data (username, password, server, table name) from `private_cache.json` and store in the `self.engine` variable
 
 <br />
 
