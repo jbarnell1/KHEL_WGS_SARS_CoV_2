@@ -2,6 +2,8 @@
 # General Package for State Lab SARS-CoV-2 Analysis
 _______________________________________
 
+## Get started with this package by following the instructions in the [setup](docs/setup.md) guide!
+
 ## The daily workflow package contains the following workflows in their respective subdirectories:
 
 <br />
@@ -115,13 +117,14 @@ In addition to the standard workflows, I have included several scripts which can
 ### **[Query:](docs/query.md)**
   - This script seeks to simplify queries made to the database by simplifying queries into selectable statements.
   - After querying the database, the query is saved to an excel workbook for easy data manipulation/viewing
-  - NOT YET IMPLEMENTED
+  - DEPRECATED
 
 <br />
 <br />
 
 ### **[Refresh:](docs/refresh.md)**
   - This script completely empties the database and uploads all data contained in the user-selected excel workbook to the database.
+  - DEPRECATED
 
 <br />
 <br />
