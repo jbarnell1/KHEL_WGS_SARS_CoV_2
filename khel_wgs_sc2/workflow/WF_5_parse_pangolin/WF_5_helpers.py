@@ -77,6 +77,7 @@ class WorkflowObj5(workflow_obj):
             join_type='inner')
 
         df_results_final_lst = df_results_final.values.astype(str).tolist()
+        print("Updating rows in the results table...")
         self.db_handler.lst_ptr_push(df_lst=df_results_final_lst, query=self.write_query_tbl1)
 
 

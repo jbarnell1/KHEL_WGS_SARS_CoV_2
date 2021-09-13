@@ -37,7 +37,7 @@ class WorkflowObj1(workflow_obj):
 
 
     def get_initial_demo_df(self):
-        print("\nUse the following window to open the wgs run order worksheet...")
+        print("\nUse the following window to open the Sample ID Upload worksheet...")
         self.demo_path = get_path()
         self.df_right = get_pandas(self.demo_path, 'WF_1', 'run order', ',')
         # drop controls from index

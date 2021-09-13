@@ -66,6 +66,7 @@ class WorkflowObj4(workflow_obj):
         # attempt to connect to database
         super().setup_db()
         df_qc_update_lst = self.df_qc.values.astype(str).tolist()
+        print("Pushing information to Run Stats table...")
         self.db_handler.lst_ptr_push(df_lst=df_qc_update_lst, query=self.write_query_tbl2)
         all_time_df_qc = self.db_handler.sub_read(query=self.read_query_tbl2)
         
@@ -83,7 +84,6 @@ class WorkflowObj4(workflow_obj):
                 \nNextclade data from this run has likely already been pushed to the database!\
                 \n-------------------------------------------------------------------------------------------------------------------")
         print("Updating rows in the results table...")
-
         self.db_handler.lst_ptr_push(df_lst=df_results_final_lst, query=self.write_query_tbl1)
 
 

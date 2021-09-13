@@ -16,7 +16,7 @@ class WorkflowObj3(workflow_obj):
         super().get_json(3)
 
     def compile_fasta(self):
-        print("Use the following dialog box to select the folder with all FASTA files")
+        print("Use the following dialog box to select the folder with all FASTA files in the Run Data folder")
         self.path = get_path_folder()
         # make new folder/file to save to
         splt = self.path.split("/")
