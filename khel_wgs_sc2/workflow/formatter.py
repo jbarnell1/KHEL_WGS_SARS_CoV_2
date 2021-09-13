@@ -255,8 +255,6 @@ def format_l_name(row, lst):
         for item in lst:
             if item == names[-1].lower():
                 return names[-2].capitalize() + ", " + names[-1].upper()
-        # if re.search("jr", names[-1].lower()) or re.search("sr", names[-1].lower()):
-        #     return names[-2].capitalize() + ", " + names[-1].capitalize()
         return names[-1].capitalize()
 
 
