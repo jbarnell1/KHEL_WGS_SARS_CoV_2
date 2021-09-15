@@ -241,7 +241,9 @@ def format_f_name(row):
     else:
         full_name = str(row["name"])
         names = full_name.split()
-        return names[0].capitalize()
+        f_name = names[0].capitalize()
+        f_name = f_name.replace("'","''")
+        return f_name
 
 
 def format_l_name(row, lst):
@@ -255,7 +257,9 @@ def format_l_name(row, lst):
         for item in lst:
             if item == names[-1].lower():
                 return names[-2].capitalize() + ", " + names[-1].upper()
-        return names[-1].capitalize()
+        l_name = names[-1].capitalize()
+        l_name = l_name.replace("'", "''")
+        return l_name
 
 
 def drop_cols(df, lst):
