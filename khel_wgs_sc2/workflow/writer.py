@@ -23,7 +23,7 @@ def save_csv(df, path, user_selection, lab):
     
     if user_selection == 'a':
         filename_df = "whole_db_" + today + ".csv"
-    elif user_selection == 's':
+    elif user_selection == 's' or user_selection == 'sd':
         filename_df = "submitted_" + lab + "_" + today + ".csv"
     elif user_selection == 'f':
         filename_df = lab + "_" + today + ".csv"

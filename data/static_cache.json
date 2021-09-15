@@ -683,7 +683,6 @@
             "AND results.dob IS NOT NULL",
             "AND results.facility IS NOT NULL",
             "AND results.doc IS NOT NULL",
-            "AND results.dob IS NOT NULL",
             "AND results.percent_cvg < {percent_cvg_cutoff}"
         ],
         "read_sdate_query_tbl1":[
@@ -693,8 +692,8 @@
             "(SELECT hsn, pos_pass, neg_pass",
             "FROM dbo.Run_Stats) qc",
             "ON results.hsn = qc.hsn",
-            "WHERE results.date_submitted >= CAST('{start}' AS DATE)",
-            "AND results.date_submitted <= CAST('{end}' AS DATE)",
+            "WHERE results.date_submitted >= '{start}'",
+            "AND results.date_submitted <= '{end}'",
             "AND results.lineage_id IS NOT NULL",
             "AND results.clade IS NOT NULL",
             "AND results.f_name IS NOT NULL",
@@ -702,9 +701,8 @@
             "AND results.dob IS NOT NULL",
             "AND results.facility IS NOT NULL",
             "AND results.doc IS NOT NULL",
-            "AND results.dob IS NOT NULL",
-            "AND qc.pos_pass = 1",
-            "AND qc.neg_pass = 1",
+            "AND qc.pos_pass IS NULL",
+            "AND qc.neg_pass IS NULL",
             "AND results.percent_cvg >= {percent_cvg_cutoff}"
         ],
         "read_facility_query_tbl1": [
