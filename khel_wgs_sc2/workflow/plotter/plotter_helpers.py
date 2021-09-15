@@ -1,7 +1,7 @@
 from ..workflow_obj import workflow_obj
 import pandas as pd
 import datetime
-import pandas_bokeh
+#import pandas_bokeh
 import bokeh
 import os
 
@@ -43,7 +43,7 @@ class plotter_obj(workflow_obj):
             num += 1
             file_name = today + "/interactive_plot_" + str(num) + ".html"
         file_path = self.base_path + file_name
-        pandas_bokeh.output_file(file_path)
+        #pandas_bokeh.output_file(file_path)
 
         #area_plot_df = self.df[["doc", "clade"]].copy()
         area_plot_df = self.df
@@ -77,4 +77,4 @@ class plotter_obj(workflow_obj):
             num += 1
             file_name = today + "/interactive_plot_" + num + ".html"
         file_path = self.base_path + file_name
-        pandas_bokeh.output_file(file_path)
+        #pandas_bokeh.output_file(file_path)
