@@ -3,8 +3,7 @@ import time
 
 
 def run_plotter():
-    print("\n================================\nEPI_ISL Import Script\n================================\n\n")
-    print("Importing data from cache...")
+    print("\n================================\nPlotter Script\n================================\n\n")
 
     # import relevant data from json file
     data_obj = plotter_obj()
@@ -14,8 +13,8 @@ def run_plotter():
     data_obj.get_plotter_dfs()
 
     # placeholder for future
-    data_obj.do_stuff()
-    
+    data_obj.create_plots()
+
     # write to HTML file for observation
     data_obj.write_data()
 

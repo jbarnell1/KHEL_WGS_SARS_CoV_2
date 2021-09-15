@@ -1054,8 +1054,8 @@
     },
     "plotter": {
         "read_query_tbl1":[
-            "FROM dbo.Results",
             "SELECT *",
+            "FROM dbo.Results",
             "ORDER BY wgs_run_date"
         ]
     },

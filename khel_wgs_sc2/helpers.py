@@ -9,9 +9,9 @@ from workflow.WF_8_build_nextstrain.WF_8_build_nextstrain import run_script_8
 from workflow.epi_isl.epi_isl import run_epi_isl
 from workflow.gisaid.gisaid import run_gisaid
 from workflow.outside_lab.outside_lab import run_outside_lab
+from workflow.plotter.plotter import run_plotter
 from workflow.query.query import run_query
 from workflow.refresh.refresh import run_refresh
-import pyodbc
 import time
 
 
@@ -22,7 +22,8 @@ def run():
         u_input = input("\n\nIf you'd like to run the whole workflow, enter 'start'.\n\nIf you'd like to run just a part of the workflow:\nenter '1' to import demographics\
             \nenter '2' to parse the clearlabs run data\nenter '3' to compile the fasta file\nenter '4' to parse the nextclade file\nenter '5' to parse the pangolin file\
             \nenter '6' to build the daily epi report\nenter '7' to send the daily epi report\nenter '8' to build a nextstrain report\n\nOther options:\
-            \nenter 'refresh' to roll back the database to the most current version of an excel file\nenter 'query' to get a specific snapshot of the database\
+            \nenter 'refresh' to roll back the database to the most current version of an excel file\nenter 'plotter' to get an interactive dashboard of the database\
+            \nenter 'query' to get a specific snapshot of the database\
             \nenter 'outside lab' to import a data template submitted from an outside lab\nenter 'gisaid' to produce template and fasta files from a list of hsn's\
             \nenter 'epi isl' to update all isl numbers for samples submitted to gisaid\n\nenter 'q' to quit\n--> ")
         try:
@@ -91,6 +92,10 @@ def run():
             elif u_input.strip().lower() == 'refresh':
                 # run script
                 run_refresh()
+
+            elif u_input.strip().lower() == 'plotter':
+                # run script
+                run_plotter()
                 
             elif u_input.strip().lower() == 'query':
                 # run script
@@ -115,7 +120,7 @@ def run():
                 raise ValueError("Invalid input!")
 
         except Exception as i:
-            print(i)
+            print(i, str(type(i)))
             time.sleep(2)
             
             
