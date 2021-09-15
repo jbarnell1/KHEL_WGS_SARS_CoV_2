@@ -19,9 +19,9 @@ class WorkflowObj6(workflow_obj):
         while True:
             self.user_selection = input("Would you like to select all data (type 'a'), a range (type 'r'),\
                 \na single date (type 'd'), samples submitted from a given lab (type 's'),\
-                \nor all samples from a given facility (type 'f')?    ")
+                \nall samples submitted by a given date (type 'sd'), or all samples from a given facility (type 'f')?\n-->")
             if self.user_selection.lower() == 'd':
-                date_start = input('Enter the date in YYYY-MM-DD format (include dashes):   ')
+                date_start = input('Enter the date in YYYY-MM-DD format (include dashes):\n-->')
                 year, month, day = map(int, date_start.split('-'))
                 date_start = datetime.datetime(year, month, day).strftime("%Y-%m-%d")
                 date_end = date_start
@@ -36,6 +36,16 @@ class WorkflowObj6(workflow_obj):
                 # we want the bad report as well
                 self.bad = True
                 break
+            elif self.user_selection.lower() == 'sd':
+                date_start = input('Enter the submitted date you\'d like to search for in YYYY-MM-DD format (include dashes):\n-->')
+                year, month, day = map(int, date_start.split('-'))
+                date_start = datetime.datetime(year, month, day).strftime("%Y-%m-%d")
+                date_end = date_start
+
+                self.read_sdate_query_tbl1 = self.read_sdate_query_tbl1.replace("{start}", date_start)
+                self.query = self.read_sdate_query_tbl1.replace("{end}", date_end)
+                self.query = self.query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
+
             elif self.user_selection.lower() == 'r':
                 date_start = input('Enter the start date in YYYY-MM-DD format (include dashes):   ')
                 year, month, day = map(int, date_start.split('-'))
@@ -62,13 +72,13 @@ class WorkflowObj6(workflow_obj):
                 self.a = True
                 break
             elif self.user_selection.lower() == 'f':
-                self.ui_lab = input("Please enter the facility to filter samples by:    ")
+                self.ui_lab = input("Please enter the facility to filter samples by:\n-->")
                 self.query = self.read_facility_query_tbl1.replace("{facility}", self.ui_lab)
                 self.query = self.query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
                 
                 break
             elif self.user_selection.lower() == 's':
-                self.ui_lab = input("Please enter the submitting facility to filter samples by:    ")
+                self.ui_lab = input("Please enter the submitting facility to filter samples by:\n-->")
                 self.query = self.read_sfacility_query_tbl1.replace("{sub_lab}", self.ui_lab)
                 self.query = self.query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
                 self.p_lab = self.ui_lab
