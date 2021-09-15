@@ -36,6 +36,8 @@ class workflow_obj(ABC):
                 workflow = 'query'
             elif wf == -5:
                 workflow = 'refresh'
+            elif wf == -6:
+                workflow = 'plotter'
 
         working_static_cache = full_static_cache[workflow]
         gen_static_cache = full_static_cache['all_workflows']
@@ -116,6 +118,8 @@ class workflow_obj(ABC):
             if wf == -5:
                 self.base_path = working_private_cache['base_path']
                 self.new_base_path = working_private_cache['new_base_path']
+            if wf == -6:
+                self.base_path = working_private_cache['base_path']
 
         except KeyError:
             print("Looks like this is your first time using the script!")
@@ -156,6 +160,10 @@ Downloads used to be stored.")
                 print("\nPlease select the path to the folder where ClearLabs \
 Downloads are now stored.")
                 self.new_base_path = get_path_folder()
+            if wf == -6:
+                print("\nPlease select the path to the folder where the \
+Plots should be stored")
+                self.base_path = get_path_folder()
 
             if need_sql:
                 self.sql_user = input("\nPlease enter the username for the sql database:\n-->")
@@ -205,6 +213,8 @@ future for any reason, modify the cache file: daily_workflow/data/private_cache.
                 full_private_cache[workflow]['lab'] = self.lab
                 full_private_cache[workflow]['p_lab'] = self.p_lab
                 full_private_cache[workflow]['folderpathbase'] = self.folderpathbase
+            if wf == -6:
+                full_private_cache[workflow]['base_path'] = self.base_path
             full_private_cache["all_workflows"]['sql_user'] = self.sql_user
             full_private_cache["all_workflows"]['sql_pass'] = self.sql_pass
             full_private_cache["all_workflows"]['sql_server'] = self.sql_server

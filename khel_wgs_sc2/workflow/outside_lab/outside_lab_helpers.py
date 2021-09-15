@@ -40,23 +40,21 @@ class outside_lab_obj(workflow_obj):
         df['f_name'] = df.apply(lambda row: get_name(row, "first"), axis=1)
         print("\nAdding 'l_name' column...")
         df['l_name'] = df.apply(lambda row: get_name(row, "last"), axis=1)
-        print("\nAdding 'pango_learn_version' column...")
-        df.insert(0, "pango_learn_version", None)
         print("\nAdding 'platform' column...")
-        df['platform'] = df.apply(lambda row: parse_seq_id(row, "platform"), axis=1)
+        df['platform'] = df.apply(lambda row: parse_seq_id(row), axis=1)
         print("\nAdding 'machine_num' column...")
-        df['machine_num'] = df.apply(lambda row: parse_seq_id(row, "machine_num"), axis=1)
+        df['machine_num'] = df.apply(lambda row: parse_seq_id(row), axis=1)
         print("\nAdding 'position' column...")
-        df['position'] = df.apply(lambda row: parse_seq_id(row, "position"), axis=1)
+        df['position'] = df.apply(lambda row: parse_seq_id(row), axis=1)
         print("\nAdding 'day_run_num' column...")
-        df['day_run_num'] = df.apply(lambda row: parse_seq_id(row, "day_run_num"), axis=1)
+        df['day_run_num'] = df.apply(lambda row: parse_seq_id(row), axis=1)
         print("\nAdding 'gisaid_num' column...")
         df['gisaid_num'] = df.apply(lambda row: parse_gisaid_num(row), axis=1)
         df['source'] = df.apply(lambda row: format_source(row), axis=1)
         df['age'] = df.apply(lambda row: get_age(row), axis=1)
-        df['sex'] = df.apply(lambda row: row.capitalize(), axis=1)
-        df['state'] = df.apply(lambda row: row.capitalize(), axis=1)
-        df['facility'] = df.apply(lambda row: row.lower(), axis=1)
+        df['sex'] = df.apply(lambda row: row['sex'].capitalize(), axis=1)
+        df['state'] = df.apply(lambda row: format_state(row), axis=1)
+        df['facility'] = df.apply(lambda row: row['facility'].lower(), axis=1)
         df.replace(to_replace="UNKNOWN", value = None, inplace=True)
         df.replace(to_replace="Unknown", value = None, inplace=True)
         df.replace(to_replace="unknown", value = None, inplace=True)
@@ -86,9 +84,7 @@ class outside_lab_obj(workflow_obj):
 
         self.df_table1 = remove_dups(self.df_table1)
         self.df_table1 = pd.DataFrame(self.df_table1, columns=self.dbo_tbl_1_cols)
-        self.df_table1['hsn'] = self.df_table1.apply(lambda row: drop_letter(row), axis=1)
         print(self.df_table1)
-        self.df_table2['hsn'] = self.df_table2.apply(lambda row: drop_letter(row), axis=1)
         df_2_row_lst = remove_m(self.df_table2)
         self.df_table2 = pd.DataFrame(df_2_row_lst, columns = list(self.df_table2.columns))
         print(self.df_table2)
@@ -112,48 +108,12 @@ class outside_lab_obj(workflow_obj):
 
 
 
-def parse_seq_id(row, arg):
-    # if iseq
-    if re.search("^KS-M\d{4}-\d{6}$", str(row['seq_run_id'])) or re.search("^\d{6}$", str(row['seq_run_id'])):
-        if arg == "platform":
-            return "iSeq"
-        elif arg == "machine_num":
-            return -1
-        elif arg == "position":
-            return -1
-        elif arg == "day_run_num":
-            return "01"
-        
-    # if ClearLabs
-    elif re.search("^CL-BHRL\d{2}-\d{6}$", str(row['seq_run_id'])) or re.search("^BHRL\d{2}.\d{4}-\d{2}-\d{2}.\d{2}$", str(row['seq_run_id'])) or re.search("^BB1L\d{2}.\d{4}-\d{2}-\d{2}.\d{2}$", str(row['seq_run_id'])):
-        if arg == "platform":
-            return "ClearLabs"
-        elif arg == "machine_num":
-            if re.search("CL-BHRL\d{2}-\d{6}", str(row['seq_run_id'])):
-                return str(row['seq_run_id'])[7:9]
-            else:
-                return str(row['seq_run_id'])[4:6]
-        elif arg == "position":
-            if re.search("CL-BHRL\d{2}-\d{6}", str(row['seq_run_id'])):
-                if str(row['seq_run_order']) != 'nan':
-                    return row['seq_run_order'][-2:]
-                else:
-                    return -2
-            else:
-                return row['seq_run_order'][-2:]
-        elif arg == "day_run_num":
-            if re.search("CL-BHRL\d{2}-\d{6}", str(row['seq_run_id'])):
-                return '1'
-            else:
-                return row['seq_run_id'][-2:]
-    # outside lab/unknown
-    else:
+def parse_seq_id(row):
        return "-3"
 
 
 def get_name(row, arg):
-    full_name = str(row["name"]).strip()
-    names = full_name.split()
+    names = [str(row["f_name"]).strip(), str(row["l_name"]).strip()]
     if arg == "last":
         if names[-1].lower() == "jr" or names[-1].lower() == "sr":
             return names[-2] + ", " + names[-1]
@@ -161,6 +121,12 @@ def get_name(row, arg):
     if arg == "first":
         return names[0].capitalize()
 
+
+def format_state(row):
+    if row['state'].lower() == 'ks':
+        return "Kansas"
+    else:
+        return row['state']
 
 def get_path_to_fasta(row):
     return None
@@ -194,14 +160,14 @@ def get_path():
 
 def get_avg_depth(row):
     # remove the 'times' symbol, convert to int and return
-    result = str(row["seq_coverage"]).replace("x", "")
+    result = str(row["avg_depth"]).replace("x", "")
     result = result.replace("X", "")
     return result
 
 
 def get_percent_cvg(row):
     # remove percentage signs
-    result = float(str(row['assembly_coverage']).replace("%", ""))
+    result = float(str(row['percent_cvg']).replace("%", ""))
     # convert to decimal percentage
     if result > 1:
         result /= 100
@@ -260,12 +226,8 @@ def build_sample_dict(df):
         rel_info = []
         rel_info.append(df.iloc[i][lst.index("gisaid_num")]) # First element in list is GISAID #
         rel_info.append(df.iloc[i][lst.index("total_ns")]) # Next is Total Ns
-        rel_info.append(df.iloc[i][lst.index("seq_coverage")]) # Next is Seq coverage
-        rel_info.append(df.iloc[i][lst.index("assembly_coverage")]) # Next is assembly coverage
-        rel_info.append(df.iloc[i][lst.index("aligned_bases")]) # Next is Aligned bases (iSeq)
-        rel_info.append(df.iloc[i][lst.index("percent_cvg")]) # Next is percent_cvg (iSeq)
-        rel_info.append(df.iloc[i][lst.index("mean_depth")]) # Next is mean depth (iSeq)
-
+        rel_info.append(df.iloc[i][lst.index("avg_depth")]) # Next is Seq coverage
+        rel_info.append(df.iloc[i][lst.index("percent_cvg")]) # Next is assembly coverage
 
         # if copy has been created in dictionary tracker already
         if HSN in dup_dict:
@@ -288,39 +250,39 @@ def select_best_HSN(df, dup_dict):
         depth_score = 0
         best_HSN = ""
         for key2 in dup_dict[key]:
-            if ((str(dup_dict[key][key2][1]) == "nan") and (str(dup_dict[key][key2][2]) == "nan") and (str(dup_dict[key][key2][3]) == "nan")):
-                # Sample is from iSeq
-                # Set score
-                depth_score_curr = float(dup_dict[key][key2][6])
-                if depth_score_curr > 0:
-                    percent_score = float(dup_dict[key][key2][5])
-                    # Check aligned bases
-                    if percent_score > score:
-                        score = percent_score
-                        best_HSN = key2
-                    elif percent_score == score:
-                        if depth_score_curr > depth_score:
-                            depth_score = depth_score_curr
-                            best_HSN = key2
-                    else:
-                        continue
-            else:
+            # if ((str(dup_dict[key][key2][1]) == "nan") and (str(dup_dict[key][key2][2]) == "nan") and (str(dup_dict[key][key2][3]) == "nan")):
+            #     # Sample is from iSeq
+            #     # Set score
+            #     depth_score_curr = float(dup_dict[key][key2][6])
+            #     if depth_score_curr > 0:
+            #         percent_score = float(dup_dict[key][key2][5])
+            #         # Check aligned bases
+            #         if percent_score > score:
+            #             score = percent_score
+            #             best_HSN = key2
+            #         elif percent_score == score:
+            #             if depth_score_curr > depth_score:
+            #                 depth_score = depth_score_curr
+            #                 best_HSN = key2
+            #         else:
+            #             continue
+            # else:
                 # Sample is from clearlabs
                 # Set score
-                depth_score_curr = float(str(dup_dict[key][key2][2]).lower().replace("x",""))
-                if depth_score_curr > 0:
-                    cov_score = float(dup_dict[key][key2][3])
-                    # test scores against one another
-                    if cov_score > score:
-                        score = cov_score
+            depth_score_curr = float(str(dup_dict[key][key2][2]).lower().replace("x",""))
+            if depth_score_curr > 0:
+                cov_score = float(dup_dict[key][key2][3])
+                # test scores against one another
+                if cov_score > score:
+                    score = cov_score
+                    depth_score = depth_score_curr
+                    best_HSN = key2
+                elif cov_score == score:
+                    if depth_score_curr > depth_score:
                         depth_score = depth_score_curr
                         best_HSN = key2
-                    elif cov_score == score:
-                        if depth_score_curr > depth_score:
-                            depth_score = depth_score_curr
-                            best_HSN = key2
-                    else:
-                        continue
+                else:
+                    continue
         add_back.append(best_HSN)
     # remove empty strings from list
     add_back[:] = [x for x in add_back if x]
@@ -349,12 +311,6 @@ def make_dataframes(df, add_back):
     results.append(row_list)
     results.append(dup_row_list)
     return results
-
-
-def drop_letter(row):
-    HSN = str(row["hsn"])
-    HSN = HSN[:-2]
-    return HSN
 
 
 def parse_gisaid_num(row):
