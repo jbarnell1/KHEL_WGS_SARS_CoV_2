@@ -4,6 +4,7 @@ khel_wgs_sc2/__pycache__/
 khel_wgs_sc2/workflow/__pycache__/
 khel_wgs_sc2/workflow/epi_isl/__pycache__/
 khel_wgs_sc2/workflow/gisaid/__pycache__/
+khel_wgs_sc2/workflow/plotter/__pycache__/
 khel_wgs_sc2/workflow/outside_lab/__pycache__/
 khel_wgs_sc2/workflow/query/__pycache__/
 khel_wgs_sc2/workflow/refresh/__pycache__/
