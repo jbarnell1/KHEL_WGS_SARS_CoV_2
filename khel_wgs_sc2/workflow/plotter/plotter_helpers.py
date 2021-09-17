@@ -22,8 +22,9 @@ class plotter_obj(workflow_obj):
     def get_plots(self):
         super().setup_db()
         everything = self.db_handler.sub_read(query=self.read_query_tbl1)
-        #self.plot_clades_over_time(everything)
+        self.plot_clades_over_time(everything)
         self.plot_important_aa_subs_over_time(everything)
+        
         
     def plot_clades_over_time(self, everything):
         cot = everything[['doc', 'clade', 'hsn']].copy()
@@ -121,7 +122,7 @@ class plotter_obj(workflow_obj):
         p.legend.location='top_left'
         p.legend.background_fill_color = '#fafafa'
 
-        show(p)
+        save(p)
 
 
     
