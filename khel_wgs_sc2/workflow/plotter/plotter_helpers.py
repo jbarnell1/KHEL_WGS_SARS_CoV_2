@@ -1,0 +1,154 @@
+from bokeh.models.tools import HoverTool
+from ..workflow_obj import workflow_obj
+import re
+import pandas as pd
+import numpy as np
+import bokeh
+from bokeh.palettes import Spectral11, viridis
+from bokeh.plotting import figure, save, show, output_file, ColumnDataSource
+import datetime
+
+
+class plotter_obj(workflow_obj):
+    # constructor
+    def __init__(self):
+        self.id = "plotter"
+
+    
+    # methode
+    def get_json(self):
+        super().get_json(-6)
+
+    def get_plots(self):
+        super().setup_db()
+        everything = self.db_handler.sub_read(query=self.read_query_tbl1)
+        #self.plot_clades_over_time(everything)
+        self.plot_important_aa_subs_over_time(everything)
+        
+    def plot_clades_over_time(self, everything):
+        cot = everything[['doc', 'clade', 'hsn']].copy()
+        cot = cot.groupby(['doc', 'clade']).agg(['count'])
+        cot.reset_index(inplace=True)
+        cot_pvt = cot.pivot(index='doc', columns='clade')
+        cot_pvt.fillna(value=0, inplace=True)
+        cot_pvt.columns = [col[2] for col in cot_pvt.columns]
+        for combine_lst_key in self.cot_combine_cols.keys():
+            for col_name_idx in range(len(self.cot_combine_cols[combine_lst_key])):
+                if col_name_idx == 0:
+                    temp_col = cot_pvt[self.cot_combine_cols[combine_lst_key][col_name_idx]]
+                else:
+                    temp_col += cot_pvt[self.cot_combine_cols[combine_lst_key][col_name_idx]]
+            cot_pvt[combine_lst_key] = temp_col
+            cot_pvt.drop(labels=self.cot_combine_cols[combine_lst_key], inplace=True, axis=1)
+        cot_pvt.reset_index(inplace=True)
+        cot_pvt['date'] = cot_pvt.apply(lambda row: get_dt(row), axis=1)
+        clades = cot_pvt.columns.tolist()
+        clades.remove('date')
+        clades.remove('doc')
+        cot_pvt = cot_pvt.resample('W', on='date').sum()
+        cot_pvt.reset_index(inplace=True)
+        cot_pvt['total'] = cot_pvt.apply(lambda row: get_total(row, clades), axis=1)
+        for clade in clades:
+            cot_pvt[clade + "f"] = cot_pvt.apply(lambda row: get_percentage(row, clade), axis=1)
+        cot_pvt.drop(labels=clades, inplace=True, axis=1)
+        cot_pvt.drop(labels=['total'], inplace=True, axis=1)
+        cot_pvt.columns = [column[:-1] for column in cot_pvt.columns]
+        cot_pvt.to_csv(self.base_path + "cot_pvt.csv")
+        source = ColumnDataSource(cot_pvt)
+        output_file(self.base_path + "cot_pvt.html")
+        # create a new plot with a title and axis labels
+        p = figure(
+            title="Clades over time",
+            x_axis_label='Time',
+            x_axis_type='datetime',
+            y_range=(0, 1),
+            y_axis_label='Percent dominance',
+            sizing_mode='stretch_both'
+        )
+        stackers = cot_pvt.columns.tolist()
+        #stackers.remove('do')
+        stackers.remove('dat')
+        #add a line renderer with legend and line thickness to the plot
+        p.varea_stack(
+            stackers=stackers,
+            x='dat',
+            color=viridis(len(stackers)),
+            legend_label=stackers,
+            source=source
+        )
+        p.vline_stack(
+            stackers=stackers,
+            x='dat',
+            color=viridis(len(stackers)),
+            source=source
+        )
+        p.legend.orientation='horizontal'
+        p.legend.location='top_center'
+        p.legend.background_fill_color = '#fafafa'
+        # show the results
+        save(p)    
+
+    def plot_important_aa_subs_over_time(self, everything):
+        ast = everything[['doc', 'aa_substitutions']].copy()
+        ast['doc'] = pd.to_datetime(ast['doc'], format="%Y-%m-%d")
+        for col_to_add in self.ast_add_cols:
+            self.n = 0
+            ast[col_to_add] = ast.apply(lambda row: self.get_num_occurances(row, self.ast_add_cols[col_to_add]), axis=1)
+        ast.drop(labels=['aa_substitutions'], inplace=True, axis=1)
+        ast = ast.resample('D', on='doc').sum()
+        for col in self.ast_add_cols.keys():
+            ast[col] = ast[col].cumsum()
+        
+
+        p = figure(
+            title="Mutations evading treatment per CDC",
+            x_axis_label='Date',
+            x_axis_type='datetime',
+            y_axis_label='Cumulative number of strains',
+            sizing_mode='stretch_both',
+        )
+        output_file(self.base_path + "ast.html")
+        num_lines=len(ast.columns)
+        cols = [ast[name].values for name in ast]
+        colors_list=Spectral11[0:num_lines]
+        legends_list=ast.columns.tolist()
+        xs=[ast.index.values]*num_lines
+        ys=cols
+
+        for (colr, leg, x, y) in zip(colors_list, legends_list, xs, ys):
+            p.line(x, y, color=colr, line_width=3, legend_label=leg, hover_color=colr)
+
+        p.legend.location='top_left'
+        p.legend.background_fill_color = '#fafafa'
+
+        show(p)
+
+
+    
+    def get_num_occurances(self, row, lst):
+        if pd.isna(row['aa_substitutions']):
+            return 0
+        for mut in lst:
+            if not re.search(mut, row['aa_substitutions']):
+                return 0
+        return 1
+
+def get_dt(row):
+    dt = datetime.datetime.strptime(row['doc'], "%Y-%m-%d")
+    return dt
+
+
+def get_total(row, lst):
+    total = 0
+    for col in lst:
+        total+= row[col]
+    return total
+
+
+def get_percentage(row, col):
+    try:
+        return row[col]/row['total']
+    except ZeroDivisionError:
+        return 0
+
+
