@@ -1069,12 +1069,21 @@
         ]
     },
     "plotter": {
-        "combine_cols":{
+        "cot_combine_cols":{
             "20H Beta": ["20H (Beta, V2)", "20H/501Y.V2"],
             "20I Alpha": ["20I", "20I (Alpha, V1)", "20I/501Y.V1"],
             "20J Gamma": ["20J", "20J (Gamma, V3)", "20J/501Y.V3"],
             "21A Delta": ["21A", "21A (Delta)"],
             "21H Mu": ["21H", "21H (Mu)"]
+        },
+        "ast_add_cols":{
+            "L452R":["L452R"],
+            "E484K":["E484K"],
+            "L452R and E484Q":["L452R", "E484Q"],
+            "K417N, E484K, and N501Y":["K417N", "E484K", "N501Y"],
+            "K417T, E484K, and N501Y":["K417T", "E484K", "N501Y"],
+            "K417N, L452R, and T478K":["K417N", "L452R", "T478K"],
+            "R346K, E484K, and N501Y":["R346K", "E484K", "N501Y"]
         },
         "read_query_tbl1":[
             "SELECT *",
