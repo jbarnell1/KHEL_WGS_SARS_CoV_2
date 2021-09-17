@@ -22,10 +22,18 @@ class plotter_obj(workflow_obj):
     def get_plots(self):
         super().setup_db()
         everything = self.db_handler.sub_read(query=self.read_query_tbl1)
-        self.plot_clades_over_time(everything)
-        self.plot_important_aa_subs_over_time(everything)
+        print("\nBuilding clade over time plot...")
+        #self.plot_clades_over_time(everything)
+        print(" Done!")
+        print("\nBuilding aa_subs over time plot...")
+        #self.plot_important_aa_subs_over_time(everything)
+        print(" Done!")
+        print("\nBuilding cumulative subs over time plot...")
+        self.plot_cumulative_subs_over_time(everything)
+        print(" Done!")
         
-        
+
+
     def plot_clades_over_time(self, everything):
         cot = everything[['doc', 'clade', 'hsn']].copy()
         cot = cot.groupby(['doc', 'clade']).agg(['count'])
@@ -125,6 +133,43 @@ class plotter_obj(workflow_obj):
         save(p)
 
 
+    def plot_cumulative_subs_over_time(self, everything):
+        cst = everything[['doc', 'aa_substitutions', 'total_mutations']].copy()
+        print(cst)
+        cst['doc'] = pd.to_datetime(cst['doc'], format="%Y-%m-%d")
+        cst['avg_tot_aa'] = cst.apply(lambda row: get_len(row, 'aa_substitutions'), axis=1)
+        print(cst)
+        cst.fillna(0, inplace=True)
+        cst.drop(labels=['aa_substitutions'], inplace=True, axis=1)
+        cst = cst.resample('W', on='doc').mean()
+        cst.fillna(0, inplace=True)
+        cst['diff'] = cst.apply(lambda row: row['total_mutations'] - row['avg_tot_aa'], axis=1)
+        print(cst)
+
+        p = figure(
+            title="Number of mutations/substitutions over time",
+            x_axis_label='Date',
+            x_axis_type='datetime',
+            y_axis_label='Total number of mutations/substitutions',
+            sizing_mode='stretch_both',
+        )
+        output_file(self.base_path + "cst.html")
+        num_lines=len(cst.columns)
+        cols = [cst[name].values for name in cst]
+        colors_list=Spectral11[0:num_lines]
+        legends_list=cst.columns.tolist()
+        xs=[cst.index.values]*num_lines
+        ys=cols
+
+        for (colr, leg, x, y) in zip(colors_list, legends_list, xs, ys):
+            p.line(x, y, color=colr, line_width=3, legend_label=leg, hover_color=colr)
+
+        p.legend.location='top_left'
+        p.legend.background_fill_color = '#fafafa'
+
+        save(p)
+
+
     
     def get_num_occurances(self, row, lst):
         if pd.isna(row['aa_substitutions']):
@@ -151,5 +196,12 @@ def get_percentage(row, col):
         return row[col]/row['total']
     except ZeroDivisionError:
         return 0
+
+
+def get_len(row, col):
+    if pd.isna(row[col]):
+        return 0
+    lst = row[col].split(",")
+    return float(len(lst))
 
 
