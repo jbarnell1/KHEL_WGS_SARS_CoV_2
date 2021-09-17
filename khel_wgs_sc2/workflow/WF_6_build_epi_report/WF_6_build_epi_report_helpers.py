@@ -21,7 +21,7 @@ class WorkflowObj6(workflow_obj):
                 \na single date (type 'd'), samples submitted from a given lab (type 's'),\
                 \nall samples submitted by a given date (type 'sd'), or all samples from a given facility (type 'f')?\n--> ")
             if self.user_selection.lower() == 'd':
-                date_start = input('Enter the date in YYYY-MM-DD format (include dashes):\n-->')
+                date_start = input('Enter the date in YYYY-MM-DD format (include dashes):\n--> ')
                 year, month, day = map(int, date_start.split('-'))
                 date_start = datetime.datetime(year, month, day).strftime("%Y-%m-%d")
                 date_end = date_start

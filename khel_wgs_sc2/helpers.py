@@ -9,7 +9,7 @@ from workflow.WF_8_build_nextstrain.WF_8_build_nextstrain import run_script_8
 from workflow.epi_isl.epi_isl import run_epi_isl
 from workflow.gisaid.gisaid import run_gisaid
 from workflow.outside_lab.outside_lab import run_outside_lab
-#from workflow.plotter.plotter import run_plotter
+from workflow.plotter.plotter import run_plotter
 from workflow.query.query import run_query
 from workflow.refresh.refresh import run_refresh
 import pyodbc
@@ -94,9 +94,9 @@ def run():
                 # run script
                 run_refresh()
 
-            # elif u_input.strip().lower() == 'plotter':
-            #     # run script
-            #     run_plotter()
+            elif u_input.strip().lower() == 'plotter':
+                # run script
+                run_plotter()
                 
             elif u_input.strip().lower() == 'query':
                 # run script

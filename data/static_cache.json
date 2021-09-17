@@ -662,7 +662,6 @@
             "AND results.dob IS NOT NULL",
             "AND results.facility IS NOT NULL",
             "AND results.doc IS NOT NULL",
-            "AND results.dob IS NOT NULL",
             "AND qc.pos_pass = 1",
             "AND qc.neg_pass = 1",
             "AND results.percent_cvg >= {percent_cvg_cutoff}"
@@ -676,8 +675,6 @@
             "ON results.hsn = qc.hsn",
             "WHERE results.wgs_run_date >= CAST('{start}' AS DATE)",
             "AND results.wgs_run_date <= CAST('{end}' AS DATE)",
-            "AND results.lineage_id IS NOT NULL",
-            "AND results.clade IS NOT NULL",
             "AND results.f_name IS NOT NULL",
             "AND results.l_name IS NOT NULL",
             "AND results.dob IS NOT NULL",
@@ -1072,9 +1069,18 @@
         ]
     },
     "plotter": {
+        "combine_cols":{
+            "20H Beta": ["20H (Beta, V2)", "20H/501Y.V2"],
+            "20I Alpha": ["20I", "20I (Alpha, V1)", "20I/501Y.V1"],
+            "20J Gamma": ["20J", "20J (Gamma, V3)", "20J/501Y.V3"],
+            "21A Delta": ["21A", "21A (Delta)"],
+            "21H Mu": ["21H", "21H (Mu)"]
+        },
         "read_query_tbl1":[
             "SELECT *",
             "FROM dbo.Results",
+            "WHERE doc >= '2021-01-01'",
+            "AND percent_cvg > {percent_cvg_cutoff}",
             "ORDER BY wgs_run_date"
         ]
     },
