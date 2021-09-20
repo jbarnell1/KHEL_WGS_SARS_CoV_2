@@ -22,6 +22,7 @@ class plotter_obj(workflow_obj):
     def get_plots(self):
         super().setup_db()
         everything = self.db_handler.sub_read(query=self.read_query_tbl1)
+        everything.to_csv(self.base_path + "test.csv")
         print("\nBuilding clade over time plot...")
         #self.plot_clades_over_time(everything)
         print(" Done!")
@@ -62,7 +63,7 @@ class plotter_obj(workflow_obj):
         cot_pvt.drop(labels=clades, inplace=True, axis=1)
         cot_pvt.drop(labels=['total'], inplace=True, axis=1)
         cot_pvt.columns = [column[:-1] for column in cot_pvt.columns]
-        cot_pvt.to_csv(self.base_path + "cot_pvt.csv")
+        
         source = ColumnDataSource(cot_pvt)
         output_file(self.base_path + "cot_pvt.html")
         # create a new plot with a title and axis labels
