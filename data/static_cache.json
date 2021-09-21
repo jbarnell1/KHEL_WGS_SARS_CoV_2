@@ -1091,6 +1091,9 @@
             "K417N, L452R, and T478K":["K417N", "L452R", "T478K"],
             "R346K, E484K, and N501Y":["R346K", "E484K", "N501Y"]
         },
+        "dot_add_cols":[
+
+        ],
         "read_query_tbl1":[
             "SELECT *",
             "FROM dbo.Results",

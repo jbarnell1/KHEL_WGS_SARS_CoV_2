@@ -4,7 +4,7 @@ import re
 import pandas as pd
 import numpy as np
 import bokeh
-from bokeh.palettes import Spectral11, viridis
+from bokeh.palettes import Spectral11, viridis, d3, Turbo256
 from bokeh.plotting import figure, save, show, output_file, ColumnDataSource
 import datetime
 
@@ -24,13 +24,16 @@ class plotter_obj(workflow_obj):
         everything = self.db_handler.sub_read(query=self.read_query_tbl1)
         everything.to_csv(self.base_path + "test.csv")
         print("\nBuilding clade over time plot...")
-        #self.plot_clades_over_time(everything)
+        self.plot_clades_over_time(everything)
         print(" Done!")
         print("\nBuilding aa_subs over time plot...")
-        #self.plot_important_aa_subs_over_time(everything)
+        self.plot_important_aa_subs_over_time(everything)
         print(" Done!")
         print("\nBuilding cumulative subs over time plot...")
         self.plot_cumulative_subs_over_time(everything)
+        print(" Done!")
+        print("\nBuilding Deltas over time plot...")
+        self.plot_delta_over_time(everything)
         print(" Done!")
         
 
@@ -170,6 +173,51 @@ class plotter_obj(workflow_obj):
 
         save(p)
 
+    def plot_delta_over_time(self, everything):
+        dot = everything[['doc', 'clade', 'lineage_id']].copy()
+        dot.fillna("", inplace=True)
+        dot = dot.loc[dot['clade'].str.contains('21A')]
+        dot['doc'] = pd.to_datetime(dot['doc'], format="%Y-%m-%d")
+        dot.drop(labels=['clade'], inplace=True, axis=1)
+        cols_to_create = set(dot.lineage_id.values.astype(str).tolist())
+        cols_to_create.remove('B.1.617.2\xa0')
+        for col in cols_to_create:
+            dot[col] = dot.apply(lambda row: sum_types(row, col), axis=1)
+
+        print(dot)
+        dot = dot.resample('D', on='doc').sum()
+        print(dot)
+        for col in cols_to_create:
+            dot[col] = dot[col].cumsum()
+        print(dot)
+
+        p = figure(
+            title="Delta lineages over time",
+            x_axis_label='Date',
+            x_axis_type='datetime',
+            y_axis_label='Cumulative number of lineages',
+            sizing_mode='stretch_both',
+        )
+        output_file(self.base_path + "dot.html")
+        num_lines=len(dot.columns)
+        cols = [dot[name].values for name in dot]
+        interval = 256/num_lines
+        colors_list=[]
+        for i in range(0, 256, int(interval)):
+            colors_list.append(Turbo256[i])
+        legends_list=dot.columns.tolist()
+        xs=[dot.index.values]*num_lines
+        ys=cols
+
+        for (colr, leg, x, y) in zip(colors_list, legends_list, xs, ys):
+            p.line(x, y, color=colr, line_width=5, legend_label=leg, hover_color=colr)
+
+        p.legend.location='top_left'
+        p.legend.background_fill_color = '#fafafa'
+
+        dot.to_csv(self.base_path + "dot.csv")
+        show(p)
+
 
     
     def get_num_occurances(self, row, lst):
@@ -179,6 +227,11 @@ class plotter_obj(workflow_obj):
             if not re.search(mut, row['aa_substitutions']):
                 return 0
         return 1
+
+def sum_types(row, col):
+    if row['lineage_id'] == col:
+        return 1
+    return 0
 
 def get_dt(row):
     dt = datetime.datetime.strptime(row['doc'], "%Y-%m-%d")
