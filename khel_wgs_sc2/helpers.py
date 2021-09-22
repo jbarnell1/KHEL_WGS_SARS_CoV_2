@@ -6,6 +6,7 @@ from workflow.WF_5_parse_pangolin.WF_5_parse_pangolin import run_script_5
 from workflow.WF_6_build_epi_report.WF_6_build_epi_report import run_script_6
 from workflow.WF_7_send_epi_report.WF_7_send_epi_report import run_script_7
 from workflow.WF_8_build_nextstrain.WF_8_build_nextstrain import run_script_8
+from workflow.WF_9_send_fastas.WF_9_send_fastas import run_script_9
 from workflow.epi_isl.epi_isl import run_epi_isl
 from workflow.gisaid.gisaid import run_gisaid
 from workflow.outside_lab.outside_lab import run_outside_lab
@@ -19,10 +20,12 @@ import time
 def run():
     print("\n ___________________________________________________\n|  _______________________________________________  |\n| |\033[4m    SARS-CoV-2 daily workflow runner script    \033[0m| |\n|___________________________________________________|\n")
     ask = True
+    day = False
     while ask:
         u_input = input("\n\nIf you'd like to run the whole workflow, enter 'start'.\n\nIf you'd like to run just a part of the workflow:\nenter '1' to import demographics\
             \nenter '2' to parse the clearlabs run data\nenter '3' to compile the fasta file\nenter '4' to parse the nextclade file\nenter '5' to parse the pangolin file\
-            \nenter '6' to build the daily epi report\nenter '7' to send the daily epi report\nenter '8' to build a nextstrain report\n\nOther options:\
+            \nenter '6' to build the daily epi report\nenter '7' to send the daily epi report\nenter '8' to build a nextstrain report\nenter '9' to build a passing fasta file for a given date\
+            \n\nOther options:\
             \nenter 'refresh' to roll back the database to the most current version of an excel file\nenter 'plotter' to get an interactive dashboard of the database\
             \nenter 'query' to get a specific snapshot of the database\
             \nenter 'outside lab' to import a data template submitted from an outside lab\nenter 'gisaid' to produce template and fasta files from a list of hsn's\
@@ -37,7 +40,7 @@ def run():
                             run_script_1()
                             tracker += 1
                         elif tracker == 2:
-                            run_script_2()
+                            day = run_script_2()
                             tracker += 1
                         elif tracker == 3:
                             compiled_fasta_path = run_script_3()
@@ -89,6 +92,9 @@ def run():
                 
             elif u_input.strip().lower() == '8':
                 run_script_8()
+
+            elif u_input.strip().lower() == '9':
+                run_script_9(day)
             
             elif u_input.strip().lower() == 'refresh':
                 # run script

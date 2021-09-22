@@ -783,6 +783,15 @@
         ]
     },
     "workflow7": {},
+    "workflow8": {},
+    "workflow9": {
+        "read_query_tbl1": [
+            "SELECT hsn, path_to_fasta, wgs_run_date",
+            "FROM dbo.Results",
+            "WHERE path_to_fasta IS NOT NULL",
+            "AND percent_cvg >= {percent_cvg_cutoff}"
+        ]
+    },
     "epi_isl": {
         "rename_epi_isl_cols_lst": {
             "Accession ID": "gisaid_epi_isl"
@@ -938,7 +947,7 @@
             "SELECT hsn",
             "FROM dbo.Results",
             "WHERE wgs_run_date >= '{prev_week}'",
-            "AND percent_cvg > {percent_cvg_cutoff} ",
+            "AND percent_cvg >= {percent_cvg_cutoff} ",
             "AND path_to_fasta IS NOT NULL",
             "AND gisaid_num IS NULL",
             "AND gisaid_epi_isl IS NULL",
@@ -1098,7 +1107,7 @@
             "SELECT *",
             "FROM dbo.Results",
             "WHERE doc >= '2021-01-01'",
-            "AND percent_cvg > {percent_cvg_cutoff}",
+            "AND percent_cvg >= {percent_cvg_cutoff}",
             "ORDER BY wgs_run_date"
         ]
     },

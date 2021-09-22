@@ -120,6 +120,8 @@ class workflow_obj(ABC):
                 self.new_base_path = working_private_cache['new_base_path']
             if wf == -6:
                 self.base_path = working_private_cache['base_path']
+            if wf == 9:
+                self.base_path = working_private_cache['base_path']
 
         except KeyError:
             print("Looks like this is your first time using the script!")
@@ -163,6 +165,10 @@ Downloads are now stored.")
             if wf == -6:
                 print("\nPlease select the path to the folder where the \
 Plots should be stored")
+                self.base_path = get_path_folder()
+            if wf == 9:
+                print("\nPlease select the path to the folder where the \
+passing fasta files should be stored")
                 self.base_path = get_path_folder()
 
             if need_sql:
@@ -214,6 +220,8 @@ future for any reason, modify the cache file: daily_workflow/data/private_cache.
                 full_private_cache[workflow]['p_lab'] = self.p_lab
                 full_private_cache[workflow]['folderpathbase'] = self.folderpathbase
             if wf == -6:
+                full_private_cache[workflow]['base_path'] = self.base_path
+            if wf == 9:
                 full_private_cache[workflow]['base_path'] = self.base_path
             full_private_cache["all_workflows"]['sql_user'] = self.sql_user
             full_private_cache["all_workflows"]['sql_pass'] = self.sql_pass

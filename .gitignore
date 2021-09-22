@@ -16,3 +16,4 @@ khel_wgs_sc2/workflow/WF_5_parse_pangolin/__pycache__/
 khel_wgs_sc2/workflow/WF_6_build_epi_report/__pycache__/
 khel_wgs_sc2/workflow/WF_7_send_epi_report/__pycache__/
 khel_wgs_sc2/workflow/WF_8_build_nextstrain/__pycache__/
+khel_wgs_sc2/workflow/WF_9_send_fastas/__pycache__/
