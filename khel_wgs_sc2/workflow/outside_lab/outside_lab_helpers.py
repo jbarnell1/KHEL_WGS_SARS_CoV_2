@@ -123,10 +123,11 @@ def get_name(row, arg):
 
 
 def format_state(row):
-    if row['state'].lower() == 'ks':
-        return "Kansas"
-    else:
-        return row['state']
+    if not pd.isna(row['state']):
+        if row['state'].lower() == 'ks':
+            return "Kansas"
+        else:
+            return row['state']
 
 def get_path_to_fasta(row):
     return None
