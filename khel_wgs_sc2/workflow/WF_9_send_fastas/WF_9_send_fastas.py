@@ -4,7 +4,7 @@ import time
 
 def run_script_9(day):
 
-    print("\n================================\nSafe file transfer protocol - WGS\n================================\n\n")
+    print("\n================================\nCompile Qualifying FASTAs\n================================\n\n")
 
     # import relevant data from json file
     data_obj = WorkflowObj9()
