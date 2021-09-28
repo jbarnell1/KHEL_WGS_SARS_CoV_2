@@ -69,6 +69,7 @@ class workflow_obj(ABC):
         except KeyError:
             full_private_cache[workflow] = {}
             write_json(path_to_private_cache, full_private_cache)
+            working_private_cache = full_private_cache[workflow]
         gen_private_cache = full_private_cache['all_workflows']
 
         try:
