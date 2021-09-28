@@ -64,7 +64,11 @@ class workflow_obj(ABC):
             private_start_dict = dict.fromkeys(full_static_cache.keys(), {})
             write_json(path_to_private_cache, private_start_dict)
         full_private_cache = read_json(path_to_private_cache)
-        working_private_cache = full_private_cache[workflow]
+        try:
+            working_private_cache = full_private_cache[workflow]
+        except KeyError:
+            full_private_cache[workflow] = {}
+            write_json(path_to_private_cache, full_private_cache)
         gen_private_cache = full_private_cache['all_workflows']
 
         try:
