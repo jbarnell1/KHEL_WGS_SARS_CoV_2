@@ -255,7 +255,7 @@ def format_l_name(row, lst):
         full_name = str(row["name"])
         names = full_name.split()
         for item in lst:
-            if re.search(item, names[-1].lower()):
+            if item == names[-1].lower():
                 return names[-2].capitalize() + ", " + names[-1].upper()
         l_name = names[-1].capitalize()
         l_name = l_name.replace("'", "''")
