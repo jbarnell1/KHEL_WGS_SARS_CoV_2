@@ -792,10 +792,16 @@
     "workflow8": {},
     "workflow9": {
         "read_query_tbl1": [
-            "SELECT hsn, path_to_fasta, wgs_run_date",
-            "FROM dbo.Results",
-            "WHERE path_to_fasta IS NOT NULL",
-            "AND percent_cvg >= {percent_cvg_cutoff}"
+            "SELECT results.hsn, results.path_to_fasta, results.wgs_run_date",
+            "FROM dbo.Results results",
+            "INNER JOIN",
+            "(SELECT hsn, pos_pass, neg_pass",
+            "FROM dbo.Run_Stats) qc",
+            "ON results.hsn = qc.hsn",
+            "WHERE results.path_to_fasta IS NOT NULL",
+            "AND results.percent_cvg >= {percent_cvg_cutoff}",
+            "AND qc.pos_pass = 1",
+            "AND qc.neg_pass = 1"
         ]
     },
     "epi_isl": {
@@ -950,7 +956,7 @@
             "FROM dbo.Results"
         ],
         "read_query_tbl1_eligible_hsn": [
-            "SELECT results.hsn",
+            "SELECT results.hsn, results.wgs_run_date, results.percent_cvg, results.path_to_fasta, results.gisaid_num, results.gisaid_epi_isl, results.doc",
             "FROM dbo.Results results",
             "INNER JOIN",
             "(SELECT hsn, pos_pass, neg_pass",

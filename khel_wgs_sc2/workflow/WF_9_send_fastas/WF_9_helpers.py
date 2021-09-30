@@ -21,6 +21,8 @@ class WorkflowObj9(workflow_obj):
         fasta_lst_df = self.db_handler.sub_read(query=self.read_query_tbl1)
         fasta_lst_df =  fasta_lst_df[fasta_lst_df.wgs_run_date == self.day.strftime("%Y-%m-%d")]
         self.fasta_lst = fasta_lst_df["path_to_fasta"].values.astype(str).tolist()
+        if len(self.fasta_lst) == 0:
+            raise ValueError("==================================================================================\nError:\nNo eligible samples from this date!! - All samples failed QC?\n==================================================================================\n")
 
 
     def build_fasta(self):

@@ -37,6 +37,8 @@ class gisaid_obj(workflow_obj):
         prev_week = (datetime.date.today() - datetime.timedelta(days = 7)).strftime("%Y%m%d")
         self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{prev_week}", prev_week)
         self.hsn_lst = self.db_handler.sub_read(query=self.read_query_tbl1_eligible_hsn)['hsn'].astype(str).tolist()
+        if len(self.hsn_lst) == 0:
+            raise ValueError("==================================================================================\nError:\nNo eligible samples for gisaid report!! - All samples already reported\n==================================================================================\n")
 
     def get_gisaid_df(self):
         # use the hsn list from above to get all hsns into single dataframe
