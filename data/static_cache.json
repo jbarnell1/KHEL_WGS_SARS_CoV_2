@@ -950,14 +950,20 @@
             "FROM dbo.Results"
         ],
         "read_query_tbl1_eligible_hsn": [
-            "SELECT hsn",
-            "FROM dbo.Results",
-            "WHERE wgs_run_date >= '{prev_week}'",
-            "AND percent_cvg >= {percent_cvg_cutoff} ",
-            "AND path_to_fasta IS NOT NULL",
-            "AND gisaid_num IS NULL",
-            "AND gisaid_epi_isl IS NULL",
-            "AND doc IS NOT NULL"
+            "SELECT results.hsn",
+            "FROM dbo.Results results",
+            "INNER JOIN",
+            "(SELECT hsn, pos_pass, neg_pass",
+            "FROM dbo.Run_Stats) qc",
+            "ON results.hsn = qc.hsn",
+            "WHERE results.wgs_run_date >= '{prev_week}'",
+            "AND results.percent_cvg >= {percent_cvg_cutoff} ",
+            "AND results.path_to_fasta IS NOT NULL",
+            "AND results.gisaid_num IS NULL",
+            "AND results.gisaid_epi_isl IS NULL",
+            "AND qc.pos_pass = 1",
+            "AND qc.neg_pass = 1",
+            "AND results.doc IS NOT NULL"
         ],
         "read_query_tbl1": [
             "SELECT *",
