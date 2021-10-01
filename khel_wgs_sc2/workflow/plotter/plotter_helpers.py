@@ -2,8 +2,6 @@ from bokeh.models.tools import HoverTool
 from ..workflow_obj import workflow_obj
 import re
 import pandas as pd
-import numpy as np
-import bokeh
 from bokeh.palettes import Spectral11, viridis, d3, Turbo256
 from bokeh.plotting import figure, save, show, output_file, ColumnDataSource
 import datetime
@@ -34,6 +32,9 @@ class plotter_obj(workflow_obj):
         print(" Done!")
         print("\nBuilding Deltas over time plot...")
         self.plot_delta_over_time(everything)
+        print(" Done!")
+        print("\nBuilding lineages over time plot...")
+        self.plot_lineage_over_time(everything)
         print(" Done!")
         
 
@@ -97,6 +98,69 @@ class plotter_obj(workflow_obj):
         )
         p.legend.orientation='horizontal'
         p.legend.location='top_center'
+        p.legend.background_fill_color = '#fafafa'
+        # show the results
+        save(p)    
+
+    def plot_lineage_over_time(self, everything):
+        lot = everything[['doc', 'lineage_id', 'hsn']].copy()
+        lot = lot.groupby(['doc', 'lineage_id']).agg(['count'])
+        lot.reset_index(inplace=True)
+        lot_pvt = lot.pivot(index='doc', columns='lineage_id')
+        lot_pvt.fillna(value=0, inplace=True)
+        lot_pvt.columns = [col[2] for col in lot_pvt.columns]
+        for combine_lst_key in self.lot_combine_cols.keys():
+            for col_name_idx in range(len(self.lot_combine_cols[combine_lst_key])):
+                if col_name_idx == 0:
+                    temp_col = lot_pvt[self.lot_combine_cols[combine_lst_key][col_name_idx]]
+                else:
+                    temp_col += lot_pvt[self.lot_combine_cols[combine_lst_key][col_name_idx]]
+            lot_pvt[combine_lst_key] = temp_col
+            lot_pvt.drop(labels=self.lot_combine_cols[combine_lst_key], inplace=True, axis=1)
+        lot_pvt.reset_index(inplace=True)
+        lot_pvt['date'] = lot_pvt.apply(lambda row: get_dt(row), axis=1)
+        lineages = lot_pvt.columns.tolist()
+        lineages.remove('date')
+        lineages.remove('doc')
+        lot_pvt = lot_pvt.resample('W', on='date').sum()
+        lot_pvt.reset_index(inplace=True)
+        lot_pvt['total'] = lot_pvt.apply(lambda row: get_total(row, lineages), axis=1)
+        for lineage in lineages:
+            lot_pvt[lineage + "f"] = lot_pvt.apply(lambda row: get_percentage(row, lineage), axis=1)
+        lot_pvt.drop(labels=lineages, inplace=True, axis=1)
+        lot_pvt.drop(labels=['total'], inplace=True, axis=1)
+        lot_pvt.columns = [column[:-1] for column in lot_pvt.columns]
+        
+        source = ColumnDataSource(lot_pvt)
+        output_file(self.base_path + "lot_pvt.html")
+        # create a new plot with a title and axis labels
+        p = figure(
+            title="lineages over time",
+            x_axis_label='Time',
+            x_axis_type='datetime',
+            y_range=(0, 1),
+            y_axis_label='Percent dominance',
+            sizing_mode='stretch_both'
+        )
+        stackers = lot_pvt.columns.tolist()
+        #stackers.remove('do')
+        stackers.remove('dat')
+        #add a line renderer with legend and line thickness to the plot
+        p.varea_stack(
+            stackers=stackers,
+            x='dat',
+            color=viridis(len(stackers)),
+            legend_label=stackers,
+            source=source
+        )
+        p.vline_stack(
+            stackers=stackers,
+            x='dat',
+            color=viridis(len(stackers)),
+            source=source
+        )
+        p.legend.orientation='vertical'
+        p.legend.location='top_left'
         p.legend.background_fill_color = '#fafafa'
         # show the results
         save(p)    
@@ -216,7 +280,7 @@ class plotter_obj(workflow_obj):
         p.legend.background_fill_color = '#fafafa'
 
         dot.to_csv(self.base_path + "dot.csv")
-        show(p)
+        save(p)
 
 
     

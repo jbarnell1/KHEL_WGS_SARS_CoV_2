@@ -1103,6 +1103,8 @@
             "21A Delta": ["21A", "21A (Delta)"],
             "21H Mu": ["21H", "21H (Mu)"]
         },
+        "lot_combine_cols":{
+        },
         "ast_add_cols":{
             "L452R":["L452R"],
             "D614G":["D614G"],
