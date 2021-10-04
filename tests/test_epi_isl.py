@@ -1,4 +1,11 @@
-from ..workflow.epi_isl.epi_isl_helpers import parse_gisaid_num
+if __package__ is None:
+    import sys
+    from os import path
+    sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+    from khel_wgs_sc2.workflow.epi_isl.epi_isl_helpers import parse_gisaid_num
+else:
+    from khel_wgs_sc2.workflow.epi_isl.epi_isl_helpers import parse_gisaid_num
+
 
 
 def test_parse_gisaid_num():

@@ -133,6 +133,7 @@ class plotter_obj(workflow_obj):
         
         source = ColumnDataSource(lot_pvt)
         output_file(self.base_path + "lot_pvt.html")
+        pd.DataFrame(lot_pvt).to_csv(self.base_path + "lot_pvt.csv")
         # create a new plot with a title and axis labels
         p = figure(
             title="lineages over time",
