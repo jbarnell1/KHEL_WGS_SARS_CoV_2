@@ -10,7 +10,7 @@ import pandas as pd
 
 class WorkflowObj1(workflow_obj):
     # constructor
-    def __init__(self):
+    def __init__(self): #self helps python know its part of that class
         self.id = "WF_1"
 
     # methods
@@ -43,12 +43,12 @@ class WorkflowObj1(workflow_obj):
         # drop controls from index
         neg = False
         pos = False
-        for index in range(len(self.df_right.index)):
-            if "neg" in self.df_right['Sample ID'][index].lower():
-                neg_idx = index
+        for row in range(len(self.df_right.index)):
+            if "neg" in self.df_right['Sample ID'][row].lower():
+                neg_idx = row
                 neg = True
-            if "pos" in self.df_right['Sample ID'][index].lower():
-                pos_idx = index
+            if "pos" in self.df_right['Sample ID'][row].lower():
+                pos_idx = row
                 pos = True
             if neg and pos:
                 break
@@ -56,10 +56,7 @@ class WorkflowObj1(workflow_obj):
 
 
     def format_demo_df(self):
-        self.df_right = format_hsn_col(\
-            df=self.df_right, \
-            hsn_colname='Sample ID', \
-            hsn_only=True)
+        self.df_right = format_hsn_col(self.df_right, hsn_colname='Sample ID', hsn_only=True)
         
 
     def get_initial_lims_df(self):

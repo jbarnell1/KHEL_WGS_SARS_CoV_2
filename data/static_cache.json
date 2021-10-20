@@ -539,20 +539,28 @@
             "WHERE hsn = {0} AND wgs_run_date = CAST('{1}' AS DATE) AND machine_num = {2} AND position = {3} AND day_run_num = {4}"
         ],
         "write_query_tbl1": [
-            "UPDATE dbo.Results",
-            "SET clade = '{1}', total_ns = {2}, total_mutations = {3}, total_aa_changes = {4}, aa_substitutions = '{5}', pcr_primer_changes = '{6}', nextclade_version = CAST('{7}' AS DATE), path_to_fasta ='{11}'",
-            "WHERE hsn = {0}"
+            "UPDATE dbo.Results results",
+            "INNER JOIN",
+            "(SELECT hsn, neg_pass, pos_pass",
+            "FROM dbo.Run_Stats) run_stats",
+            "ON results.hsn = run_stats.hsn",
+            "SET results.clade = '{1}', results.total_ns = {2}, results.total_mutations = {3}, results.total_aa_changes = {4}, results.aa_substitutions = '{5}', results.pcr_primer_changes = '{6}', results.nextclade_version = CAST('{7}' AS DATE), results.path_to_fasta ='{11}'",
+            "WHERE results.hsn = {0}",
+            "AND run_stats.neg_pass = 1",
+            "AND run_stats.pos_pass = 1"
         ],
         "read_query_tbl2": [
             "SELECT row.*",
             "FROM dbo.Run_Stats row",
             "INNER JOIN",
-            "(SELECT hsn, MAX(percent_cvg) AS MaxPercentCoverage",
+            "(SELECT hsn, neg_pass, pos_pass, MAX(percent_cvg) AS MaxPercentCoverage",
             "FROM dbo.Run_Stats",
             "GROUP BY hsn) grouped_row",
             "ON row.hsn = grouped_row.hsn",
             "AND row.percent_cvg = grouped_row.MaxPercentCoverage",
-            "WHERE row.avg_depth >= {avg_depth_cutoff}"
+            "WHERE row.avg_depth >= {avg_depth_cutoff}",
+            "AND grouped_row.neg_pass = 1",
+            "AND grouped_row.pos_pass = 1"
         ]
     },
     "workflow5": {
@@ -582,20 +590,28 @@
             "wgs_run_date_var"
         ],
         "write_query_tbl1": [
-            "UPDATE dbo.Results",
-            "SET lineage_id = '{1}', pangolin_version = '{2}', pango_learn_version = CAST('{3}' AS DATE)",
-            "WHERE hsn = {0}"
+            "UPDATE dbo.Results results",
+            "INNER JOIN",
+            "(SELECT hsn, neg_pass, pos_pass",
+            "FROM dbo.Run_Stats) run_stats",
+            "ON results.hsn = run_stats.hsn",
+            "SET results.lineage_id = '{1}', results.angolin_version = '{2}', results.pango_learn_version = CAST('{3}' AS DATE)",
+            "WHERE results.hsn = {0}",
+            "AND run_stats.neg_pass = 1",
+            "AND run_stats.pos_pass = 1"
         ],
         "read_query_tbl2": [
             "SELECT row.*",
             "FROM dbo.Run_Stats row",
             "INNER JOIN",
-            "(SELECT hsn, MAX(percent_cvg) AS MaxPercentCoverage",
+            "(SELECT hsn, neg_pass, pos_pass, MAX(percent_cvg) AS MaxPercentCoverage",
             "FROM dbo.Run_Stats",
             "GROUP BY hsn) grouped_row",
             "ON row.hsn = grouped_row.hsn",
             "AND row.percent_cvg = grouped_row.MaxPercentCoverage",
-            "WHERE row.avg_depth >= {avg_depth_cutoff}"
+            "WHERE row.avg_depth >= {avg_depth_cutoff}",
+            "AND grouped_row.neg_pass = 1",
+            "AND grouped_row.pos_pass = 1"
         ]
     },
     "workflow6": {

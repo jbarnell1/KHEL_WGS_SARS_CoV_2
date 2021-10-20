@@ -14,7 +14,6 @@ def get_pandas(path, log_name, workbook_name, separator):
     except Exception as o:
         print("\nThere is an issue opening the " + workbook_name + " workbook!")
         print(o)
-        #logger.critical(log_name + ": There is an issue opening the " + workbook_name + " workbook")
         time.sleep(10)
         sys.exit()
     print(" Done!\n")

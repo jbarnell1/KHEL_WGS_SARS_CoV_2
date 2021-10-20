@@ -32,10 +32,11 @@ def run():
             \nenter 'epi isl' to update all isl numbers for samples submitted to gisaid\n\nenter 'q' to quit\n--> ")
         try:
             if u_input.strip().lower() == 'start':
+                # tracker will 
                 tracker = 1
                 while True:
                     try:
-                        # run script
+                        # tracker is tracking which run script to run
                         if tracker == 1:
                             run_script_1()
                             tracker += 1
