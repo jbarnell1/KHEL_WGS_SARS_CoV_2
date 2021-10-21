@@ -989,8 +989,7 @@
             "AND results.path_to_fasta IS NOT NULL",
             "AND results.gisaid_num IS NULL",
             "AND results.gisaid_epi_isl IS NULL",
-            "AND qc.pos_pass = 1",
-            "AND qc.neg_pass = 1",
+            "AND results.reportable = {surv}",
             "AND results.doc IS NOT NULL"
         ],
         "read_query_tbl1": [
