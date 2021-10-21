@@ -43,7 +43,7 @@ class gisaid_obj(workflow_obj):
         # samples eligible for upload based on the qc cutoffs set
         # in data/static_cache.json
         self.next_gisaid = int(self.db_handler.ss_read(query=self.read_query_tbl1_max_gisaid).iat[0, 0]) + 1
-        prev_week = (datetime.date.today() - datetime.timedelta(days = 7)).strftime("%Y%m%d")
+        prev_week = (datetime.date.today() - datetime.timedelta(days = 31)).strftime("%Y%m%d")
         self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{prev_week}", prev_week)
         self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{surv}", str(self.surv))
         self.hsn_lst = self.db_handler.sub_read(query=self.read_query_tbl1_eligible_hsn)['hsn'].astype(str).tolist()
