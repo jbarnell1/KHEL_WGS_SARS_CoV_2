@@ -53,6 +53,7 @@ class workflow_obj(ABC):
         self.percent_cvg_cutoff = gen_static_cache['percent_cvg_cutoff']
         self.neg_percent_cvg_cutoff = gen_static_cache['neg_percent_cvg_cutoff']
         self.col_func_map = gen_static_cache['col_func_map']
+        self.surv = gen_static_cache['surv']
 
         # search for private data.  If empty, gather from user (first time use)
         path_to_private_cache = top_pkg_folder + "\\data\\private_cache.json"
