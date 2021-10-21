@@ -1,5 +1,6 @@
 {
     "all_workflows": {
+        "surv": 1,
         "percent_cvg_cutoff": 0.95,
         "neg_percent_cvg_cutoff": 0.3,
         "avg_depth_cutoff": 0.75,
@@ -111,6 +112,10 @@
             ],
             "neg_pass": [
                 "neg_ctrl_pass"
+            ],
+            "reportable": [
+                "check_reportable",
+                "percent_cvg_cutoff"
             ],
             "Lab": [
                 "lab"
@@ -437,13 +442,16 @@
             "hsn",
             "avg_depth",
             "percent_cvg",
-            "wgs_run_date"
+            "pos_pass",
+            "neg_pass",
+            "wgs_run_date",
+            "reportable"
         ],
         "write_query_tbl1": [
             "UPDATE dbo.Results",
-            "SET avg_depth = {1}, percent_cvg = {2}, wgs_run_date = CAST('{3}' AS DATE)",
-            "WHERE (hsn = {0} AND percent_cvg IS NULL AND avg_depth IS NULL)",
-            "OR (hsn = {0} AND percent_cvg < {2} AND {1} >= {avg_depth_cutoff})"
+            "SET avg_depth = {1}, percent_cvg = {2}, wgs_run_date = CAST('{5}' AS DATE), reportable = {6}",
+            "WHERE (hsn = {0} AND percent_cvg IS NULL AND avg_depth IS NULL AND reportable IS NULL)",
+            "OR (hsn = {0} AND percent_cvg < {2} AND {1} >= {avg_depth_cutoff} AND {6} = 1)"
         ],
         "add_col_lst": [
             "platform",
@@ -457,7 +465,8 @@
             "neg_ctrl_lot",
             "neg_ctrl_exp",
             "pos_ctrl_lot",
-            "pos_ctrl_exp"
+            "pos_ctrl_exp",
+            "reportable"
         ]
     },
     "workflow3": {
@@ -539,28 +548,33 @@
             "WHERE hsn = {0} AND wgs_run_date = CAST('{1}' AS DATE) AND machine_num = {2} AND position = {3} AND day_run_num = {4}"
         ],
         "write_query_tbl1": [
-            "UPDATE dbo.Results results",
-            "INNER JOIN",
-            "(SELECT hsn, neg_pass, pos_pass",
-            "FROM dbo.Run_Stats) run_stats",
-            "ON results.hsn = run_stats.hsn",
+            "UPDATE results",
             "SET results.clade = '{1}', results.total_ns = {2}, results.total_mutations = {3}, results.total_aa_changes = {4}, results.aa_substitutions = '{5}', results.pcr_primer_changes = '{6}', results.nextclade_version = CAST('{7}' AS DATE), results.path_to_fasta ='{11}'",
-            "WHERE results.hsn = {0}",
-            "AND run_stats.neg_pass = 1",
-            "AND run_stats.pos_pass = 1"
+            "FROM dbo.Results results",
+            "INNER JOIN dbo.Run_Stats run_stats",
+            "ON results.hsn = run_stats.hsn",
+            "WHERE (results.hsn = {0}",
+            "AND results.clade IS NULL",
+            "AND results.total_ns IS NULL",
+            "AND results.total_mutations IS NULL",
+            "AND results.total_aa_changes IS NULL",
+            "AND results.aa_substitutions IS NULL",
+            "AND results.pcr_primer_changes IS NULL",
+            "AND results.nextclade_version IS NULL", 
+            "AND results.path_to_fasta IS NULL)",
+            "OR (results.hsn = {0}",
+            "AND results.reportable = 1)"
         ],
         "read_query_tbl2": [
             "SELECT row.*",
             "FROM dbo.Run_Stats row",
             "INNER JOIN",
-            "(SELECT hsn, neg_pass, pos_pass, MAX(percent_cvg) AS MaxPercentCoverage",
+            "(SELECT hsn, MAX(percent_cvg) AS MaxPercentCoverage",
             "FROM dbo.Run_Stats",
             "GROUP BY hsn) grouped_row",
             "ON row.hsn = grouped_row.hsn",
             "AND row.percent_cvg = grouped_row.MaxPercentCoverage",
-            "WHERE row.avg_depth >= {avg_depth_cutoff}",
-            "AND grouped_row.neg_pass = 1",
-            "AND grouped_row.pos_pass = 1"
+            "WHERE row.avg_depth >= {avg_depth_cutoff}"
         ]
     },
     "workflow5": {
@@ -590,28 +604,28 @@
             "wgs_run_date_var"
         ],
         "write_query_tbl1": [
-            "UPDATE dbo.Results results",
-            "INNER JOIN",
-            "(SELECT hsn, neg_pass, pos_pass",
-            "FROM dbo.Run_Stats) run_stats",
+            "UPDATE results",
+            "SET results.lineage_id = '{1}', results.pangolin_version = '{2}', results.pango_learn_version = CAST('{3}' AS DATE)",
+            "FROM dbo.Results results",
+            "INNER JOIN dbo.Run_Stats run_stats",
             "ON results.hsn = run_stats.hsn",
-            "SET results.lineage_id = '{1}', results.angolin_version = '{2}', results.pango_learn_version = CAST('{3}' AS DATE)",
-            "WHERE results.hsn = {0}",
-            "AND run_stats.neg_pass = 1",
-            "AND run_stats.pos_pass = 1"
+            "WHERE (results.hsn = {0}",
+            "AND results.lineage_id IS NULL",
+            "AND results.pangolin_version IS NULL", 
+            "AND results.pango_learn_version IS NULL)",
+            "OR (results.hsn = {0}",
+            "AND results.reportable = 1)"
         ],
         "read_query_tbl2": [
             "SELECT row.*",
             "FROM dbo.Run_Stats row",
             "INNER JOIN",
-            "(SELECT hsn, neg_pass, pos_pass, MAX(percent_cvg) AS MaxPercentCoverage",
+            "(SELECT hsn, MAX(percent_cvg) AS MaxPercentCoverage",
             "FROM dbo.Run_Stats",
             "GROUP BY hsn) grouped_row",
             "ON row.hsn = grouped_row.hsn",
             "AND row.percent_cvg = grouped_row.MaxPercentCoverage",
-            "WHERE row.avg_depth >= {avg_depth_cutoff}",
-            "AND grouped_row.neg_pass = 1",
-            "AND grouped_row.pos_pass = 1"
+            "WHERE row.avg_depth >= {avg_depth_cutoff}"
         ]
     },
     "workflow6": {
@@ -669,7 +683,7 @@
             "dob"
         ],
         "read_date_query_tbl1": [
-            "SELECT results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
+            "SELECT results.reportable, results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
             "FROM dbo.Results results",
             "INNER JOIN",
             "(SELECT hsn, pos_pass, neg_pass",
@@ -684,8 +698,7 @@
             "AND results.dob IS NOT NULL",
             "AND results.facility IS NOT NULL",
             "AND results.doc IS NOT NULL",
-            "AND qc.pos_pass = 1",
-            "AND qc.neg_pass = 1",
+            "AND results.reportable = {surv}",
             "AND results.percent_cvg >= {percent_cvg_cutoff}"
         ],
         "read_bad_date_query_tbl1":[
@@ -720,8 +733,7 @@
             "AND results.dob IS NOT NULL",
             "AND results.facility IS NOT NULL",
             "AND results.doc IS NOT NULL",
-            "AND qc.pos_pass IS NULL",
-            "AND qc.neg_pass IS NULL",
+            "AND results.reportable = {surv}",
             "AND results.percent_cvg >= {percent_cvg_cutoff}"
         ],
         "read_facility_query_tbl1": [
@@ -739,6 +751,7 @@
             "AND results.dob IS NOT NULL",
             "AND results.doc IS NOT NULL",
             "AND results.dob IS NOT NULL",
+            "AND results.reportable = {surv}",
             "AND results.percent_cvg >= {percent_cvg_cutoff}"
         ],
         "read_bad_facility_query_tbl1": [
@@ -770,7 +783,8 @@
             "AND results.facility IS NOT NULL",
             "AND results.doc IS NOT NULL",
             "AND results.dob IS NOT NULL",
-            "AND results.percent_cvg >= {percent_cvg_cutoff}"
+            "AND results.percent_cvg >= {percent_cvg_cutoff}",
+            "AND results.reportable = {surv}"
         ],
         "read_bad_sfacility_query_tbl1": [
             "SELECT results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",

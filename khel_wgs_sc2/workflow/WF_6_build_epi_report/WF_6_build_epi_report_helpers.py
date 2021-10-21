@@ -16,6 +16,16 @@ class WorkflowObj6(workflow_obj):
 
     def get_ui(self):
         self.bad = False
+        if not self.surv:
+            print("\n==========================================",
+                    "\nALERT! You are generating a report for",
+                    "\n------------------"
+                    "\nSURVEILLANCE ONLY."
+                    "\n------------------",
+                    "\nIf you wish to report the results to",
+                    "\nHORIZON, please change the 'surv' variable",
+                    "\nin the static_cache.json file to a 1.",
+                    "\n==========================================")
         while True:
             self.user_selection = input("Would you like to select all data (type 'a'), a range (type 'r'),\
                 \na single date (type 'd'), samples submitted from a given lab (type 's'),\
@@ -29,6 +39,7 @@ class WorkflowObj6(workflow_obj):
                 self.read_date_query_tbl1 = self.read_date_query_tbl1.replace("{start}", date_start)
                 self.query = self.read_date_query_tbl1.replace("{end}", date_end)
                 self.query = self.query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
+                self.query = self.query.replace("{surv}", str(self.surv))
 
                 self.bad_query = self.read_bad_date_query_tbl1.replace("{start}", date_start)
                 self.bad_query = self.bad_query.replace("{end}", date_end)
@@ -45,6 +56,7 @@ class WorkflowObj6(workflow_obj):
                 self.read_sdate_query_tbl1 = self.read_sdate_query_tbl1.replace("{start}", date_start)
                 self.query = self.read_sdate_query_tbl1.replace("{end}", date_end)
                 self.query = self.query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
+                self.query = self.query.replace("{surv}", str(self.surv))
                 self.ui_lab = "sub_date_query"
                 self.bad = False
                 break
@@ -61,6 +73,7 @@ class WorkflowObj6(workflow_obj):
                 self.read_date_query_tbl1 = self.read_date_query_tbl1.replace("{start}", date_start)
                 self.query = self.read_date_query_tbl1.replace("{end}", date_end)
                 self.query = self.query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
+                self.query = self.query.replace("{surv}", str(self.surv))
 
                 self.bad_query = self.read_bad_date_query_tbl1.replace("{start}", date_start)
                 self.bad_query = self.bad_query.replace("{end}", date_end)
@@ -78,19 +91,19 @@ class WorkflowObj6(workflow_obj):
                 self.ui_lab = input("Please enter the facility to filter samples by:\n--> ")
                 self.query = self.read_facility_query_tbl1.replace("{facility}", self.ui_lab)
                 self.query = self.query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
-                
+                self.query = self.query.replace("{surv}", str(self.surv))
+
                 break
             elif self.user_selection.lower() == 's':
                 self.ui_lab = input("Please enter the submitting facility to filter samples by:\n--> ")
                 self.query = self.read_sfacility_query_tbl1.replace("{sub_lab}", self.ui_lab)
                 self.query = self.query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
+                self.query = self.query.replace("{surv}", str(self.surv))
                 self.p_lab = self.ui_lab
                 
                 break
             else:
                 continue
-
-
 
     def get_df(self):
         super().setup_db()

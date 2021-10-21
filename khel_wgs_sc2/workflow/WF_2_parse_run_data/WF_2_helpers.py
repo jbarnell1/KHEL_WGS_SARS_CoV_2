@@ -49,10 +49,10 @@ class WorkflowObj2(workflow_obj):
             col_func_map=self.col_func_map)
         self.df_qc = self.df_qc.astype({"wgs_run_date": str})
         
-        # sort/remove columns to match table 1
-        self.df_qc = self.df_qc[self.df_qc_cols]
         # create dataframe for results table
         self.df_results = self.df_qc.copy()
+        # sort/remove columns to match table 1
+        self.df_qc = self.df_qc[self.df_qc_cols]
         # sort/remove columns to match table 2
         self.df_results = pd.DataFrame(self.df_results[self.df_results_cols])
         neg_idx = self.df_results.index[self.df_results['hsn'] == self.neg_name][0]
@@ -65,14 +65,11 @@ class WorkflowObj2(workflow_obj):
         # query for updating results table (only update table1 if qc is better)
         # update table 2 regardless
         
-        # only write to table 1 (results table) if QC's pass
-        if self.neg_ctrl_pass and self.pos_ctrl_pass:
-            df_results_lst = self.df_results.values.astype(str).tolist()
-            self.write_query_tbl1 = self.write_query_tbl1.replace("{avg_depth_cutoff}", str(self.avg_depth_cutoff))
-            self.write_query_tbl1 = self.write_query_tbl1.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
-            self.db_handler.lst_ptr_push(df_lst=df_results_lst, query=self.write_query_tbl1)
-        else:
-            pass
+        df_results_lst = self.df_results.values.astype(str).tolist()
+        self.write_query_tbl1 = self.write_query_tbl1.replace("{avg_depth_cutoff}", str(self.avg_depth_cutoff))
+        self.write_query_tbl1 = self.write_query_tbl1.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
+        self.db_handler.lst_ptr_push(df_lst=df_results_lst, query=self.write_query_tbl1)
+
         
         #TYPE: LST
         df_qc_lst = self.df_qc.values.astype(str).tolist()

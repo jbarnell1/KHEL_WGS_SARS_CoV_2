@@ -332,3 +332,10 @@ def get_priority(row, lst):
         return 1
     else:
         return 0
+
+
+def check_reportable(row, cutoff):
+    if row['neg_pass'] and row['pos_pass'] and row['percent_cvg'] >= cutoff:
+        return 1
+    else:
+        return 0
