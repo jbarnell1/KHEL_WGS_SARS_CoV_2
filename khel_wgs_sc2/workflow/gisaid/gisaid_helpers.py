@@ -31,7 +31,7 @@ class gisaid_obj(workflow_obj):
                     "\n==========================================\n")
         print("\nGetting list of priority samples...")
         super().setup_db()
-        self.read_query_tbl1_priority = self.read_query_tbl1_priority.replace("{surv}", self.surv)
+        self.read_query_tbl1_priority = self.read_query_tbl1_priority.replace("{surv}", str(self.surv))
         samples = self.db_handler.ss_read(query=self.read_query_tbl1_priority).values.astype(str).tolist()
         self.priority_lst = [sample[0].strip() for sample in samples]
         print(" Done!\n")
@@ -147,7 +147,6 @@ class gisaid_obj(workflow_obj):
         gisaid_df_update.insert(2, "priority_spec", "0")
         gisaid_df_update['priority_spec'] = gisaid_df_update.apply(lambda row: get_priority(row, self.priority_lst), axis=1)
         gisaid_df_update_lst = gisaid_df_update.values.astype(str).tolist()
-        self.write_query_tbl1 = self.write_query_tbl1.replace("{surv}", self.surv)
         self.db_handler.lst_ptr_push(df_lst=gisaid_df_update_lst, query=self.write_query_tbl1)
 
     def get_virus_name(self, row):
