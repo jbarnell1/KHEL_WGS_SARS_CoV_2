@@ -1,6 +1,6 @@
 {
     "all_workflows": {
-        "surv": 1,
+        "surv": 0,
         "percent_cvg_cutoff": 0.95,
         "neg_percent_cvg_cutoff": 0.3,
         "avg_depth_cutoff": 0.75,
@@ -978,7 +978,7 @@
             "FROM dbo.Results"
         ],
         "read_query_tbl1_eligible_hsn": [
-            "SELECT results.hsn, results.wgs_run_date, results.percent_cvg, results.path_to_fasta, results.gisaid_num, results.gisaid_epi_isl, results.doc",
+            "SELECT results.hsn, results.reportable, results.wgs_run_date, results.percent_cvg, results.path_to_fasta, results.gisaid_num, results.gisaid_epi_isl, results.doc",
             "FROM dbo.Results results",
             "INNER JOIN",
             "(SELECT hsn, pos_pass, neg_pass",
