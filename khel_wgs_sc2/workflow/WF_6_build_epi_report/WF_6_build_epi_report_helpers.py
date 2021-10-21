@@ -25,7 +25,7 @@ class WorkflowObj6(workflow_obj):
                     "\nIf you wish to report the results to",
                     "\nHORIZON, please change the 'surv' variable",
                     "\nin the static_cache.json file to a 1.",
-                    "\n==========================================")
+                    "\n==========================================\n")
         while True:
             self.user_selection = input("Would you like to select all data (type 'a'), a range (type 'r'),\
                 \na single date (type 'd'), samples submitted from a given lab (type 's'),\

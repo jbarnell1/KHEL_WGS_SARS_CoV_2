@@ -20,6 +20,15 @@ class gisaid_obj(workflow_obj):
 
 
     def get_priority(self):
+        print("\n==========================================",
+                    "\nALERT! You are generating a report for",
+                    "\n------------------"
+                    "\nSURVEILLANCE ONLY."
+                    "\n------------------",
+                    "\nIf you wish to report the results to",
+                    "\nHORIZON, please change the 'surv' variable",
+                    "\nin the static_cache.json file to a 1.",
+                    "\n==========================================\n")
         print("\nGetting list of priority samples...")
         super().setup_db()
         samples = self.db_handler.ss_read(query=self.read_query_tbl1_priority).values.astype(str).tolist()
