@@ -31,7 +31,6 @@ class gisaid_obj(workflow_obj):
                     "\n==========================================\n")
         print("\nGetting list of priority samples...")
         super().setup_db()
-        self.read_query_tbl1_priority = self.read_query_tbl1_priority.replace("{surv}", str(self.surv))
         samples = self.db_handler.ss_read(query=self.read_query_tbl1_priority).values.astype(str).tolist()
         self.priority_lst = [sample[0].strip() for sample in samples]
         print(" Done!\n")
@@ -46,6 +45,7 @@ class gisaid_obj(workflow_obj):
         self.next_gisaid = int(self.db_handler.ss_read(query=self.read_query_tbl1_max_gisaid).iat[0, 0]) + 1
         prev_week = (datetime.date.today() - datetime.timedelta(days = 7)).strftime("%Y%m%d")
         self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{prev_week}", prev_week)
+        self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{surv}", str(self.surv))
         self.hsn_lst = self.db_handler.sub_read(query=self.read_query_tbl1_eligible_hsn)['hsn'].astype(str).tolist()
         if len(self.hsn_lst) == 0:
             raise ValueError("==================================================================================\nError:\nNo eligible samples for gisaid report!! - All samples already reported\n==================================================================================\n")
