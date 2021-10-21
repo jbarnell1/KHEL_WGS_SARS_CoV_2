@@ -31,6 +31,7 @@ class gisaid_obj(workflow_obj):
                     "\n==========================================\n")
         print("\nGetting list of priority samples...")
         super().setup_db()
+        self.read_query_tbl1_priority = self.read_query_tbl1_priority.replace("{surv}", self.surv)
         samples = self.db_handler.ss_read(query=self.read_query_tbl1_priority).values.astype(str).tolist()
         self.priority_lst = [sample[0].strip() for sample in samples]
         print(" Done!\n")
