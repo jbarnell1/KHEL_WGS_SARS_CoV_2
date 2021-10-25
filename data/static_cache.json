@@ -1,6 +1,6 @@
 {
     "all_workflows": {
-        "surv": 0,
+        "reportable": 0,
         "percent_cvg_cutoff": 0.95,
         "neg_percent_cvg_cutoff": 0.3,
         "avg_depth_cutoff": 0.75,
@@ -698,7 +698,7 @@
             "AND results.dob IS NOT NULL",
             "AND results.facility IS NOT NULL",
             "AND results.doc IS NOT NULL",
-            "AND results.reportable = {surv}",
+            "AND results.reportable = {reportable}",
             "AND results.percent_cvg >= {percent_cvg_cutoff}"
         ],
         "read_bad_date_query_tbl1":[
@@ -733,7 +733,7 @@
             "AND results.dob IS NOT NULL",
             "AND results.facility IS NOT NULL",
             "AND results.doc IS NOT NULL",
-            "AND results.reportable = {surv}",
+            "AND results.reportable = {reportable}",
             "AND results.percent_cvg >= {percent_cvg_cutoff}"
         ],
         "read_facility_query_tbl1": [
@@ -751,7 +751,7 @@
             "AND results.dob IS NOT NULL",
             "AND results.doc IS NOT NULL",
             "AND results.dob IS NOT NULL",
-            "AND results.reportable = {surv}",
+            "AND results.reportable = {reportable}",
             "AND results.percent_cvg >= {percent_cvg_cutoff}"
         ],
         "read_bad_facility_query_tbl1": [
@@ -784,7 +784,7 @@
             "AND results.doc IS NOT NULL",
             "AND results.dob IS NOT NULL",
             "AND results.percent_cvg >= {percent_cvg_cutoff}",
-            "AND results.reportable = {surv}"
+            "AND results.reportable = {reportable}"
         ],
         "read_bad_sfacility_query_tbl1": [
             "SELECT results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
@@ -989,7 +989,7 @@
             "AND results.path_to_fasta IS NOT NULL",
             "AND results.gisaid_num IS NULL",
             "AND results.gisaid_epi_isl IS NULL",
-            "AND results.reportable = {surv}",
+            "AND results.reportable = {reportable}",
             "AND results.doc IS NOT NULL"
         ],
         "read_query_tbl1": [
@@ -997,7 +997,6 @@
             "FROM dbo.Results",
             "WHERE hsn IN {hsn_query}"
         ],
-
         "write_query_tbl1": [
             "UPDATE dbo.Results",
             "SET gisaid_num = {1},",

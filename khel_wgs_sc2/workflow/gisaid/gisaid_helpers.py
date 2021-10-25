@@ -20,15 +20,16 @@ class gisaid_obj(workflow_obj):
 
 
     def get_priority(self):
-        print("\n==========================================",
-                    "\nALERT! You are generating a report for",
-                    "\n------------------"
-                    "\nSURVEILLANCE ONLY."
-                    "\n------------------",
-                    "\nIf you wish to report the results to",
-                    "\nHORIZON, please change the 'surv' variable",
-                    "\nin the static_cache.json file to a 1.",
-                    "\n==========================================\n")
+        if not self.reportable:
+            print("\n==========================================",
+                        "\nALERT! You are generating a report for",
+                        "\n------------------"
+                        "\nSURVEILLANCE ONLY."
+                        "\n------------------",
+                        "\nIf you wish to report the results to",
+                        "\nHORIZON, please change the 'reportable' variable",
+                        "\nin the static_cache.json file to a 1.",
+                        "\n==========================================\n")
         print("\nGetting list of priority samples...")
         super().setup_db()
         samples = self.db_handler.ss_read(query=self.read_query_tbl1_priority).values.astype(str).tolist()
@@ -45,7 +46,7 @@ class gisaid_obj(workflow_obj):
         self.next_gisaid = int(self.db_handler.ss_read(query=self.read_query_tbl1_max_gisaid).iat[0, 0]) + 1
         prev_week = (datetime.date.today() - datetime.timedelta(days = 31)).strftime("%Y%m%d")
         self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{prev_week}", prev_week)
-        self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{surv}", str(self.surv))
+        self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{reportable}", str(self.reportable))
         self.hsn_lst = self.db_handler.sub_read(query=self.read_query_tbl1_eligible_hsn)['hsn'].astype(str).tolist()
         if len(self.hsn_lst) == 0:
             raise ValueError("==================================================================================\nError:\nNo eligible samples for gisaid report!! - All samples already reported\n==================================================================================\n")
