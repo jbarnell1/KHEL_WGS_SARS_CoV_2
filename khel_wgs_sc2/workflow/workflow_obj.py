@@ -53,7 +53,6 @@ class workflow_obj(ABC):
         self.percent_cvg_cutoff = gen_static_cache['percent_cvg_cutoff']
         self.neg_percent_cvg_cutoff = gen_static_cache['neg_percent_cvg_cutoff']
         self.col_func_map = gen_static_cache['col_func_map']
-        self.reportable = gen_static_cache['reportable']
 
         # search for private data.  If empty, gather from user (first time use)
         path_to_private_cache = top_pkg_folder + "\\data\\private_cache.json"
@@ -80,6 +79,10 @@ class workflow_obj(ABC):
             self.sql_server = gen_private_cache['sql_server']
             self.sql_db = gen_private_cache['sql_db']
             need_sql=False
+
+            need_reportable = True
+            self.reportable = gen_private_cache['reportable']
+            need_reportable = False
 
             need_analysis_pathway = True
             need_ssh = True
@@ -185,22 +188,25 @@ passing fasta files should be stored")
 
             if need_analysis_pathway:
                 self.analysis_pathway = input("\nPlease enter 'online' if you plan to perform the nextclade and pangolin analysis \
-using the online tools.\nPlease enter 'cli' if you plan to perform the nextclade and pangolin analysis using a separate system\n-->")
+using the online tools.\nPlease enter 'cli' if you plan to perform the nextclade and pangolin analysis using a separate system\n--> ")
 
             if need_ssh:
                 self.ssh_ip = input("\nPlease type the ip address of the server you'd like to access (if you will run the pangolin/nextclade \
-analysis on the current computer, use '127.0.0.1')\n-->")
-                self.ssh_user = input("\nPlease enter the user name of the server to be used for the pangolin/nextclade analysis\n-->")
-                self.ssh_pwd = input("\nPlease enter the password of the server to be used for the pangolin/nextclade analysis\n-->")
+analysis on the current computer, use '127.0.0.1')\n--> ")
+                self.ssh_user = input("\nPlease enter the user name of the server to be used for the pangolin/nextclade analysis\n--> ")
+                self.ssh_pwd = input("\nPlease enter the password of the server to be used for the pangolin/nextclade analysis\n--> ")
                 self.ssh_port = input("\nPlease enter the port number to use for communication with the server for pangolin/nextclade analysis \
-(typically port '8080' or '8088' will work fine.)\n-->")
-                self.ssh_dest = input("\nPlease type the location of the nextclade package on the server.\n-->")
+(typically port '8080' or '8088' will work fine.)\n--> ")
+                self.ssh_dest = input("\nPlease type the location of the nextclade package on the server.\n--> ")
             
             if need_ctrls:
-                self.neg_ctrl_lot = input("\nPlease type the lot number for the negative control (something like 'AF29484103')\n-->")
-                self.neg_ctrl_exp = input("\nPlease type the expiration date for the negative control, formatted YYYY-MM-DD (something like '2021-02-19')\n-->")
-                self.pos_ctrl_lot = input("\nPlease type the lot number for the positive control (something like 'AF29484103')\n-->")
-                self.pos_ctrl_exp = input("\nPlease type the expiration date for the positive control, formatted YYYY-MM-DD (something like '2021-02-19')\n-->")
+                self.neg_ctrl_lot = input("\nPlease type the lot number for the negative control (something like 'AF29484103')\n--> ")
+                self.neg_ctrl_exp = input("\nPlease type the expiration date for the negative control, formatted YYYY-MM-DD (something like '2021-02-19')\n--> ")
+                self.pos_ctrl_lot = input("\nPlease type the lot number for the positive control (something like 'AF29484103')\n--> ")
+                self.pos_ctrl_exp = input("\nPlease type the expiration date for the positive control, formatted YYYY-MM-DD (something like '2021-02-19')\n--> ")
+            
+            if need_reportable:
+                self.reportable = int(input("\nPlease type 0 if you don't want the results to be reportable and 1 if you would like the results to be reportable.\n--> "))
 
             print("\nFinished! If you need to change these values in the \
 future for any reason, modify the cache file: daily_workflow/data/private_cache.json")
@@ -243,6 +249,7 @@ future for any reason, modify the cache file: daily_workflow/data/private_cache.
             full_private_cache["all_workflows"]['neg_ctrl_exp'] = self.neg_ctrl_exp
             full_private_cache["all_workflows"]['pos_ctrl_lot'] = self.pos_ctrl_lot
             full_private_cache["all_workflows"]['pos_ctrl_exp'] = self.pos_ctrl_exp
+            full_private_cache["all_workflows"]['reportable'] = self.reportable
 
             print("\nStoring data for future use...")
             res = write_json(path_to_private_cache, full_private_cache)

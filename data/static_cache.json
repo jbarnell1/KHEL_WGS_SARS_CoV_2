@@ -1,6 +1,5 @@
 {
     "all_workflows": {
-        "reportable": 0,
         "percent_cvg_cutoff": 0.95,
         "neg_percent_cvg_cutoff": 0.3,
         "avg_depth_cutoff": 0.75,
