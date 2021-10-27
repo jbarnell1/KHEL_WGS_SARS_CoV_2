@@ -732,7 +732,6 @@
             "AND results.dob IS NOT NULL",
             "AND results.facility IS NOT NULL",
             "AND results.doc IS NOT NULL",
-            "AND results.reportable = {reportable}",
             "AND results.percent_cvg >= {percent_cvg_cutoff}"
         ],
         "read_facility_query_tbl1": [
@@ -782,8 +781,7 @@
             "AND results.facility IS NOT NULL",
             "AND results.doc IS NOT NULL",
             "AND results.dob IS NOT NULL",
-            "AND results.percent_cvg >= {percent_cvg_cutoff}",
-            "AND results.reportable = {reportable}"
+            "AND results.percent_cvg >= {percent_cvg_cutoff}"
         ],
         "read_bad_sfacility_query_tbl1": [
             "SELECT results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
