@@ -683,7 +683,7 @@
             "dob"
         ],
         "read_date_query_tbl1": [
-            "SELECT results.reportable, results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
+            "SELECT DISTINCT results.reportable, results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
             "FROM dbo.Results results",
             "INNER JOIN",
             "(SELECT hsn, pos_pass, neg_pass",
