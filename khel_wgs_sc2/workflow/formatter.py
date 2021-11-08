@@ -40,6 +40,11 @@ def remove_pools(df, col_name):
 def merge_dataframes(df1=None, df2=None, df1_drop=None, df_final_drop=None, join_lst=None, join_type=None):
     # df1 from qc table, may have duplicate hsns.  Remove common columns between
     # the two dataframes. df2 from results table
+    join_dict = {}
+    for col in join_lst:
+        join_dict[col] = 'str'
+    df1 = df1.astype(join_dict)
+    df2 = df2.astype(join_dict)
     df1.drop(labels=df1_drop, axis=1, inplace=True)
     df1.drop_duplicates(subset=['hsn'], inplace=True)
     df_final = df2.merge(df1, how=join_type, on=join_lst)

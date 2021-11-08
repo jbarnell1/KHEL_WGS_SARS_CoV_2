@@ -450,7 +450,8 @@
             "UPDATE dbo.Results",
             "SET avg_depth = {1}, percent_cvg = {2}, wgs_run_date = CAST('{5}' AS DATE), reportable = {6}",
             "WHERE (hsn = {0} AND percent_cvg IS NULL AND avg_depth IS NULL AND reportable IS NULL)",
-            "OR (hsn = {0} AND percent_cvg < {2} AND {1} >= {avg_depth_cutoff} AND {6} = 1)"
+            "OR (hsn = {0} AND percent_cvg < {2} AND {1} >= {avg_depth_cutoff} AND {6} = 1)",
+            "OR (hsn = {0} AND {6} = 1 AND {1} >= {avg_depth_cutoff} AND reportable = 0)"
         ],
         "add_col_lst": [
             "platform",
