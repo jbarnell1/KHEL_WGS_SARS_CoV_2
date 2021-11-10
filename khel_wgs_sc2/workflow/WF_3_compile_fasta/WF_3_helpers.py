@@ -1,6 +1,6 @@
 from ..workflow_obj import workflow_obj
 from ..ui import get_path_folder
-from ..formatter import add_cols, remove_pools, remove_blanks
+from ..formatter import add_cols, remove_pools, remove_blanks, replace_shortcut
 import os
 import pandas as pd
 import datetime
@@ -18,6 +18,7 @@ class WorkflowObj3(workflow_obj):
     def compile_fasta(self):
         print("Use the following dialog box to select the folder with all FASTA files in the Run Data folder")
         self.path = get_path_folder()
+        self.path = replace_shortcut(self.path)
         # make new folder/file to save to
         splt = self.path.split("/")
         if splt[-1] != "FAST files":
