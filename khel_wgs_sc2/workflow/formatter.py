@@ -10,7 +10,8 @@ def remove_blanks(df, col_name):
     # remove any blanks from the run 
     try:
         while True:
-            if re.search("blank\d*.*", working_df.at[ctr, col_name].lower()):
+            value = working_df.at[ctr, col_name].lower()
+            if re.search("^blank\d*.*$", value):
                 working_df.drop(labels=ctr, inplace=True)
             ctr += 1
     except ValueError:
@@ -54,13 +55,13 @@ def merge_dataframes(df1=None, df2=None, df1_drop=None, df_final_drop=None, join
 
 def format_hsn_col(df=None, hsn_colname=None, hsn_only=False):
     df = remove_pools(df, hsn_colname)
+    df = remove_blanks(df, hsn_colname)
     if hsn_only:
         df.columns = [hsn_colname]
     df[hsn_colname] = df.apply(lambda row: extract_hsn(row), axis=1)
     df[hsn_colname] = df.apply(lambda row: str(row[hsn_colname]), axis=1)
     df = df.rename(columns= {hsn_colname:'hsn'})
     df.drop_duplicates(subset='hsn', inplace=True, ignore_index=True)
-    df = remove_blanks(df, 'hsn')
     return df
 
 
