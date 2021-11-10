@@ -10,7 +10,7 @@ def remove_blanks(df, col_name):
     # remove any blanks from the run 
     try:
         while True:
-            if re.search("Blank\d*.*", working_df.at[ctr, col_name].lower()):
+            if re.search("blank\d*.*", working_df.at[ctr, col_name].lower()):
                 working_df.drop(labels=ctr, inplace=True)
             ctr += 1
     except ValueError:
