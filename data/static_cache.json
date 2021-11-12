@@ -551,13 +551,6 @@
             "UPDATE results",
             "SET results.clade = '{1}', results.total_ns = {2}, results.total_mutations = {3}, results.total_aa_changes = {4}, results.aa_substitutions = '{5}', results.pcr_primer_changes = '{6}', results.nextclade_version = CAST('{7}' AS DATE), results.path_to_fasta ='{11}'",
             "FROM dbo.Results results",
-            "INNER JOIN",
-            "(SELECT hsn, MAX(percent_cvg) AS MaxPercentCoverage",
-            "FROM dbo.Run_Stats",
-            "WHERE pos_pass = 1",
-            "AND neg_pass = 1",
-            "GROUP BY hsn) run_stats",
-            "ON results.hsn = run_stats.hsn",
             "WHERE (results.hsn = {0}",
             "AND results.clade IS NULL",
             "AND results.total_ns IS NULL",
@@ -571,15 +564,8 @@
             "AND results.reportable = 1)"
         ],
         "read_query_tbl2": [
-            "SELECT row.*",
-            "FROM dbo.Run_Stats row",
-            "INNER JOIN",
-            "(SELECT hsn, MAX(percent_cvg) AS MaxPercentCoverage",
-            "FROM dbo.Run_Stats",
-            "GROUP BY hsn) grouped_row",
-            "ON row.hsn = grouped_row.hsn",
-            "AND row.percent_cvg = grouped_row.MaxPercentCoverage",
-            "WHERE row.avg_depth >= {avg_depth_cutoff}"
+            "SELECT *",
+            "FROM dbo.Run_Stats"
         ]
     },
     "workflow5": {
