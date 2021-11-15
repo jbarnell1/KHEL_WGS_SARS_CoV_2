@@ -598,8 +598,6 @@
             "UPDATE results",
             "SET results.lineage_id = '{1}', results.pangolin_version = '{2}', results.pango_learn_version = CAST('{3}' AS DATE)",
             "FROM dbo.Results results",
-            "INNER JOIN dbo.Run_Stats run_stats",
-            "ON results.hsn = run_stats.hsn",
             "WHERE (results.hsn = {0}",
             "AND results.lineage_id IS NULL",
             "AND results.pangolin_version IS NULL", 
@@ -674,7 +672,7 @@
             "dob"
         ],
         "read_date_query_tbl1": [
-            "SELECT DISTINCT results.reportable, results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
+            "SELECT results.reportable, results.f_name, results.l_name, results.dob, results.sex, results.facility, results.hsn, results.doc, results.source, results.wgs_run_date, results.lineage_id, results.clade, results.gisaid_num, results.race, results.Ethnicity",
             "FROM dbo.Results results",
             "WHERE results.wgs_run_date >= CAST('{start}' AS DATE)",
             "AND results.wgs_run_date <= CAST('{end}' AS DATE)",

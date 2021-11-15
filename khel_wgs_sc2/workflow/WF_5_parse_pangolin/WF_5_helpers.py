@@ -74,7 +74,7 @@ class WorkflowObj5(workflow_obj):
             'total_ns', 'qc_snpclusters_status', 'qc_overall_status', 'path_to_fasta'],
             df_final_drop=['wgs_run_date', 'machine_num', 'position', 'day_run_num'],
             join_lst=["hsn", "wgs_run_date", "machine_num", "position", "day_run_num"],
-            join_type='inner')
+            join_type='left')
 
         df_results_final_lst = df_results_final.values.astype(str).tolist()
         print("Updating rows in the results table...")
