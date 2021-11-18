@@ -131,7 +131,7 @@ class WorkflowObj6(workflow_obj):
                 col_lst = self.csv_headers, \
                 col_func_map= self.col_func_map)
             self.bad_df = self.bad_df[self.bad_df_headers]
-            if not self.bad_df.empty():
+            if not self.bad_df.empty:
                 self.bad_df = clean_df(self.bad_df)
 
     
