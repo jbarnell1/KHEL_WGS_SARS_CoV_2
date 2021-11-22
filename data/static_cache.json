@@ -969,7 +969,8 @@
             "AND results.gisaid_num IS NULL",
             "AND results.gisaid_epi_isl IS NULL",
             "AND results.reportable = {reportable}",
-            "AND results.doc IS NOT NULL"
+            "AND results.doc IS NOT NULL",
+            "AND results.dob IS NOT NULL"
         ],
         "read_query_tbl1": [
             "SELECT *",
