@@ -1,6 +1,6 @@
 {
     "all_workflows": {
-        "percent_cvg_cutoff": 0.95,
+        "percent_cvg_cutoff": 0.90,
         "neg_percent_cvg_cutoff": 0.3,
         "avg_depth_cutoff": 0.75,
         "col_func_map": {
