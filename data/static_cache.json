@@ -685,7 +685,7 @@
             "AND results.dob IS NOT NULL",
             "AND results.facility IS NOT NULL",
             "AND results.doc IS NOT NULL",
-            "AND results.reportable = {reportable}",
+            "AND results.reportable {reportable}",
             "AND results.percent_cvg >= {percent_cvg_cutoff}"
         ],
         "read_bad_date_query_tbl1":[
@@ -972,7 +972,7 @@
             "AND results.path_to_fasta IS NOT NULL",
             "AND results.gisaid_num IS NULL",
             "AND results.gisaid_epi_isl IS NULL",
-            "AND results.reportable = {reportable}",
+            "AND results.reportable {reportable}",
             "AND results.doc IS NOT NULL"
         ],
         "read_query_tbl1": [
