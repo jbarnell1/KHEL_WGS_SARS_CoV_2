@@ -833,7 +833,7 @@
         "unknown": "unknown",
         "host":"Human",
         "seq_tech":"ClearLabs",
-        "assembly_method":"ClearLabs",
+        "assembly_method":"BIP_Wv7",
         "rename_gisaid_cols_lst": {
             "age": "covv_patient_age",
             "avg_depth": "covv_coverage"
