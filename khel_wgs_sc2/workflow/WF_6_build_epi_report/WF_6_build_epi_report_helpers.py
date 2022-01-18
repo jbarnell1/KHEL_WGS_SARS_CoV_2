@@ -39,7 +39,11 @@ class WorkflowObj6(workflow_obj):
                 self.read_date_query_tbl1 = self.read_date_query_tbl1.replace("{start}", date_start)
                 self.query = self.read_date_query_tbl1.replace("{end}", date_end)
                 self.query = self.query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
-                self.query = self.query.replace("{reportable}", str(self.reportable))
+                if not self.reportable:
+                    self.query = self.query.replace("{reportable}", "in (0,1)")
+                    pass
+                else:
+                    self.query = self.query.replace("{reportable}", str(self.reportable))
 
                 self.bad_query = self.read_bad_date_query_tbl1.replace("{start}", date_start)
                 self.bad_query = self.bad_query.replace("{end}", date_end)

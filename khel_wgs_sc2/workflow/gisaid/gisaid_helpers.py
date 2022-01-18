@@ -46,7 +46,10 @@ class gisaid_obj(workflow_obj):
         self.next_gisaid = int(self.db_handler.ss_read(query=self.read_query_tbl1_max_gisaid).iat[0, 0]) + 1
         prev_week = (datetime.date.today() - datetime.timedelta(days = 31)).strftime("%Y%m%d")
         self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{prev_week}", prev_week)
-        self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{reportable}", str(self.reportable))
+        if not self.reportable:
+            self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{reportable}", "in (0, 1)")
+        else:
+            self.read_query_tbl1_eligible_hsn = self.read_query_tbl1_eligible_hsn.replace("{reportable}", str(self.reportable))
         self.hsn_lst = self.db_handler.sub_read(query=self.read_query_tbl1_eligible_hsn)['hsn'].astype(str).tolist()
         if len(self.hsn_lst) == 0:
             raise ValueError("==================================================================================\nError:\nNo eligible samples for gisaid report!! - All samples already reported\n==================================================================================\n")
