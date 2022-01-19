@@ -18,22 +18,23 @@ class WorkflowObj2(workflow_obj):
         run_data, self.machine_num, self.wgs_run_date, \
             self.day_run_num, self.platform = get_run_data()
 
-        neg = False
-        pos = False
-        # store away the control values for the run
-        for sample_num in range(len(run_data['hsn'])):
-            if "neg" in run_data['hsn'][sample_num].lower():
-                self.neg_ctrl_pass = (run_data['percent_cvg'][sample_num] <= self.neg_percent_cvg_cutoff)
-                self.neg_name = "1" + self.wgs_run_date[:-4].replace("/", "") + self.wgs_run_date[-2:] + str(self.machine_num) + str(self.day_run_num)
-                run_data['hsn'][sample_num] = self.neg_name
-                neg = True
-            if "pos" in run_data['hsn'][sample_num].lower():
-                self.pos_ctrl_pass = (run_data['percent_cvg'][sample_num] >= self.percent_cvg_cutoff)
-                self.pos_name = "2" + self.wgs_run_date[:-4].replace("/", "") + self.wgs_run_date[-2:] + str(self.machine_num) + str(self.day_run_num)
-                run_data['hsn'][sample_num] = self.pos_name
-                pos = True
-            if neg and pos:
-                break
+        if self.include_controls:
+            neg = False
+            pos = False
+            # store away the control values for the run
+            for sample_num in range(len(run_data['hsn'])):
+                if "neg" in run_data['hsn'][sample_num].lower():
+                    self.neg_ctrl_pass = (run_data['percent_cvg'][sample_num] <= self.neg_percent_cvg_cutoff)
+                    self.neg_name = "1" + self.wgs_run_date[:-4].replace("/", "") + self.wgs_run_date[-2:] + str(self.machine_num) + str(self.day_run_num)
+                    run_data['hsn'][sample_num] = self.neg_name
+                    neg = True
+                if "pos" in run_data['hsn'][sample_num].lower():
+                    self.pos_ctrl_pass = (run_data['percent_cvg'][sample_num] >= self.percent_cvg_cutoff)
+                    self.pos_name = "2" + self.wgs_run_date[:-4].replace("/", "") + self.wgs_run_date[-2:] + str(self.machine_num) + str(self.day_run_num)
+                    run_data['hsn'][sample_num] = self.pos_name
+                    pos = True
+                if neg and pos:
+                    break
         
         # create dataframe for QC/Research table
         self.df_qc = pd.DataFrame.from_dict(run_data)
@@ -43,21 +44,33 @@ class WorkflowObj2(workflow_obj):
         self.df_qc = remove_pools(self.df_qc, 'hsn')
         self.df_qc = remove_blanks(self.df_qc, 'hsn')
         # add columns
+
         self.df_qc = add_cols(obj=self, \
             df=self.df_qc, \
             col_lst=self.add_col_lst, \
             col_func_map=self.col_func_map)
         self.df_qc = self.df_qc.astype({"wgs_run_date": str})
+
+        if self.include_controls:
+            self.df_qc=add_cols(obj=self, \
+            df=self.df_qc, \
+            col_lst=self.add_col_lst_ctrl, \
+            col_func_map=self.col_func_map)
+        else:
+            self.df_qc['pos_pass'] = 0
+            self.df_qc['neg_pass'] = 0
+            self.df_qc['reportable'] = 0
         
         # create dataframe for results table
         self.df_results = self.df_qc.copy()
         # sort/remove columns to match table 1
-        self.df_qc = self.df_qc[self.df_qc_cols]
         # sort/remove columns to match table 2
         self.df_results = pd.DataFrame(self.df_results[self.df_results_cols])
-        neg_idx = self.df_results.index[self.df_results['hsn'] == self.neg_name][0]
-        pos_idx = self.df_results.index[self.df_results['hsn'] == self.pos_name][0]
-        self.df_results.drop([pos_idx, neg_idx], inplace=True)
+        self.df_qc = pd.DataFrame(self.df_qc[self.df_qc_cols])
+        if self.include_controls:
+            neg_idx = self.df_results.index[self.df_results['hsn'] == self.neg_name][0]
+            pos_idx = self.df_results.index[self.df_results['hsn'] == self.pos_name][0]
+            self.df_results.drop([pos_idx, neg_idx], inplace=True)
 
 
     def database_push(self):

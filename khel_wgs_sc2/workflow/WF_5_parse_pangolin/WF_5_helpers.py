@@ -35,21 +35,22 @@ class WorkflowObj5(workflow_obj):
         df = remove_blanks(df, 'Sequence name')
 
         # rename controls to appropriate format for database
-        neg = False
-        pos = False
-        for index in range(len(df.index)):
-            if "neg" in df['Sequence name'][index].lower():
-                neg_splt = df.at[index, 'Sequence name'].split("/")
-                neg_name = neg_name + "/" + "/".join(neg_splt[1:])
-                df.at[index, 'Sequence name'] = neg_name
-                neg = True
-            if "pos" in df['Sequence name'][index].lower():
-                pos_splt = df.at[index, 'Sequence name'].split("/")
-                pos_name = pos_name + "/" + "/".join(pos_splt[1:])
-                df.at[index, 'Sequence name'] = pos_name
-                pos = True
-            if neg and pos:
-                break
+        if self.include_controls:
+            neg = False
+            pos = False
+            for index in range(len(df.index)):
+                if "neg" in df['Sequence name'][index].lower():
+                    neg_splt = df.at[index, 'Sequence name'].split("/")
+                    neg_name = neg_name + "/" + "/".join(neg_splt[1:])
+                    df.at[index, 'Sequence name'] = neg_name
+                    neg = True
+                if "pos" in df['Sequence name'][index].lower():
+                    pos_splt = df.at[index, 'Sequence name'].split("/")
+                    pos_name = pos_name + "/" + "/".join(pos_splt[1:])
+                    df.at[index, 'Sequence name'] = pos_name
+                    pos = True
+                if neg and pos:
+                    break
 
         # add columns
         df = add_cols(obj=self,

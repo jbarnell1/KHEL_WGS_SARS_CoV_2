@@ -32,21 +32,22 @@ class WorkflowObj4(workflow_obj):
         df = remove_blanks(df, 'seqName')
 
         # rename controls to appropriate format for database
-        neg = False
-        pos = False
-        for index in range(len(df.index)):
-            if "neg" in df['seqName'][index].lower():
-                neg_splt = df.at[index, 'seqName'].split("/")
-                neg_name = neg_name + "/" + "/".join(neg_splt[1:])
-                df.at[index, 'seqName'] = neg_name
-                neg = True
-            if "pos" in df['seqName'][index].lower():
-                pos_splt = df.at[index, 'seqName'].split("/")
-                pos_name = pos_name + "/" + "/".join(pos_splt[1:])
-                df.at[index, 'seqName'] = pos_name
-                pos = True
-            if neg and pos:
-                break
+        if self.include_controls:
+            neg = False
+            pos = False
+            for index in range(len(df.index)):
+                if "neg" in df['seqName'][index].lower():
+                    neg_splt = df.at[index, 'seqName'].split("/")
+                    neg_name = neg_name + "/" + "/".join(neg_splt[1:])
+                    df.at[index, 'seqName'] = neg_name
+                    neg = True
+                if "pos" in df['seqName'][index].lower():
+                    pos_splt = df.at[index, 'seqName'].split("/")
+                    pos_name = pos_name + "/" + "/".join(pos_splt[1:])
+                    df.at[index, 'seqName'] = pos_name
+                    pos = True
+                if neg and pos:
+                    break
 
         # add columns
         df = add_cols(obj=self,

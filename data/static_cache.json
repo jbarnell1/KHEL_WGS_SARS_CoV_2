@@ -114,8 +114,7 @@
             ],
             "reportable": [
                 "check_reportable",
-                "percent_cvg_cutoff",
-                "include_controls"
+                "percent_cvg_cutoff"
             ],
             "Lab": [
                 "lab"
@@ -463,12 +462,14 @@
             "percent_cvg",
             "avg_depth",
             "wgs_run_date",
-            "pos_pass",
-            "neg_pass",
             "neg_ctrl_lot",
             "neg_ctrl_exp",
             "pos_ctrl_lot",
-            "pos_ctrl_exp",
+            "pos_ctrl_exp"
+        ],
+        "add_col_lst_ctrl": [
+            "pos_pass",
+            "neg_pass",
             "reportable"
         ]
     },
@@ -833,8 +834,7 @@
         "covv_passage": "Original",
         "unknown": "unknown",
         "host":"Human",
-        "seq_tech":"ClearLabs",
-        "assembly_method":"BIP_Wv7",
+        "seq_tech":"BIP_Wv7",
         "rename_gisaid_cols_lst": {
             "age": "covv_patient_age",
             "avg_depth": "covv_coverage"

@@ -40,6 +40,7 @@ class WorkflowObj1(workflow_obj):
         print("\nUse the following window to open the Sample ID Upload worksheet...")
         self.demo_path = get_path()
         self.df_right = get_pandas(self.demo_path, 'WF_1', 'run order', ',')
+        self.df_right = self.df_right.applymap(str)
         # drop controls from index
         neg = False
         pos = False
@@ -52,7 +53,10 @@ class WorkflowObj1(workflow_obj):
                 pos = True
             if neg and pos:
                 break
-        self.df_right.drop([pos_idx, neg_idx], inplace=True)
+        if neg:
+            self.df_right.drop([neg_idx], inplace=True)
+        if pos:
+            self.df_right.drop([pos_idx], inplace=True)
 
 
     def format_demo_df(self):

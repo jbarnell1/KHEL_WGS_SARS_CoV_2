@@ -73,23 +73,24 @@ class WorkflowObj3(workflow_obj):
         self.df = remove_blanks(self.df, 'seqName')
 
         #drop controls from index
-        neg = False
-        pos = False
-        to_drop = []
-        for index in range(len(self.df.index)):
-            if "neg" in self.df['seqName'][index].lower():
-                #neg_idx = index
-                to_drop.append(index)
-                neg = True
+        if self.include_controls:
+            neg = False
+            pos = False
+            to_drop = []
+            for index in range(len(self.df.index)):
+                if "neg" in self.df['seqName'][index].lower():
+                    #neg_idx = index
+                    to_drop.append(index)
+                    neg = True
 
-            if "pos" in self.df['seqName'][index].lower():
-                #pos_idx = index
-                to_drop.append(index)
-                pos = True
-            if neg and pos:
-                break
-        #self.df.drop([pos_idx, neg_idx], inplace=True)
-        self.df.drop(to_drop, inplace=True)
+                if "pos" in self.df['seqName'][index].lower():
+                    #pos_idx = index
+                    to_drop.append(index)
+                    pos = True
+                if neg and pos:
+                    break
+            #self.df.drop([pos_idx, neg_idx], inplace=True)
+            self.df.drop(to_drop, inplace=True)
 
         # add columns
         add_cols(obj=self, \
