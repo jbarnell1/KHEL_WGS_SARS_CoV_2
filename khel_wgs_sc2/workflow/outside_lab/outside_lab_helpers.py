@@ -66,6 +66,8 @@ class outside_lab_obj(workflow_obj):
 
         for column in self.str_cols:
             df[column] = df.apply(lambda row: fix_single_quote(row, column), axis=1)
+            # also strip any hiding spaces from the cells
+            df[column] = df.apply(lambda row: str(row[column]).strip(), axis=1)
 
 
         # sort/remove columns into the two dataframes

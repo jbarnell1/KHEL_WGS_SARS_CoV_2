@@ -84,6 +84,10 @@ class workflow_obj(ABC):
             self.reportable = gen_private_cache['reportable']
             need_reportable = False
 
+            include_controls = True
+            self.include_controls = gen_private_cache['include_controls']
+            include_controls = False
+
             need_analysis_pathway = True
             need_ssh = True
             self.analysis_pathway = gen_private_cache['analysis_pathway']
@@ -205,6 +209,9 @@ analysis on the current computer, use '127.0.0.1')\n--> ")
                 self.pos_ctrl_lot = input("\nPlease type the lot number for the positive control (something like 'AF29484103')\n--> ")
                 self.pos_ctrl_exp = input("\nPlease type the expiration date for the positive control, formatted YYYY-MM-DD (something like '2021-02-19')\n--> ")
             
+            if include_controls:
+                self.include_controls = int(input("\nPlease type 0 if there are no controls included on this run, and 1 if there are controls included.\n--> "))
+
             if need_reportable:
                 self.reportable = int(input("\nPlease type 0 if you don't want the results to be reportable and 1 if you would like the results to be reportable.\n--> "))
 

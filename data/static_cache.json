@@ -114,7 +114,8 @@
             ],
             "reportable": [
                 "check_reportable",
-                "percent_cvg_cutoff"
+                "percent_cvg_cutoff",
+                "include_controls"
             ],
             "Lab": [
                 "lab"
