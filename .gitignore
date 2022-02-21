@@ -2,6 +2,7 @@ data/private_cache.json
 
 khel_wgs_sc2/__pycache__/
 khel_wgs_sc2/workflow/__pycache__/
+khel_wgs_sc2/workflow/web_scraper/
 khel_wgs_sc2/workflow/epi_isl/__pycache__/
 khel_wgs_sc2/workflow/gisaid/__pycache__/
 khel_wgs_sc2/workflow/plotter/__pycache__/
