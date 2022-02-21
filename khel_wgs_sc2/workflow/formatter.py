@@ -11,7 +11,7 @@ def remove_blanks(df, col_name):
     try:
         while True:
             value = working_df.at[ctr, col_name].lower()
-            if re.search("^blank\d*.*$", value):
+            if re.search("^blank\d*.*$", value) or re.search("^0$", value):
                 working_df.drop(labels=ctr, inplace=True)
             ctr += 1
     except ValueError:

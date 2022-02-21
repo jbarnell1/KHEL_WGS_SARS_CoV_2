@@ -32,7 +32,7 @@ class WorkflowObj1(workflow_obj):
             raise ValueError("Positive Control is invalid- already expired")
         if datetime.datetime.strptime(self.neg_ctrl_exp, "%Y-%m-%d") <= today:
             print("ALERT!! The negative control is out of spec!  Please update in data/private_cache.json")
-            raise ValueError("Positive Control is invalid- already expired")
+            raise ValueError("Negative Control is invalid- already expired")
         print(" Done!\n")
 
 
