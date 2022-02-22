@@ -353,7 +353,7 @@ def replace_shortcut(path):
     path = path.replace("\\", "/")
     if base_path == path[0:20]:
         return path
-    if path[3:26] != "Molecular Genomics Unit":
+    if path[3:26] != "Molecular_Genomics_Unit":
         # return None
         raise ValueError("The supplied path shouldn't be passed to 'replace_shortcut()'!")
     extension = path[3:]
