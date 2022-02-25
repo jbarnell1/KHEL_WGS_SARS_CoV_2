@@ -349,14 +349,16 @@ def check_reportable(row, cutoff):
 
 
 def replace_shortcut(path):
+    if not re.search("Molecular_Genomics_Unit/Testing/WGS_Sequencing_COVID/Run Data/ClearLabs/.*/FAST files", path):
+        # return None
+        raise ValueError("The supplied path shouldn't be passed to 'replace_shortcut()'!")
+
     base_path = "//kdhe/dfs/LabShared"
     path = path.replace("\\", "/")
     if base_path == path[0:20]:
         return path
-    
+
     path_lst = path.split("/")
     folder = path_lst[-2]
-    if not re.search("Molecular_Genomics_Unit/Testing/WGS_Sequencing_COVID/Run Data/ClearLabs/.*/FAST files", path):
-        # return None
-        raise ValueError("The supplied path shouldn't be passed to 'replace_shortcut()'!")
+    
     return "//kdhe/dfs/LabShared/Molecular_Genomics_Unit/Testing/WGS_Sequencing_COVID/Run Data/ClearLabs/" + folder + "/FAST files"
