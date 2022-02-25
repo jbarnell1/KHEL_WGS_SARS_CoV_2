@@ -353,9 +353,10 @@ def replace_shortcut(path):
     path = path.replace("\\", "/")
     if base_path == path[0:20]:
         return path
-    if path[3:26] != "Molecular_Genomics_Unit":
+    
+    path_lst = path.split("/")
+    folder = path_lst[-2]
+    if not re.search("Molecular_Genomics_Unit/Testing/WGS_Sequencing_COVID/Run Data/ClearLabs/.*/FAST files", path):
         # return None
         raise ValueError("The supplied path shouldn't be passed to 'replace_shortcut()'!")
-    extension = path[3:]
-    path = base_path + "/" + extension
-    return path
+    return "//kdhe/dfs/LabShared/Molecular_Genomics_Unit/Testing/WGS_Sequencing_COVID/Run Data/ClearLabs/" + folder + "/FAST files"
