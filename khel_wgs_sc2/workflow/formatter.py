@@ -11,7 +11,7 @@ def remove_blanks(df, col_name):
     try:
         while True:
             value = working_df.at[ctr, col_name].lower()
-            if re.search("^blank\d*.*$", value):
+            if re.search("^blank\d*.*$", value) or re.search("^0$", value):
                 working_df.drop(labels=ctr, inplace=True)
             ctr += 1
     except ValueError:
@@ -349,13 +349,16 @@ def check_reportable(row, cutoff):
 
 
 def replace_shortcut(path):
+    if not re.search("Molecular_Genomics_Unit/Testing/WGS_Sequencing_COVID/Run Data/ClearLabs/.*/FAST files", path):
+        # return None
+        raise ValueError("The supplied path shouldn't be passed to 'replace_shortcut()'!")
+
     base_path = "//kdhe/dfs/LabShared"
     path = path.replace("\\", "/")
     if base_path == path[0:20]:
         return path
-    if path[3:26] != "Molecular Genomics Unit":
-        # return None
-        raise ValueError("The supplied path shouldn't be passed to 'replace_shortcut()'!")
-    extension = path[3:]
-    path = base_path + "/" + extension
-    return path
+
+    path_lst = path.split("/")
+    folder = path_lst[-2]
+    
+    return "//kdhe/dfs/LabShared/Molecular_Genomics_Unit/Testing/WGS_Sequencing_COVID/Run Data/ClearLabs/" + folder + "/FAST files"
