@@ -22,7 +22,7 @@ VERSION = '0.1.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'pandas', 'numpy', 'sqlalchemy', 'tk', 'cx_oracle', 'paramiko', 'openpyxl', 'bokeh', 'pyodbc', 'openpyxl'
+    'pandas', 'numpy', 'sqlalchemy', 'tk', 'cx_oracle', 'paramiko', 'openpyxl', 'bokeh', 'pyodbc'
 ]
 
 # What packages are optional?
